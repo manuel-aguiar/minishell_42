@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:26:37 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/12 22:29:12 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/12 22:55:58 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,14 @@ void		run_cd(char **cmd, char **env, int final_out);
 int			cd_exists(char *cmd, char *curpath, int final_out);
 char		*set_beg_path(char *cmd, char **env, char *curpath);
 static char	*aux_cd_paths(char *cmd, char *curpath, char *curr);
+
+/*
+block->ms->env;     //copia do env
+block->cmd_args      // char **av, ja limpo de expansoes, quotes, etc
+block->final_out;	// fd para escrever com ft_putstr_fd
+block->final_in;    // fd para ler tipo gnl (n/a)
+
+*/
 
 int	run_pwd(t_block *block)
 {

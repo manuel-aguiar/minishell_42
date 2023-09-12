@@ -681,10 +681,3 @@ void rm_unnecessary_parenthesis(t_prompt *pmt)
     rm_doubled_parenthesis(pmt);
     rm_corner_parenthesis(pmt->copy, pmt->prompt);
 }
-
-
-
-
-
-
-
