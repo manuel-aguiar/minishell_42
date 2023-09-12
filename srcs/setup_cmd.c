@@ -1,26 +1,26 @@
 #include "minishell.h"
 
 /*
-    
+
     remove_unguarded_quotes
     fan favourite stupid function for those nasty cases like:
     echo "'"hello"'"bye'"'''
-    
+
     checks whether a quote guard is guarded itself by another quote and should stay,
     then mallocs the whole damn thing and you have a total of 2x the memory of your
     starting string, once again, by the 100th time since this program started, nice.
-    
+
     which by the way, if you are wondering, the above example should output this: 'hello'bye"
-    
+
     happy? who dafuq tries this stuff
-    
+
 */
 
 int setup_guard_array(char *str)
 {
     int i;
     int open;
-    
+
     open = 0;
     i = 0;
     while (str[i])
@@ -49,7 +49,7 @@ int remove_unguarded_quotes(char **str, int *has_guards)
     char *new;
     int i;
     int j;
-    
+
     setup_guard_array(*str);
     i = 0;
     j = 0;
@@ -59,7 +59,7 @@ int remove_unguarded_quotes(char **str, int *has_guards)
     len = i;
     if (j == len)
     {
-        if (has_guards) 
+        if (has_guards)
             *has_guards = 0;
         return (1);
     }
@@ -87,14 +87,14 @@ int remove_unguarded_quotes(char **str, int *has_guards)
     This function lacks creativity in its naming.
     sees if an argument has space in it (after confirming it is not between quotes)
     and splits and updates the full list....
-    
+
     it sees what the new total is, gets the split "split", allocates "new" for the new total.
     copies all block->cmd_args in order, then inserts the split, copies the remaining cmd_args
     and thhen frees the holding array of the old block->cmd_args and split (all the pointers
     were passed to "new", we don't want to free those).
-    
+
     (it also frees the cmd_arg[index] in the middle that we split, since we won't use that anymore)
-    
+
     And we go back to the original loop.
     #ugliest_function_ever
 */
@@ -105,13 +105,13 @@ int cmd_args_has_space_split(t_prep_cmd *cmd, int *index)
     int     count;
     char    **split;
     char    **new;
-    
+
     i = 0;
     while (cmd->cmd_args[*index][i] && !ft_isspace(cmd->cmd_args[*index][i]))
         i++;
     if (!cmd->cmd_args[*index][i])
         return (1);
-    
+
     split = ft_split_count(cmd->cmd_args[*index], " ", &count);
     if (!split)
         return (perror_msg("malloc"));
@@ -130,7 +130,7 @@ int cmd_args_has_space_split(t_prep_cmd *cmd, int *index)
                 + (t_ulong)(i == *index && i - *index < count) * (t_ulong)split[i - *index]  \
                 + (t_ulong)(i < cmd->args_len && i > *index) * (t_ulong)cmd->cmd_args[i - count + 1]);
         i++;*/
-        
+
         if (i < *index)
         {
             new[i] = cmd->cmd_args[i];
@@ -170,7 +170,7 @@ int cmd_args_rm_quotes_and_split(t_prep_cmd *cmd)
 {
     int i;
     int has_guards;
-    
+
     has_guards = 0;
     i = 0;
     while (cmd->cmd_args[i])
@@ -189,7 +189,7 @@ int cmd_args_rm_quotes_and_split(t_prep_cmd *cmd)
 
 /*
     cmd_args_expand_dollar_wildcard
-    As per the name, goes through all the cmd_args and expands wildcards 
+    As per the name, goes through all the cmd_args and expands wildcards
     and envieronment variables within each.
     Expand dollars in every case except \'.
     Expand wildcards whenever there are no quotes surrounding the argument.
@@ -200,7 +200,7 @@ int cmd_args_rm_quotes_and_split(t_prep_cmd *cmd)
 int cmd_args_expand_dollar_wildcard(t_prep_cmd *cmd)
 {
     int i;
-    
+
     i = 0;
     while (cmd->cmd_args[i])
     {
@@ -212,25 +212,25 @@ int cmd_args_expand_dollar_wildcard(t_prep_cmd *cmd)
         i++;
     }
     return (1);
-} 
+}
 
 
 
 /*
     get_cmd_args
-    
+
     after having succeessfully removed redirections to the linkedlist,
     we agreggate the remaining split since they are all the command args.
     after that, we will need to expand wildcards, environment and
     remove quotes
-    
+
     expansion of enviroment variables and wildcards must occur seperatelly
     in cmd_args and io_files because on the latter, multiple io_files
     per redirection will result in ambiguous redirection and execution must
     therefore stop there. So, we can manage io_files before continuing expanding
     the command, since once we find a problem in redirections, the rest is not
     really needed because execution will stop anyways.
-    
+
     at the end, we can do ft_free_set_null to block->cmd_args_copy (despite being char **)
     because we have successefully moved all addresses we wanted to block->cmd_args
     therefore, no malloc'ed pointers are being held exclusively by block->cmd_args_copy and we can
@@ -244,7 +244,7 @@ int get_cmd_args(t_prep_cmd *cmd)
 {
     int i;
     int len;
-    
+
     cmd->cmd_args = malloc(sizeof(*cmd->cmd_args) * (cmd->args_len + 1));
     if (!cmd->cmd_args)
         return (perror_msg("malloc"));
@@ -268,10 +268,10 @@ int get_cmd_args(t_prep_cmd *cmd)
     return (1);
 }
 
-/* 
+/*
     split_cmd_by_quotes_spaces
-    make a copy of the original, set characters between quotes to an 
-    arbitrary non-space value. 
+    make a copy of the original, set characters between quotes to an
+    arbitrary non-space value.
     split by spaces (spaces between quotes will be set to something else)
     loop through the whole thing to replenish the empty quotes with the original values
 
@@ -280,12 +280,12 @@ int split_cmd_by_quotes_spaces(t_prep_cmd *cmd, t_block *block)
 {
     cmd->prompt_copy = ft_strdup(block->prompt);
     if (!cmd->prompt_copy)
-        return (perror_msg("malloc"));                                                                                
+        return (perror_msg("malloc"));
     set_in_between_to(cmd->prompt_copy, '"', '"', -1);
     set_in_between_to(cmd->prompt_copy, '\'', '\'', -1);
     cmd->cmd_args_copy = ft_split_count_replenish(cmd->prompt_copy, block->prompt, " ", &cmd->split_len);
     if (!cmd->cmd_args_copy)
-        return (perror_msg("malloc"));                                                                    
+        return (perror_msg("malloc"));
     ft_free_set_null(&cmd->prompt_copy);
     return (1);
 }
@@ -305,7 +305,7 @@ int split_cmd_by_quotes_spaces(t_prep_cmd *cmd, t_block *block)
     free_cmd_struct
     the struct is not malloc'ed, just the pointers may be. we free those and the stack call
     by "setup_cmd" will destroy the struct itself
-    
+
     If everything goes to plan, this function will not be called
     In the end, all that was done by t_prep_cmd will be given to t_block.
 
@@ -366,7 +366,7 @@ int setup_cmd(t_block *block)
 {
     int         i;
     t_prep_cmd  cmd;
-    
+
     if (!setup_prep_cmd_struct(&cmd, block))
         return (0);
     i = 0;

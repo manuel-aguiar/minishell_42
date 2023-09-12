@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/08/25 09:52:17 by marvin           ###   ########.fr       */
+/*   Updated: 2023/09/12 19:24:27 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,23 @@
 /*
 
     waiting_for_my_children
-    blocks waits for all the live children and, after arriving, sets their 
+    blocks waits for all the live children and, after arriving, sets their
     child_pid to zero to signal that either it is a manager and has no pid
-    or that the child has already arrived because another conditional needed it 
+    or that the child has already arrived because another conditional needed it
     to arrive before.
-    
-    Called by a manager block to wait for all its children and to decide 
+
+    Called by a manager block to wait for all its children and to decide
     on conditionals whether to proceed or not.
-    
+
     t_ms will call its only pid if needed, corresponding to a single command
     with no manager behind other than t_ms itself.
-    
+
 */
 
 int waiting_for_my_children(t_block *block, int index)
 {
     int i;
-    
+
     check_for_signals(block->ms);
     i = 0;
     //printf("block [%s] waiting for %d children \n", block->prompt, block->op_count + 1);
@@ -114,10 +114,10 @@ int pipes_and_conditionals(t_block *block, int index, int *must_fork)
     This function prepares the command for execution.
     If redirections have a problem (ambiguous/non existent), close the remaining file descriptors
     and exit.
-    
+
     If there is no command (the prompt is made of only redirections, totally legal)
     just close the file descriptors and exit.
-    
+
     Otherwise, call process_execution: responsible for fork and execve.
 
 */
@@ -153,7 +153,7 @@ int execute(t_block *block)
     will destroy his own block upon exiting (the child must call destroy_block anyways)
     Upon execution, all the fds are analysed before the command itself, so if
     any fd fails to open, the command won't analyse it s own arguments.
-    
+
 
 
 */
@@ -163,7 +163,7 @@ int open_here_docs_at_block(t_block *block)
     int         i;
     t_redir     *redir;
     t_vdmnode   *cur;
-    
+
     if (!block->io_files)
         return (1);
     cur = block->io_files->head;
@@ -184,8 +184,8 @@ int open_here_docs_at_block(t_block *block)
             if (!remove_unguarded_quotes(&redir->file, NULL)
             || !here_doc(block, redir->file))
                 return (0);
-            
-            
+
+
             //block->here_doc = redir->file;
             //printf("here doc name [%s]\n", block->here_doc);
             //redir->file = NULL;
@@ -202,7 +202,7 @@ int open_here_docs_at_block(t_block *block)
 int get_all_here_docs(t_block *block)
 {
     int i;
-    
+
     if (!block->is_cmd)
     {
         i = 0;
@@ -221,7 +221,7 @@ int execution_tree(t_block *block, int i_am_forked)
     int         i;
     int         status;
     int         must_fork;
-    
+
     if (i_am_forked)
         block->i_am_forked = 1;
     if (!manage_io_files(block))
@@ -242,9 +242,9 @@ int execution_tree(t_block *block, int i_am_forked)
             {
                 if (!(must_fork && block->child_pids[i] != 0))
                     execution_tree(block->child_list[i], must_fork);
-                
-                
-                
+
+
+
             }
             if (i > 0 && block->op_id[i - 1] == OP_PIPE)
             {
@@ -280,7 +280,7 @@ int execution_tree(t_block *block, int i_am_forked)
 void    print_execution_tree(t_block *block)
 {
     int i;
-    
+
     i = 0;
     if (!block)
         return ;
@@ -300,7 +300,7 @@ int setup_execution_tree(t_ms *ms, t_block *father, char *pmt, int my_id)
 {
     int     i;
     t_block *block;
-    
+
     block = init_block(ms, father, pmt, my_id);
     if (!block)
         return (0);
@@ -336,8 +336,8 @@ int ms_prompt_loop(t_ms *ms)
     	        execution_tree(ms->first, 0);
     	    destroy_block(ms->first);
         	//execution_tree(ms, NULL, ms->prompt, 0);
-        	
-        	
+
+
         	if (ms->my_kid != -1)
         	{
         	    waitpid(ms->my_kid, &ms->exit_status, 0);
@@ -357,7 +357,7 @@ int ms_prompt_loop(t_ms *ms)
 int main(int ac, char **av, char **env)
 {
 	t_ms	ms;
-    
+
     (void)ac;
 	if (!init_ms(&ms, &av[0][2], env))
 		return (0);
@@ -370,7 +370,7 @@ int main(int ac, char **av, char **env)
 
 se o infile falhar, o comando nao executa, erro tipo 1
 
-ERROS: 
+ERROS:
 
 ((cat && cat) && (cat && cat)) | ls
     - piperead nao é devidamente fechado porque os netos nao sabem quye o
@@ -379,7 +379,7 @@ ERROS:
     escrevem indefinidamente.
 
     - tenho de encontrar forma de os netos saberem sempre que lhes foi dado um pipe;
-    
+
 PIPEX SEEM FIXED, EVERY PIPE LEADS TO A forked
 
 got to fixe conditionals

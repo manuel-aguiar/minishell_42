@@ -2,11 +2,11 @@
 
 /*
     dollar expansion functions
-    
-    
+
+
     all of these serve to insert on the cmd_arg/redirection the corresponding expansion of $
     according to the env variables and/or exit status,
-    all the functions take the place where the original argument is (char **). 
+    all the functions take the place where the original argument is (char **).
     This intent is to make the code more modular:
         -   both cmd and block can use these when dealing with their redirections.
         -   all that is required is that there is a pointer to t_ms available to search env
@@ -19,7 +19,7 @@ int dollar_exit_status(char **to_expand, t_ms *ms, int *index, int dol_len)
 {
     char    *itoa;
     char    *new;
-    
+
     check_for_signals(ms);
     itoa = ft_itoa(ms->exit_status);
     if (!itoa)
@@ -39,7 +39,7 @@ int dollar_search_env(char **to_expand, t_ms *ms, int *index, int dol_len)
 {
     int     i;
     char    *new;
-    
+
     i = 0;
     (*to_expand)[*index] = '\0';
     if (ms->env)
@@ -71,7 +71,7 @@ int dollar_search_env(char **to_expand, t_ms *ms, int *index, int dol_len)
 int dollar_search_replace(char **to_expand, t_ms *ms, int *index)
 {
     int len;
-    
+
     if (!(*to_expand)[*index + 1] || (*to_expand)[*index + 1] == ' ')
         return (1);
     if ((*to_expand)[*index + 1] == '?')
@@ -88,7 +88,7 @@ int expand_dollars(char **to_expand, t_ms *ms)
 {
     int i;
     int quote;
-    
+
     quote = 0;
     i = 0;
     while ((*to_expand)[i])
@@ -116,7 +116,7 @@ int here_doc_expand_dollars(char **to_expand, t_ms *ms)
 {
     int i;
     int quote;
-    
+
     quote = 0;
     i = 0;
     while ((*to_expand)[i])
@@ -152,7 +152,7 @@ int wildcard_search_replace(char **to_expand, int *index, char **fail_return)
     int     count;
     int     start;
     int     end;
-    
+
     start = *index;
     while (start > 0 && (*to_expand)[start - 1] != ' ' \
     && (*to_expand)[start - 1] != '<' && (*to_expand)[start - 1] != '>')
@@ -176,15 +176,15 @@ int wildcard_search_replace(char **to_expand, int *index, char **fail_return)
     free(*to_expand);
     free(join);
     *to_expand = new;
-    
+
     return (1);
-    
+
 }
 
 
 /*
     expand_wildcards
-    
+
     function used to expand wildcards in cmd_args and redirections. It is only used after the command has been into individua
     portions meaning that redirections and cmd args are processed seperatelly:
         -   failure in the file descriptors due to ambiguous redirection means that the rest of the cmd_args
@@ -200,7 +200,7 @@ int expand_wildcards(char **to_expand, char **fail_return)
 {
     int i;
     int quote;
-    
+
     quote = 0;
     i = 0;
     while ((*to_expand)[i])

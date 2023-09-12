@@ -3,7 +3,7 @@
 
 /*
     close_in/close_out_fds
-    These two functions check wether the current file descriptor was 
+    These two functions check wether the current file descriptor was
     inherited or not. If not, they can close it. The only file descriptors
     that blocks are allowed to close that were not opened by them are
     pipe ends. All others that are inherited, are the responsibility of their
@@ -30,7 +30,7 @@ int outfiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i)
     int     type;
     int     cur;
     int     c;
-    
+
     cur = *i;
     c = 1;
     if (!*io_files)
@@ -66,7 +66,7 @@ int infiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i)
     int     type;
     int     cur;
     int     c;
-    
+
     cur = *i;
     c = 1;
     if (!*io_files)
@@ -108,7 +108,7 @@ int infiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i)
     and opened properly without ambiguity.
     The function will change the name of the file in the t_vdmlist *files directly
     and the final name will be the one that will be used to open.
-    
+
     Contrary to expansion on command arguments, if there are spaces these are not split
     and will be considered as a single name of a file. Eg: echo hello "hey there"
     will open/create a file called 'hey there' (without quotes) and will write "hello"
@@ -134,14 +134,14 @@ int manage_io_expansion(t_block *block)
     char    *temp;
     char    *redir_copy;
     char    *fail_return;
-    
+
     fail_return = NULL;
     redir_copy = ((t_redir *)block->io_files->head->data)->file;
     if (redir_copy[0] != '\'')
         if (!expand_dollars(&redir_copy, block->ms))
             return (0);
     if (redir_copy[0] != '\'' \
-    && redir_copy[0] != '"') 
+    && redir_copy[0] != '"')
         if (!expand_wildcards(&redir_copy, &fail_return))
             return (0);
     if (fail_return)
@@ -163,15 +163,15 @@ int manage_io_expansion(t_block *block)
 
 /*
     here_doc functions
-    
+
     These are used to manage here_doc.
     dfs (depth first search) will create a file name that is not in use in the current directory
     on which the user will write to from the terminal.
-    
+
     here_doc_fill will write to the file using get_next_line and ft_putstr_fd to
     that file  descriptor. The file will then be closed and open in order to reset its offset to 0
     and allow the command that uses it as input to be able to read it from the beginning.
-    
+
     here_doc will simply print error messages in case there is a problem while opening and closing
     the file and leading execution to fail (here_doc -> manage_infiles -> manage_io_files -> execute return 0)
 
@@ -212,7 +212,8 @@ static int	here_doc_temp(t_block *block)
 
 	found = 0;
 	ft_memset(new, '\0', sizeof(new));
-	dfs(new, sizeof(new), 0, &found);
+	new[0] = '.';
+	dfs(new, sizeof(new), 1, &found);
 	block->here_doc = ft_strdup(new);
 	if (!block->here_doc)
 		return (perror_msg("malloc"));
@@ -223,7 +224,7 @@ static int	here_doc_temp(t_block *block)
 
     here_doc_file
     fills the here_doc temp file with readline.
-    
+
     it uses here_doc_expand_dollars for env expansion because in here_docs, quotes
     dont' guard the expansion of env variables: they are expanded both with \' and ' " '
 
@@ -232,7 +233,7 @@ static int	here_doc_temp(t_block *block)
 void    sigint_heredoc(int signum)
 {
     int code;
-    
+
     if (signum == SIGINT)
     {
         //printf("\n\n successfully changed the signal handler\n\n\n");
@@ -253,14 +254,14 @@ static int here_doc_fill(t_block *block, char *eof)
 {
 	char	*line;
 	int     count;
-    
+
     ms_prepare_signal(block->ms, sigint_heredoc);
     count = 0;
 	while (1)
 	{
 	    count++;
 		line = readline("> ");
-		
+
 		if (line)
 		{
 			if (!ft_strncmp(eof, line, ft_strlen(eof)) \
@@ -279,12 +280,12 @@ static int here_doc_fill(t_block *block, char *eof)
 			ft_free_set_null(&line);
 		}
 		else
-		{   
+		{
 			printf("minishell: warning: here-document at line %d delimited by end-of-file (wanted `%s')\n", count, eof);
 			break;
 		}
 	}
-	return (1);    
+	return (1);
 }
 
 
@@ -292,15 +293,15 @@ int here_doc(t_block *block, char *eof)
 {
     int pid;
     int hc_status;
-    
+
     if (!here_doc_temp(block))
-        return (0);                 
+        return (0);
     //printf("trying to open file [%s]\n", block->here_doc);
     block->here_doc_fd = open(block->here_doc, O_CREAT | O_TRUNC |O_RDWR, 0644);
     //printf("success? fd: %d\n", block->here_doc_fd);
     if (block->here_doc_fd == -1)
         return (perror_msg_func(block, block->here_doc, CODE_OPEN, 1));                 //open failed, perror(open) guarda exit status
-    
+
     pid = fork();
     if (pid == -1)
         return (perror_msg("fork"));
@@ -308,7 +309,7 @@ int here_doc(t_block *block, char *eof)
     {
         here_doc_fill(block, eof);
         exit(0);
-    } 
+    }
     waitpid(pid, &hc_status, 0);
     //printf("exit status of child wifexited %d, status %d\n", WIFSIGNALED(hc_status), WTERMSIG(hc_status));
     if (WIFSIGNALED(hc_status) && WTERMSIG(hc_status))
@@ -331,7 +332,7 @@ int here_doc(t_block *block, char *eof)
 /*
 
     manage_infile/manage_outfile
-    
+
     These functions are called from manage_io_files
     manage_io_files checks all redirections from the t_vdmlist *files,
     checks if they are in or out, and of which type, then forwarding to manage_infile/manage_outfile
@@ -347,7 +348,7 @@ int here_doc(t_block *block, char *eof)
 int manage_infile(t_block *block, int index)
 {
     t_redir *redir;
-    
+
     redir = (t_redir *)block->io_files->head->data;
     close_in_fds(block);
     //printf("redirection [%s] at [%s]\n", redir->file, block->prompt);
@@ -371,8 +372,8 @@ int manage_infile(t_block *block, int index)
         block->final_in = open(redir->file, O_RDWR);
         //printf("prompt [%s] final in is %d\n", block->prompt, block->final_in);
         if (block->final_in == -1)
-             return (perror_msg_func(block, redir->file, CODE_OPEN, 1));   
-        
+             return (perror_msg_func(block, redir->file, CODE_OPEN, 1));
+
     }
     vdmlist_del_head(block->io_files, destroy_redir);
     return (1);
@@ -381,7 +382,7 @@ int manage_infile(t_block *block, int index)
 int manage_outfile(t_block *block)
 {
     t_redir *redir;
-    
+
     redir = (t_redir *)block->io_files->head->data;
     close_out_fds(block);
     if (redir->type == RE_TRUNC)
@@ -389,7 +390,7 @@ int manage_outfile(t_block *block)
     else
         block->final_out = open(redir->file, O_CREAT | O_RDWR | O_APPEND, 0644);
     if (block->final_out == -1)
-        return (perror_msg_func(block, redir->file, CODE_OPEN, 1));                 
+        return (perror_msg_func(block, redir->file, CODE_OPEN, 1));
     vdmlist_del_head(block->io_files, destroy_redir);
     return (1);
 }
@@ -409,7 +410,7 @@ int manage_outfile(t_block *block)
     If not, they are handled by their corresponding manager function, manage_infile and manage_outfile.
     At the end, t_vdmlist *files is finally destroyed as it is no longer neede. Function "destroy_redir" is
     passed to it to destroy the t_redir struct that is populating the "data" field of this linkedlist.
-    
+
 */
 
 int manage_inherited_fds(t_block *block)
@@ -438,7 +439,7 @@ int manage_io_files(t_block *block)
     int         i;
     int         type;
     int         success;
-    
+
     manage_inherited_fds(block);
     if (!block->io_files)
     {

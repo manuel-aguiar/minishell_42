@@ -19,7 +19,7 @@
 void    void_putstr(void *str)
 {
     char *mine;
-    
+
     mine = (char *)str;
     write(1, mine, ft_strlen(mine));
     printf("\n");
@@ -29,7 +29,7 @@ char    *triple_join(char *first, char *second, char *third)
 {
     int     i;
     char    *new;
-    
+
     new = malloc((ft_strlen(first) + ft_strlen(second) + ft_strlen(third) + 1) * sizeof(*first));
     if (!new)
     {
@@ -52,12 +52,12 @@ void file_list(t_vdmlist *files, char *path, int cur_lvl, int max_lvl)
     struct dirent   *entry;
     DIR             *dir;
     char            *filename;
-    
+
     dir = opendir(path);
     if (!dir)
     {
         perror("opendir");
-        return ;                               
+        return ;
     }
     while (1)
     {
@@ -68,7 +68,7 @@ void file_list(t_vdmlist *files, char *path, int cur_lvl, int max_lvl)
         && ft_strncmp(entry->d_name, "..", 2))
         {
             if (!ft_strncmp(path, ".", 1))
-                filename = ft_strdup(entry->d_name);                                        //perror         
+                filename = ft_strdup(entry->d_name);                                        //perror
             else
                 filename = triple_join(path, "/", entry->d_name);                           //perror
             if (entry->d_type == DT_REG)
@@ -157,7 +157,7 @@ char    **list_to_array(t_vdmlist *list)
     int         len;
     int         i;
     t_vdmnode   *cur;
-    
+
     if (!list)
         return (NULL);
     len = list->len;
@@ -185,7 +185,7 @@ char    *split_join(char **split, char *sep)
     int     j;
     int     k;
     char    *join;
-    
+
     i = 0;
     len = 0;
     while (split[i])
@@ -220,7 +220,7 @@ int count_chars(char *str, char c)
 {
     int i;
     int count;
-    
+
     count = 0;
     i = 0;
     while (str[i])
@@ -237,7 +237,7 @@ int count_chars(char *str, char c)
 char     *wildcard(char *pattern, int pat_len, int *match_count)
 {
     t_wildc     wildcard;
-    
+
     wildcard.pattern = pattern;
     wildcard.depth = count_chars(pattern, '/');
     wildcard.sub_pats = ft_split_count(wildcard.pattern, " *", &wildcard.sub_count);
@@ -259,24 +259,24 @@ char     *wildcard(char *pattern, int pat_len, int *match_count)
     wildcard.join = NULL;
 
     file_list(wildcard.files, ".", 0, wildcard.depth);
-    
+
    /*
     t_vdmnode *cur;
-    
+
     cur = wildcard.files->head;
     while (cur)
     {
         printf(" file [%s], fits? %d\n", (char *)cur->data, wildcard_fit(cur->data, &wildcard));
         cur = cur->next;
     }
-    
+
     vdmlist_head_print(wildcard.files, void_putstr);
     */
-    
+
     vdmlist_remove_if(wildcard.files, &wildcard, wildcard_fit, free);
-    
-    ft_free_charmat_null(&wildcard.sub_pats, free); 
-    
+
+    ft_free_charmat_null(&wildcard.sub_pats, free);
+
     wildcard.match_count = wildcard.files->len;
     if (wildcard.match_count == 0)
         wildcard.join = triple_join("\'", pattern, "\'");
@@ -286,12 +286,12 @@ char     *wildcard(char *pattern, int pat_len, int *match_count)
         wildcard.join = split_join(wildcard.split, " ");            //totally unprotected
         ft_free_charmat_null(&wildcard.split, free);
     }
-    
+
     //vdmlist_head_print(wildcard.files, void_putstr);
-    
+
     //totally unprotected
     vdmlist_destroy(&wildcard.files, NULL);             //totally unprotected
-    
+
                 //totally unprotected
     //printf("the winners are: %s\n", wildcard.join);
     *match_count = wildcard.match_count;

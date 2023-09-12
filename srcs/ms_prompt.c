@@ -3,7 +3,7 @@
 
 /*
     get_prompt
-    
+
     gets the prompt, validates syntax, removes unnecessary parenthesis,
     gives the prompt to the t_ms struct and saves the exit_status on t_ms
     in case a syntax error was found
@@ -13,17 +13,17 @@
 int get_prompt(t_ms *ms)
 {
     t_prompt pmt;
-    
+
     if (ms->prompt)
         ft_free_set_null(&ms->prompt);
-    
+
     if(!setup_prompt_struct(&pmt, ms))
         return (0);
-    
+
     validate_syntax(&pmt);
     validate_quote_close(&pmt);
     validate_parenthesis_close(&pmt);
-    
+
     if (pmt.exit_status)
     {
         ms->exit_status = pmt.exit_status;
@@ -39,7 +39,7 @@ int get_prompt(t_ms *ms)
 /*
     syntax_error_msg is a helper function to help print the error messages found in
     the p+rompt, to STDERR
-    
+
     NOT DONE YET, we must change to write to ms->errfd, as it could be changed...? maybe x'D
 
 */
@@ -47,7 +47,7 @@ int get_prompt(t_ms *ms)
 int syntax_error_msg(t_prompt *pmt)
 {
     int i;
-    
+
     ft_putstr_fd("minishell: syntax error near unexpected token `", pmt->errfd);
     i = 0;
     if (pmt->err_token[i] != '<' \
@@ -75,7 +75,7 @@ int syntax_error_msg(t_prompt *pmt)
     return (0);
 }
 
-/* 
+/*
     syntax_error_manager
     when an error is found, it calls the error manager to print the corresponding message
     as well as saving the error code that matches the description
@@ -110,7 +110,7 @@ int validate_parenthesis_close(t_prompt *pmt)
 {
     int         open;
     int         i;
-    
+
     open = 0;
     i = 0;
     while (pmt->copy[i])
@@ -134,7 +134,7 @@ int validate_quote_close(t_prompt *pmt)
 {
     int i;
     int quote;
-    
+
     i = 0;
     quote = 0;
     while (pmt->prompt[i])
@@ -154,7 +154,7 @@ int validate_quote_close(t_prompt *pmt)
                 i++;
             }
         }
-    }    
+    }
     if (quote)
         return (syntax_error_manager(pmt, EXIT_SYNTAX, "quotes", i));
     return (1);
@@ -162,7 +162,7 @@ int validate_quote_close(t_prompt *pmt)
 
 /*
     syntax_operators_end/syntax_redir_end
-    
+
     self explanatory, no prompts ending on a redirection symbol without a file names
     or ending on an operator with no further instructions.
 
@@ -174,7 +174,7 @@ int syntax_operators_end(t_prompt *pmt)
     int         len;
     int         j;
     char        error[3];
-    
+
     len = ft_strlen(pmt->copy) - 1;
     while (len >= 0 && pmt->copy[len] == ' ')
         len--;
@@ -189,14 +189,14 @@ int syntax_operators_end(t_prompt *pmt)
         error[j] = '\0';
         return (syntax_error_manager(pmt, EXIT_SYNTAX, error, len));
     }
-        
+
     return (1);
 }
 
 int syntax_redir_end(t_prompt *pmt)
 {
     int         len;
-    
+
     len = ft_strlen(pmt->copy) - 1;
     while (len >= 0 && pmt->copy[len] == ' ')
         len--;
@@ -221,7 +221,7 @@ int syntax_redirections(t_prompt *pmt)
     int         i;
     int         j;
     char        error[3];
-    
+
     i = 0;
     while (pmt->copy[i])
     {
@@ -252,7 +252,7 @@ int syntax_redirections(t_prompt *pmt)
 
 /*
     syntax_operators
-    
+
     checks whether the operators are in the correct place.
     error[3] simply serves to report correctly to syntax_error_manager
     about which symbol is the one responsible for the error:
@@ -266,7 +266,7 @@ int syntax_operators(t_prompt *pmt)
     int         i;
     int         j;
     char        error[3];
-    
+
     i = 0;
     while (pmt->copy[i])
     {
@@ -296,7 +296,7 @@ int syntax_operators(t_prompt *pmt)
     return (1);
 }
 
-/* 
+/*
     open helper and close helper arenjust helper functions for syntax_parenthesis
     to get the corrrect index where the error was found.
 
@@ -316,7 +316,7 @@ int open_prths_helper(char *copy, int index)
 int close_prths_helper(char *copy, int index)
 {
     int len;
-    
+
     len = ft_strlen(copy);
     ++index;
     while (index < len && copy[index] == ' ')
@@ -329,7 +329,7 @@ int close_prths_helper(char *copy, int index)
 
 /*
     syntax_parenthesis
-    
+
     checks wether parenthesis are correctly opened and closed
 
 */
@@ -364,7 +364,7 @@ int syntax_parenthesis(t_prompt *pmt)
 
 /*
     syntax_begin
-    
+
     just checks whether the first non-space character is an operators,
     in which case the syntax is not correct.
 
@@ -373,7 +373,7 @@ int syntax_parenthesis(t_prompt *pmt)
 int syntax_begin(t_prompt *pmt)
 {
     int i;
-    
+
     i = 0;
     while (pmt->prompt[i] == ' ')
         i++;
@@ -403,7 +403,7 @@ int syntax_begin(t_prompt *pmt)
         Operators: one operator cannot be immediatelly after another with no arguments, etc
         Redirections: no redirections without arguments, no redirections before parenthesis, etc
         no redirections or operators at the end
-        
+
         Redirections can exist on their own withou not commands: fds are opened and closed by the shell
 */
 
@@ -420,20 +420,20 @@ int validate_syntax(t_prompt *pmt)
 }
 
 /*
-    copy_empty_quotes 
+    copy_empty_quotes
     sets up our prompt copy for analysis
     it checks which of " or ' is open at any point in time and
     sets all characters within quotes to spaces.
     This copy will be used throughout the whole analysis since it removes
     characters in between quotes that could result in missfires.
-    
+
 */
 
 int copy_empty_quotes(t_prompt *pmt)
 {
     int i;
     int quote;
-    
+
     pmt->copy = ft_strdup(pmt->prompt);
     if (!pmt->copy)
         return (perror_msg("malloc"));
@@ -463,7 +463,7 @@ int copy_empty_quotes(t_prompt *pmt)
 /*
 
     is_only_spaces
-    
+
     just loops and checks if the prompt is just made of spaces
     If so, no further analysis is needed, give control back to the user.
 
@@ -472,7 +472,7 @@ int copy_empty_quotes(t_prompt *pmt)
 int is_only_spaces(t_prompt *pmt)
 {
     int i;
-    
+
     i = 0;
     while (pmt->prompt[i])
     {
@@ -486,23 +486,23 @@ int is_only_spaces(t_prompt *pmt)
 
 /*
     setup_prompt_struct
-    
+
     The function prepares the t_prompt for processing.
     First, readline to get the prompt and check for success
     Second, add prompt to hiistory, bash saves all past prompts regardless of
     success or syntax, so one can save it as soon as it is received and
     memalloc by readline didn't fail.
-    
+
     If prompt is empty or composed of just spaces (is_only_spaces), free it return:
     get_prompt returns (0), no further processing, and control is given back
     to the user.
-    
+
     copy_empty_quotes is used to empty all characters in between "" or ' '
     keeping a copy will be usefull to check for syntax and order such that
     it avoids missfires where a token (operator, parenthesis, redirection)
     is inside quotes and should therefore be ignored.
     This copy will be freed after all processing of the prompt is done.
-    
+
     the struct has a couple of control variables to ease management:
         -   parenthesis (to check later if the order is correct and allow
         for removal of unecessary parenthesis)
@@ -516,7 +516,7 @@ int is_only_spaces(t_prompt *pmt)
         -   errfd: inheried from ms to print to the stderr file descriptor
     For now, these are set to default values as if no errors were found and
     will be change accordingly upon processing.
-    
+
     If readline fails, it could be from memory failure or because readline received
     an end-of-file, meaning it should exit.
 */
@@ -534,7 +534,7 @@ int setup_prompt_struct(t_prompt *pmt, t_ms *ms)
     add_history(pmt->prompt);
     if (!pmt->prompt[0] || is_only_spaces(pmt))
     {
-        
+
         ft_free_set_null(&pmt->prompt);
         return (0);
     }
@@ -553,7 +553,7 @@ int setup_prompt_struct(t_prompt *pmt, t_ms *ms)
 
 /*
     rm_doubled_parenthesis
-    
+
     The point is to remove unnecessary parenthesis within the prompt
     Given that our implementation is based on blocks and subblocks, we don't
     want to create blocks that add just depth to the recursion but with no
@@ -562,13 +562,13 @@ int setup_prompt_struct(t_prompt *pmt, t_ms *ms)
     The criteria for removal is:
         no redirections, or operators within parenthesis
     We use the copy from setup_prompt_struct with empty quotes to avoid missfires
-    
+
     As soon as we find a parenthesis that is not needed. we remove it both from
     the original as from the copy (since we are using the copy for evaluation)
-    
+
     The algorithm resembles a stack: we increase "open" as parenthesis are opened
     and decrease it as they are closed
-    
+
     If we find any symbol (| & < >) within a parenthesis, we keep it, otherwise we
     remove both ends
 
@@ -580,7 +580,7 @@ void rm_doubled_parenthesis(t_prompt *pmt)
     int j;
     int open;
     int keep;
-    
+
     i = 0;
     while (pmt->copy[i])
     {
@@ -614,7 +614,7 @@ void rm_doubled_parenthesis(t_prompt *pmt)
                 pmt->copy[i] = ' ';
                 pmt->copy[j] = ' ';
                 pmt->prompt[i] = ' ';
-                pmt->prompt[j] = ' ';                
+                pmt->prompt[j] = ' ';
             }
             i++;
         }
@@ -624,14 +624,14 @@ void rm_doubled_parenthesis(t_prompt *pmt)
 /*
 
     remove_corned_parenthesis
-    
+
     It is somewhat similar to remove double parenthesis.
     In this case, we don't what is within the parenthesis
-    just that they are not corners since corner parenthesis don't 
+    just that they are not corners since corner parenthesis don't
     serve any purpose.
-    
+
     To be a corner, it must be the first non-space chrracter in the prompt
-    
+
     when we find the character that closes it ')' we check if the remaining
     characters in the prompt are just spaces.
     if so, they are corner parenthesis and can be removed.
@@ -645,7 +645,7 @@ void rm_corner_parenthesis(char *copy, char *original)
     int open;
     int start;
     int end;
-    
+
     set_in_between_to(copy, '(', ')', ' ');
     i = 0;
     while (copy[i] && ft_isspace(copy[i]))
@@ -668,7 +668,7 @@ void rm_corner_parenthesis(char *copy, char *original)
             if (!copy[i])
             {
                 original[start] = ' ';
-                original[end] = ' '; 
+                original[end] = ' ';
             }
             return ;
         }
@@ -684,7 +684,6 @@ void rm_unnecessary_parenthesis(t_prompt *pmt)
     rm_corner_parenthesis(pmt->copy, pmt->prompt);
     //dprintf(2, "remove corner [%s]\n", pmt->prompt);
 }
-
 
 
 

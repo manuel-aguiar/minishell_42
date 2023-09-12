@@ -3,7 +3,7 @@
 int    save_signal(int *num)
 {
     static int g_my_signal;
-    
+
     if (num)
         g_my_signal = *num;
     return (g_my_signal);
@@ -12,7 +12,7 @@ int    save_signal(int *num)
 int     check_for_signals(t_ms *ms)
 {
     int code;
-    
+
     if (save_signal(NULL))
 	{
 	    code = 0;
@@ -25,7 +25,7 @@ int     check_for_signals(t_ms *ms)
 void    signal_handler(int signum)
 {
     int code;
-    
+
     if (signum == SIGINT)
     {
         printf("\n");

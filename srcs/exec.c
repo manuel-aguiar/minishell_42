@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.exec.c                                       :+:      :+:    :+:   */
+/*   new.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/06/01 12:32:48 by marvin           ###   ########.fr       */
+/*   Updated: 2023/09/12 19:25:02 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,10 @@ void	error_child_exit(t_block *block, char *function, char *cmd, int errcode, in
     ft_putstr_fd(": ", block->ms->errfd);
     ft_putstr_fd(cmd, block->ms->errfd);
     ft_putstr_fd("\n", block->ms->errfd);
-    
-    
+
+
     //close fds
-    
+
     destroy_block(block);
     exit(errcode);
 }
@@ -75,9 +75,9 @@ void	perror_child_exit(t_block *block, char *function, int errcode, int with_ms)
         ft_putstr_fd(": ", block->ms->errfd);
     }
     perror(function);
-    
+
     //close fds
-    
+
     destroy_block(block);
     exit(errcode);
 }
@@ -146,7 +146,7 @@ int	exec_cmd_search_path(t_block *block)
 {
 	int		i;
 	char	*full_path;
-    
+
     if (!block->ms->path)
     {
         error_child_exit(block, block->cmd_args[0], ERR_CMD, CODE_CMD, 1);       // substituir
@@ -212,7 +212,7 @@ int	exec_command(t_block *block)
     it is over.
     In fact, exec command itself will exit and report on the exit status of failure and avoiding the child process
     to continue past this function.
-    
+
 */
 
 int	child_process(t_block *block)

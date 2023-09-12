@@ -44,7 +44,7 @@ INCS		= 		-I$(INC_PATH) -I$(LIB_PATH)/$(LIB_INC_P)
 
 all: $(NAME)
 
-$(NAME): message $(LIBFT) $(MLX) $(OBJS)
+$(NAME): message $(LIBFT) $(OBJS)
 	@$(CC) $(FLAGS) $(OBJS) $(INCS) -o $(NAME) $(ADD_LIB) $(LIB_PATH)/$(LIBFT)
 	@echo Program $(NAME) ready!!
 
@@ -65,7 +65,6 @@ clean:
         rm -rf $(OBJ_PATH); \
     fi
 	@make clean -C $(LIB_PATH)
-	@make clean -C $(MLX_PATH)
 	@echo Objects successfully deleted!
 
 fclean: clean

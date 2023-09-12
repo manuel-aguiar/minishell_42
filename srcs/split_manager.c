@@ -6,16 +6,16 @@
     split_redirections
     function used to extract the redirections from a split that is not final and as son-blocks below
     The file descriptors present at this level must be extracted in order to be passed to its sons.
-    
+
     The function calls ft_split_count_replenish
         this function, splits help_pmt that has been cleaned up of quotes and parenthesis in order
         to correctly seperate the arguments. Then, it uses to original to copy the base values
         found on the original prompt but split according to the required criteria (replenishes the former string)
-    
+
     A split with redirections can only have at most 1 set of open parent parenthesis. Since redirections affecting
     parenthesis can only come afterwards, we will be sure that the parenthesis correspond to children[0];
     After that, we safely remove the outside parenthesis and move on.
-    
+
 
 */
 
@@ -65,7 +65,7 @@ void    set_in_between_to(char *pmt, char start, char end, char newchar)
 char *split_copy_empty_quotes_and_parenthesis(char *prompt)
 {
     char *copy;
-    
+
     copy = ft_strdup(prompt);
     if (!copy)
     {
@@ -84,7 +84,7 @@ int split_extract_redirections(t_split_prompt *split)
 {
     int     i;
     char    *copy;
-    
+
     split->get_redir = ft_split_count_replenish(split->prompt_copy, split->prompt_orig, " ", &split->redir_split_len);
     if (!split->get_redir)
         return (perror_msg("malloc"));
@@ -116,7 +116,7 @@ int split_count_operators(t_split_prompt *split)
 {
     int i;
     int count;
-    
+
     count = 0;
     i = 0;
     while (split->prompt_copy[i])
@@ -154,7 +154,7 @@ int split_children_and_operators(t_split_prompt *split)
     int len;
     int all;
     int i;
-    
+
     all = 0;
     i = 0;
     while (all < split->op_count)
@@ -211,7 +211,7 @@ int setup_split_prompt_struct(t_split_prompt *split, t_block *block)
     split->children = ft_calloc((split->op_count + 2), sizeof(*(split->children)));
     split->child_pids = ft_calloc(split->op_count + 1, sizeof(*(split->child_pids)));
     if (!split->op_id || !split->children || !split->child_pids)
-    {    
+    {
         perror_msg("malloc");
         return (free_split_prompt(split));
     }
@@ -244,7 +244,7 @@ int split_prompt(t_block *block)
 {
     int             i;
     t_split_prompt  split;
-    
+
     if (!setup_split_prompt_struct(&split, block))
         return (0);
     if (!split_children_and_operators(&split))

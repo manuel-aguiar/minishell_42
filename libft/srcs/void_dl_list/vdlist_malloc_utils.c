@@ -49,17 +49,17 @@ void	vdmlist_remove_if(t_vdmlist *list, void *data, \
 		next = cur->next;
 		if (!cmp(cur->data, data))
 		{
-		    if (list->len == 1)
-		    {
-		        if (del && cur->data)
-		            del(cur->data);
-		        free(cur);
-		        list->head = NULL;
-		        list->tail = NULL;
-		        --(list->len);
-		    }
-		    else
-			    vdmlist_removeif_help(list, cur, del);
+			if (list->len == 1)
+			{
+				if (del && cur->data)
+					del(cur->data);
+				free(cur);
+				list->head = NULL;
+				list->tail = NULL;
+				--(list->len);
+			}
+			else
+				vdmlist_removeif_help(list, cur, del);
 		}
 		cur = next;
 	}

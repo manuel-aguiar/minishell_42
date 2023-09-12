@@ -4,7 +4,7 @@
 t_redir *init_redir(char *file, int type)
 {
     t_redir *redir;
-    
+
     redir = malloc(sizeof(*redir));
     if (!redir)
         return (NULL);
@@ -25,10 +25,10 @@ void	destroy_redir(void *og_redir)
 void	destroy_block(void *og_block)
 {
     t_block *block;
-    
-    
+
+
     block = (t_block *)og_block;
-    
+
     if (!block)
     return ;
 	if (block->child_list)
@@ -63,7 +63,7 @@ void	destroy_block(void *og_block)
 t_block *init_block(t_ms *ms, t_block *father, char *pmt, int my_id)
 {
     t_block *new;
-    
+
     new = malloc(sizeof(*new));
     if (!new)
     {
@@ -92,13 +92,13 @@ t_block *init_block(t_ms *ms, t_block *father, char *pmt, int my_id)
     new->op_count = 0;
     new->op_id = NULL;
 	new->is_cmd = 0;
-	
+
 	new->pipefd[0] = -1;
 	new->pipefd[1] = -1;
 	new->prev_pipe[0] = -1;
 	new->prev_pipe[1] = -1;
 	new->my_status = 0;
-	
+
 	new->cmd = NULL;
 	new->cmd_args = NULL;
 	new->io_files = NULL;
@@ -106,7 +106,7 @@ t_block *init_block(t_ms *ms, t_block *father, char *pmt, int my_id)
 	new->final_out = -1;
 	new->here_doc = NULL;
 	new->here_doc_fd = -1;
-	
+
 	new->my_id = my_id;
 	return (new);
 }
@@ -127,7 +127,7 @@ int	destroy_ms(t_ms *ms)
 int ms_set_path(t_ms *ms)
 {
     int     i;
-    
+
     if (!ms->env)
         return (1);
     i = 0;
