@@ -678,11 +678,8 @@ void rm_corner_parenthesis(char *copy, char *original)
 
 void rm_unnecessary_parenthesis(t_prompt *pmt)
 {
-    //dprintf(2, "before parenthesis [%s]\n", pmt->prompt);
     rm_doubled_parenthesis(pmt);
-    //dprintf(2, "remove doubled [%s]\n", pmt->prompt);
     rm_corner_parenthesis(pmt->copy, pmt->prompt);
-    //dprintf(2, "remove corner [%s]\n", pmt->prompt);
 }
 
 
