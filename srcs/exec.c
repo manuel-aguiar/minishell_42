@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   new.c                                              :+:      :+:    :+:   */
+/*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/12 19:25:02 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/12 22:18:52 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,19 +265,26 @@ int	parent_process(t_block *block, pid_t pid)
 int	process_execution(t_block *block)
 {
 	pid_t   pid;
+	int		builtin;
 
-	pid = fork();
-	if (block->i_am_forked == 0)
+	builtin = check_builtins(block);
+	if (!builtin)
 	{
-    	if (block->father)
-    	    block->father->child_pids[block->my_id] = pid;
-    	else
-    	    block->ms->my_kid = pid;
+		pid = fork();
+		if (block->i_am_forked == 0)
+		{
+			if (block->father)
+				block->father->child_pids[block->my_id] = pid;
+			else
+				block->ms->my_kid = pid;
+		}
+		if (pid == -1)
+			return (perror_msg("fork"));
+		if (!pid)
+			child_process(block);
+		parent_process(block, pid);
 	}
-	if (pid == -1)
-		return (perror_msg("fork"));
-	if (!pid)
-		child_process(block);
-	parent_process(block, pid);
+	else
+		return (exec_builtin(block, builtin));
 	return (1);
 }

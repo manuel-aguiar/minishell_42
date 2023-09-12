@@ -34,6 +34,10 @@ FILES		=		main.c							\
 					signals.c						\
 					wildcard.c						\
 					expansion.c						\
+					cd.c							\
+					env.c							\
+					builtins.c						\
+					builtins_aux.c					\
 					future_libft.c
 
 SRCS		:= 		$(addprefix $(SRC_PATH)/, $(FILES))

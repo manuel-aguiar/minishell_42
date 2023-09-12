@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/12 19:24:27 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/12 21:44:55 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -372,18 +372,11 @@ se o infile falhar, o comando nao executa, erro tipo 1
 
 ERROS:
 
-((cat && cat) && (cat && cat)) | ls
-    - piperead nao é devidamente fechado porque os netos nao sabem quye o
-    avô lhes deu um pipe para escrever.
-    só o filho sabe que é um pipe, mas os netos nao o fecham e os netos cat
-    escrevem indefinidamente.
 
-    - tenho de encontrar forma de os netos saberem sempre que lhes foi dado um pipe;
 
-PIPEX SEEM FIXED, EVERY PIPE LEADS TO A forked
-
-got to fixe conditionals
-
+env -i ./minishell
+$SHLVL antes de exec = shlvl de agora +1;
+valgrind --track-fds=yes --trace-children=yes --leak-check=full --show-leak-kinds=all ./minishell
 
 */
 

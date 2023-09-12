@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/12 19:15:50 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/12 22:40:15 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,33 @@ enum e_redir
     RE_APPEND,
 };
 
+enum e_builtin
+{
+	BI_CD = 1,
+	BI_ENV,
+	BI_PWD,
+	BI_ECHO,
+	BI_EXIT,
+	BI_UNSET,
+	BI_EXPORT,
+};
 
+/*
+	if (len == 2 && ft_strncmp(cmd[0], "cd", 2) == 0)
+		run_cd(cmd, env, final_out);
+	else if (len == 3 && ft_strncmp(cmd[0], "env", 3) == 0)
+		run_env(env, final_out);
+	else if (len == 3 && ft_strncmp(cmd[0], "pwd", 3) == 0)
+		run_pwd(final_out);
+	else if (len == 4 && ft_strncmp(cmd[0], "echo", 4) == 0)
+		run_echo(cmd, final_out);
+	else if (len == 4 && ft_strncmp(cmd[0], "exit", 4) == 0)
+		run_exit();
+	else if (len == 5 && ft_strncmp(cmd[0], "unset", 5) == 0)
+		run_unset(cmd, env);
+	else if (len == 6 && ft_strncmp(cmd[0], "export", 6) == 0)
+
+*/
 
 /* init_destroy */
 int     init_ms(t_ms *ms, char *avzero, char **env);
@@ -299,5 +325,34 @@ int		env_strcmp(void *s1, void *s2);
 int     ft_matrixlen(void *mat);
 int     ft_charmatdup(char ***dest, char **src);
 char	**ft_split_count_replenish(t_cchar *s, t_cchar *og, char *sepset, int *place_count);
+
+/*BUILTINS*/
+
+int		check_builtins(t_block *block);
+int		exec_builtin(t_block *block, int builtin);
+
+int		run_env(t_block *block);
+int		run_pwd(t_block *block);
+int		run_echo(t_block *block);
+int		run_unset(t_block *block);
+
+
+void	run_cd(char **cmd, char **env, int final_out);
+char	*set_beg_path(char *cmd, char **env, char *curpath);
+int		cd_exists(char *cmd, char *curpath, int final_out);
+
+char	*ft_strchr(const char *s, int c);
+
+void	rm_beg_end(char *curpath);
+
+void	env_remove(char **env, int i);
+int		get_corr_env(char *cmd, char **env);
+void	env_substitute(char *cmd, char **env, int i);
+void	env_add(char *cmd, char **env);
+
+
+
+
+
 
 #endif
