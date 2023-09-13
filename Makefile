@@ -5,7 +5,7 @@
 
 NAME 		=		minishell
 
-CC 			= 		cc
+CC 			= 		cc -g
 ## -Wall Wextra Werror
 FLAGS 		= 		-Wall -Werror -Wextra
 ADD_LIB 	= 		-L./$(LIB_PATH) -lft -lreadline

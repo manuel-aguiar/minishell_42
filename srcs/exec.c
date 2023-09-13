@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/12 22:18:52 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/13 19:11:48 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,10 @@ void	error_child_exit(t_block *block, char *function, char *cmd, int errcode, in
     ft_putstr_fd("\n", block->ms->errfd);
 
 
-    //close fds
+    close(block->ms->infd);
+	close(block->ms->outfd);
 
-    destroy_block(block);
+    destroy_ms(block->ms);
     exit(errcode);
 }
 
@@ -77,8 +78,10 @@ void	perror_child_exit(t_block *block, char *function, int errcode, int with_ms)
     perror(function);
 
     //close fds
+    close(block->ms->infd);
+	close(block->ms->outfd);
 
-    destroy_block(block);
+    destroy_ms(block->ms);
     exit(errcode);
 }
 

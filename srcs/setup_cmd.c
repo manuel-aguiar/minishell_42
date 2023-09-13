@@ -330,6 +330,8 @@ int setup_prep_cmd_struct(t_prep_cmd *cmd, t_block *block)
     cmd->cmd_args = NULL;
     cmd->prompt_copy = NULL;
     cmd->cmd_args_copy = NULL;
+	cmd->split_len = 0;
+	cmd->args_len = 0;
     cmd->ms = block->ms;
     if (!split_cmd_by_quotes_spaces(cmd, block))
         return (0);

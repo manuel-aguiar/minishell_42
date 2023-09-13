@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/12 21:44:55 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/13 19:32:44 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ int pipes_and_conditionals(t_block *block, int index, int *must_fork)
         if (pipe(block->pipefd) == -1)
             return (perror_msg("pipe"));
         *must_fork = 1;
-        //printf("block [%s] opened pipe (%d, %d)\n", block->prompt, block->pipefd[0], block->pipefd[1]);
     }
     if (index > 0 && index <= block->op_count \
     && (block->op_id[index - 1] == OP_AND || block->op_id[index - 1] == OP_OR))
@@ -98,11 +97,7 @@ int pipes_and_conditionals(t_block *block, int index, int *must_fork)
         if (block->child_pids[index] == -1)
             return (perror_msg("fork"));
         if (!block->child_pids[index] && index < block->op_count && block->op_id[index] == OP_PIPE)
-        {
-            //dprintf(2, "i'm child [%s], im writing, closing read pipe %d, success? %d\n", block->child_list[index]->prompt, block->pipefd[0], close(block->pipefd[0]));
             close(block->pipefd[0]);
-            //close(block->pipefd[0]);
-        }
     }
     return (1);
 }
@@ -212,7 +207,8 @@ int get_all_here_docs(t_block *block)
             i++;
         }
     }
-    open_here_docs_at_block(block);
+    if (!open_here_docs_at_block(block))
+		return (0);
     return (1);
 }
 
@@ -234,42 +230,24 @@ int execution_tree(t_block *block, int i_am_forked)
         while (block->child_list[i])
         {
             if (i > 0 && block->op_id[i - 1] == OP_PIPE)
-            {
-                //dprintf(2, "main attempting to close prev write %d, success? %d\n", block->pipefd[1], close(block->pipefd[1]));
                 close(block->pipefd[1]);
-            }
             if (block->op_id && pipes_and_conditionals(block, i, &must_fork))
             {
                 if (!(must_fork && block->child_pids[i] != 0))
                     execution_tree(block->child_list[i], must_fork);
-
-
-
             }
             if (i > 0 && block->op_id[i - 1] == OP_PIPE)
-            {
-                //dprintf(2, "main attempting to close prev read %d, success? %d\n", block->prev_pipe[0], close(block->prev_pipe[0]));
                 close(block->prev_pipe[0]);
-            }
-            //if (i < block->op_count && block->op_id[i] == OP_PIPE)
-            //{
-            //    dprintf(2, "main attempting to close prev write %d, success? %d\n", block->pipefd[1], close(block->pipefd[1]));
-            //}
             i++;
         }
         waiting_for_my_children(block, block->op_count + 1);
         close_in_fds(block);
         close_out_fds(block);
-        if (block->father)
-            block->father->my_status = block->my_status;
-        else
-            block->ms->exit_status = block->my_status;
     }
     if(i_am_forked)
     {
-        //printf("block [%s] is forked, must exit\n", block->prompt);
         status = block->my_status;
-        destroy_block(block);
+        destroy_ms(block->ms);
         exit(status);
     }
     destroy_block(block);
@@ -368,15 +346,22 @@ int main(int ac, char **av, char **env)
 
 /*
 
-se o infile falhar, o comando nao executa, erro tipo 1
-
-ERROS:
-
-
-
-env -i ./minishell
-$SHLVL antes de exec = shlvl de agora +1;
-valgrind --track-fds=yes --trace-children=yes --leak-check=full --show-leak-kinds=all ./minishell
+valgrind --track-origins=yes --track-fds=yes --trace-children=yes --leak-check=full --show-leak-kinds=all ./minishell
 
 */
 
+
+/*
+
+ALTERAÇÕES:
+
+main.c          // destroy_ms if block->i_am_forked, retira passagem de status, ja ta no wait
+ms_prompt.c     // setup env, shlvl, atenção a NULL env
+signals.c       // adiciona sigint heredoc para exit child process do heredoc.
+
+manage_files: heredoc... preciso do ms para destruir tudo no child process
+    - verificar se com heredoc da memory leak ja que nao tamos a mudar nada da infraestructura
+exec: apenas altera child exit para destruir o underlying ms
+
+
+*/

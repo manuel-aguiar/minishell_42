@@ -1,5 +1,14 @@
 #include "minishell.h"
 
+t_ms    *sigint_heredoc_where_ms_is(t_ms *ms)
+{
+    static t_ms *save;
+
+    if (ms)
+        save = ms;
+    return (save);
+}
+
 int    save_signal(int *num)
 {
     static int g_my_signal;
@@ -38,9 +47,9 @@ void    signal_handler(int signum)
     if (signum == SIGQUIT)
     {
         code = 131;
-    	save_signal(&code);
-    	rl_on_new_line();
-    	rl_redisplay();
+		save_signal(&code);
+    	//rl_on_new_line();
+    	//rl_redisplay();
     }
 }
 
@@ -48,6 +57,8 @@ int ms_prepare_signal(t_ms *ms, void (*handler)(int))
 {
     ms->sigact.sa_flags = 0;
     ms->sigact.sa_handler = handler;
+	if (sigemptyset(&(ms->sigact.sa_mask)) == -1)
+		return (perror_msg("sigemptyset"));
     if (sigaction(SIGINT, &ms->sigact, NULL) == -1)
         return (perror_msg("sigaction"));
     if (sigaction(SIGQUIT, &ms->sigact, NULL) == -1)

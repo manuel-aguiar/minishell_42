@@ -131,7 +131,7 @@ int ms_set_path(t_ms *ms)
     if (!ms->env)
         return (1);
     i = 0;
-    while (ft_strncmp("PATH", ms->env[i], 4))
+    while (ms->env[i] && ft_strncmp("PATH=", ms->env[i], 5))
         i++;
     if (!ms->env[i])
         ms->path = NULL;
@@ -144,10 +144,57 @@ int ms_set_path(t_ms *ms)
     return (1);
 }
 
+int ms_setup_initial_env(t_ms *ms, char **env)
+{
+    if (env)
+    {
+        if (!ft_charmatdup(&ms->env, env))
+	        return (perror_msg("malloc"));
+	    return (1);
+    }
+    ms->env = malloc(sizeof(*ms->env) * 1);
+    if (!ms->env)
+        return (perror_msg("malloc"));
+    ms->env[0] = NULL;
+    return (1);
+}
+
+int ms_increase_shell_level(t_ms *ms)
+{
+    int i;
+    char *new_lvl_itoa;
+    char *new_shlvl_env;
+
+    if (!ms->env)
+        return (1);
+    i = 0;
+    while (ms->env[i] && ft_strncmp("SHLVL=", ms->env[i], 6))
+        i++;
+    if (!ms->env[i])
+        return (1);
+    new_lvl_itoa = ft_itoa(ft_atoi(&ms->env[i][6]) + 1);
+    if (!new_lvl_itoa)
+        return (perror_msg("malloc"));
+    new_shlvl_env = triple_join("SHLVL=", "", new_lvl_itoa);                        // substituir pelo ft_strjoin na boa;
+    if (!new_shlvl_env)
+    {
+        free(new_lvl_itoa);
+        return (perror_msg("malloc"));
+    }
+    free(new_lvl_itoa);
+    free(ms->env[i]);
+    ms->env[i] = new_shlvl_env;
+    return (1);
+}
+
 int init_ms(t_ms *ms, char *avzero, char **env)
 {
-    if (!ft_charmatdup(&ms->env, env))
-		return (destroy_ms(ms));
+    ms->env = NULL;
+    ms->path = NULL;
+    if (!ms_setup_initial_env(ms, env))
+	    return (destroy_ms(ms));
+	if (!ms_increase_shell_level(ms))
+	return (destroy_ms(ms));
     if (!ms_set_path(ms))
     return (destroy_ms(ms));
     ms->prompt = NULL;
@@ -157,6 +204,7 @@ int init_ms(t_ms *ms, char *avzero, char **env)
 	ms->errfd = STDERR_FILENO;
 	ms->first = NULL;
 	ms->my_kid = -1;
+	sigint_heredoc_where_ms_is(ms);
 	if (!ms_prepare_signal(ms, signal_handler))
 	return (destroy_ms(ms));
 	return (1);

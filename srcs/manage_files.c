@@ -230,18 +230,18 @@ static int	here_doc_temp(t_block *block)
 
 */
 
-void    sigint_heredoc(int signum)
+void    signal_handler_heredoc(int signum)
 {
     int code;
 
     if (signum == SIGINT)
     {
         //printf("\n\n successfully changed the signal handler\n\n\n");
-        printf("\n");
-        //rl_on_new_line();
-    	//rl_replace_line("", 0);
-    	//rl_redisplay();
+		rl_replace_line("", 0);
+        destroy_ms(sigint_heredoc_where_ms_is(NULL));
+		//printf("\n");
     	exit(130);
+
     }
     if (signum == SIGQUIT)
     {
@@ -255,13 +255,11 @@ static int here_doc_fill(t_block *block, char *eof)
 	char	*line;
 	int     count;
 
-    ms_prepare_signal(block->ms, sigint_heredoc);
     count = 0;
 	while (1)
 	{
 	    count++;
 		line = readline("> ");
-
 		if (line)
 		{
 			if (!ft_strncmp(eof, line, ft_strlen(eof)) \
@@ -281,7 +279,7 @@ static int here_doc_fill(t_block *block, char *eof)
 		}
 		else
 		{
-			printf("minishell: warning: here-document at line %d delimited by end-of-file (wanted `%s')\n", count, eof);
+			printf("minishell: warning: here-document at line %d delimited by end-of-file (wanted `%s')\n", count, eof);            //dprintf ft_putstr_fd(block->ms->errfd);
 			break;
 		}
 	}
@@ -294,6 +292,7 @@ int here_doc(t_block *block, char *eof)
     int pid;
     int hc_status;
 
+	hc_status = 0;
     if (!here_doc_temp(block))
         return (0);
     //printf("trying to open file [%s]\n", block->here_doc);
@@ -307,19 +306,23 @@ int here_doc(t_block *block, char *eof)
         return (perror_msg("fork"));
     if (!pid)
     {
+		ms_prepare_signal(block->ms, signal_handler_heredoc);
         here_doc_fill(block, eof);
+		ms_prepare_signal(block->ms, signal_handler);
+		destroy_ms(block->ms);
         exit(0);
     }
+
     waitpid(pid, &hc_status, 0);
     //printf("exit status of child wifexited %d, status %d\n", WIFSIGNALED(hc_status), WTERMSIG(hc_status));
-    if (WIFSIGNALED(hc_status) && WTERMSIG(hc_status))
+    if (WIFEXITED(hc_status) && WEXITSTATUS(hc_status))
     {
         //printf("here doc failed\n");
         unlink(block->here_doc);
-        close(block->final_in);
+        close(block->here_doc_fd);
         hc_status = 130;
         save_signal(&hc_status);
-        rl_redisplay();
+        //rl_redisplay();
         return (0);
     }
 	close(block->here_doc_fd);
