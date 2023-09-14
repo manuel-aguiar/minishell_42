@@ -6,151 +6,196 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:26:37 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/12 22:55:58 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/14 20:38:31 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		run_cd(char **cmd, char **env, int final_out);
-int			cd_exists(char *cmd, char *curpath, int final_out);
-char		*set_beg_path(char *cmd, char **env, char *curpath);
-static char	*aux_cd_paths(char *cmd, char *curpath, char *curr);
+static void	aux_cd_paths(t_block *block, char **curpath, char *curr);
+static int	get_curpath(t_block *block, char **curpath);
+static int	relative_paths(t_block *block, char **curpath, char *curr);
 
-/*
-block->ms->env;     //copia do env
-block->cmd_args      // char **av, ja limpo de expansoes, quotes, etc
-block->final_out;	// fd para escrever com ft_putstr_fd
-block->final_in;    // fd para ler tipo gnl (n/a)
-
-*/
-
-int	run_pwd(t_block *block)
-{
-	char	*pwd;
-
-	pwd = getcwd(NULL, 0);
-	if (!pwd)
-		return (perror_msg("malloc"));
-	ft_putstr_fd(pwd, block->final_out);
-	write(block->final_out, "\n", 1);
-	free(pwd);
-	return (1);
-}
-
-/*
-
-
-
-int	run_cd(t_block *block, char **cmd, char **env, int final_out)
+int	run_cd(t_block *block)
 {
 	int		i;
-	char	*curr;
 	char	*curpath;
+	char	*temp;
+	char	*curr;
 
-	curr = getcwd(NULL, 0);								//malloc can fail
-	curpath = set_beg_path(cmd, env, 0, curr);
-	if (!curpath || !cmd[1])
-	{
-		if (curpath)
-			free(curpath);
-		free(curr);
-		return ;
-	}
-	if (cd_exists(cmd[1], curpath, final_out) == 0)
-		return (free(curr));
-	i = 0;
-	while (ft_strnstr(env[i], "OLDPWD=/", ft_strlen(env[i])))
-		i++;
-	if (env[i] && chdir(curpath) == 0)
-		env[i] = ft_strjoin("OLDPWD=", curr);				// malloc can fail
-	printf("%s\n", env[i]);
-	free(env[i]);
-	free(curpath);
+	curr = getcwd(NULL, 0);
+	temp = ft_strjoin("OLDPWD=", curr);
 	free(curr);
+	curpath = 0;
+	if (cd_exists(block) == 0)
+	{
+		free(temp);
+		return (0);
+	}
+	i = 0;
+	while (ft_strnstr(block->ms->env[i], \
+	"OLDPWD=/", ft_strlen(block->ms->env[i])))
+		i++;
+	env_remove(block, i);
+	env_add(block, temp);
+	printf("%s\n", block->ms->env[i]);
+	free(curpath);
+	free(temp);
 	return (1);
 }
 
-char	*set_beg_path(char **cmd, char **env, char *curpath, char *curr)
+static int	upd_pwd(t_block *block)
+{
+	char	*curr;
+	char	*temp;
+	int		i;
+
+	i = 0;
+	curr = getcwd(NULL, 0);
+	while (ft_strnstr(block->ms->env[i], "PWD=", 4))
+		i++;
+	env_remove(block, i);
+	temp = ft_strjoin("PWD=", curr);
+	free(curr);
+	if (!temp)
+	{
+		perror("malloc");
+		return (0);
+	}
+	env_add(block, temp);
+	printf("%s\n", temp);
+	free(temp);
+	return (1);
+}
+
+static int	cd_error(t_block *block, int arg)
+{
+	write(1, "minishell: ", 11);
+	ft_putstr_fd(block->cmd_args[arg], block->final_out);
+	write(1, ": No such file or directory\n", 28);
+	return (0);
+}
+
+int	cd_exists(t_block *block)
 {
 	int		i;
 
 	i = 0;
-	while (ft_strncmp(env[i], "HOME=", 5) != 0)
+	while (ft_strncmp(block->ms->env[i], "HOME=", 5) != 0)
 		i++;
-	if (!cmd[1] && !env[i])
+	if (!block->cmd_args[1] && !block->ms->env[i])
+		return (1);
+	else if ((!block->cmd_args[1] || block->cmd_args[1] \
+	&& block->cmd_args[1][0] == '~') && block->ms->env[i])
 	{
-		free(curr);
-		return (NULL);
+		if (chdir(&block->ms->env[i][5]) != 0)
+			return (cd_error(block, 0));
 	}
-	else if (!cmd[1] && env[i])
-		curpath = ft_strdup(&env[i][5]);
-	else if (cmd[1] && cmd[1] == '-' && !cmd[2])
+	else if (block->cmd_args[1])
+	{
+		if (chdir(block->cmd_args[1]) != 0)
+			return (cd_error(block, 1));
+	}
+	if (!upd_pwd(block))
+		return (0);
+	return (1);
+}
+
+/*
+static int	get_curpath(t_block *block, char **curpath)
+{
+	char	*curr;
+
+	curr = getcwd(NULL, 0);
+	if (!curr)
+	{
+		perror("malloc");
+		return (0);
+	}
+	if (!set_beg_path(block, curpath, curr) \
+	|| !curpath || !block->cmd_args[1])
+	{
+		if (*curpath)
+			free(*curpath);
+		free(curr);
+		return (0);
+	}
+	free(curr);
+	if (cd_exists(block) == 0)
+		return (0);
+	return (1);
+}
+
+int	set_beg_path(t_block *block, char **curpath, char *curr)
+{
+	int		i;
+
+	i = 0;
+	while (ft_strncmp(block->ms->env[i], "HOME=", 5) != 0)
+		i++;
+	if (!block->cmd_args[1] && !block->ms->env[i])
+		return (1);
+	else if (!block->cmd_args[1] && block->ms->env[i])
+		*curpath = ft_strdup(&block->ms->env[i][5]);
+	else if (block->cmd_args[1] && block->cmd_args[1][0] == '-')
 	{
 		i = 0;
-		while (ft_strnstr(env[i], "OLDPWD=/", ft_strlen(env[i])))
+		while (!ft_strnstr(block->ms->env[i], "OLDPWD=", 7))
 			i++;
-		curpath = ft_strdup(&env[i][5]);
+		*curpath = ft_strdup(&block->ms->env[i][7]);
 	}
 	else
-		curpath = aux_cd_paths(cmd[1], curpath, curr);
-	free(curr);
-	return (curpath);
+		aux_cd_paths(block, curpath, curr);
+	if (!(*curpath))
+	{
+		perror("malloc");
+		return (0);
+	}
+	return (1);
 }
 
-static char	*aux_cd_paths(char *cmd, char *curpath, char *curr)
+static void	aux_cd_paths(t_block *block, char **curpath, char *curr)
 {
 	int		i;
 	char	*temp;
 
 	i = 0;
-	if (cmd && cmd[0] == '/')
+	if (block->cmd_args[1] && block->cmd_args[1][0] == '/')
 	{
-		curpath = ft_strdup(cmd);						//malloc, perror_msg
-		i = ft_strlen(curpath);
-		while (curpath[--i] == '.' || (curpath[i] == '/' \
-		&& i - 1 >= 0 && curpath[i - 1] == '.'))
-			curpath[i] = 0;
+		*curpath = ft_strdup(block->cmd_args[1]);
+		if (!(*curpath))
+		{
+			perror("malloc");
+			return ;
+		}
+		i = ft_strlen(*curpath);
+		while (*curpath[--i] == '.' || (*curpath[i] == '/' \
+		&& i - 1 >= 0 && *curpath[i - 1] == '.'))
+			*curpath[i] = 0;
 	}
 	else
-	{
-		if (curr[ft_strlen(curr)] != '/')
-			temp = ft_strjoin(curr, "/");
-		else
-			temp = ft_strdup(curr);
-		// test teemp and perror_msg;
-		curpath = ft_strjoin(temp, cmd);				//malloc, perror_msg
-		free(temp);
-	}
-	return (curpath);
+		relative_paths(block, curpath, curr);
 }
 
-int	cd_exists(char *cmd, char *curpath, int final_out)
+static int	relative_paths(t_block *block, char **curpath, char *curr)
 {
-	char	*curr;
 	char	*temp;
-	// int		i;
 
-	// i = 0;
-	if (curpath)
+	if (curr[ft_strlen(curr)] != '/')
+		temp = ft_strjoin(curr, "/");
+	else
+		temp = ft_strdup(curr);
+	if (!temp)
 	{
-		if (chdir(curpath) != 0)
-		{
-			write(1, "minishell: ", 11);
-			ft_putstr_fd(cmd, final_out);
-			write(1, ": No such file or directory\n", 28);
-			free(curpath);
-			return (0);
-		}
-		temp = getcwd(NULL, 0);								// malloc can fail
-		curr = ft_strjoin("PWD=", temp);					// malloc can fail
-		free(temp);
-		// while (ft_strnstr(env[i], "PWD=/", ft_strlen(env[i])))
-		// 	i++;
-		// env[i] = 0;
-		// env[i] = ft_strdup(curr);
-		printf("%s\n", curr);
-		free(curr);
+		perror("malloc");
+		return (0);
+	}
+	*curpath = ft_strjoin(temp, block->cmd_args[1]);
+	free(temp);
+	if (!(*curpath))
+	{
+		perror("malloc");
+		return (0);
 	}
 	return (1);
 }

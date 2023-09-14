@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/14 19:04:51 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/14 20:01:45 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -340,25 +340,28 @@ char	**ft_split_count_replenish(t_cchar *s, t_cchar *og, char *sepset, int *plac
 int		check_builtins(t_block *block);
 int		exec_builtin(t_block *block, int builtin);
 
+int     run_cd(t_block *block);
 int		run_env(t_block *block);
 int		run_pwd(t_block *block);
 int		run_echo(t_block *block);
 int		run_unset(t_block *block);
+int		run_export(t_block *block);
 int		run_exit(t_block *block);
 
-
-void	run_cd(char **cmd, char **env, int final_out);
-char	*set_beg_path(char *cmd, char **env, char *curpath);
-int		cd_exists(char *cmd, char *curpath, int final_out);
+int		set_beg_path(t_block *block, char **curpath, char *curr);
+int		cd_exists(t_block *block);
 
 char	*ft_strchr(const char *s, int c);
 
 void	rm_beg_end(char *curpath);
 
-void	env_remove(char **env, int i);
-int		get_corr_env(char *cmd, char **env);
-void	env_substitute(char *cmd, char **env, int i);
-void	env_add(char *cmd, char **env);
+void	env_remove(t_block *block, int i);
+int		get_corr_env(t_block *block, int b, char t);
+void	env_substitute(t_block *block, int i, int j);
+void	env_add(t_block *block, char *new);
+
+int	    ft_isdigit(int c);
+int	    ft_isalpha(int c);
 
 
 

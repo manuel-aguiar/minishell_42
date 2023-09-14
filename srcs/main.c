@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/14 19:33:33 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/14 20:47:48 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,8 +124,13 @@ int pipes_and_conditionals(t_block *block, int index, int *must_fork)
         block->child_pids[index] = fork();
         if (block->child_pids[index] == -1)
             return (perror_msg("fork"));
-        if (!block->child_pids[index] && index < block->op_count && block->op_id[index] == OP_PIPE)
-            close(block->pipefd[0]);
+        if (!block->child_pids[index])
+		{
+			if (index < block->op_count && block->op_id[index] == OP_PIPE)
+				close(block->pipefd[0]);
+			//if (index > 0 && block->op_id[index - 1] == OP_PIPE)
+			//	close(block->prev_pipe[1]);
+		}
     }
     return (1);
 }
@@ -372,7 +377,9 @@ int ms_prompt_loop(t_ms *ms)
 	return (1);
 }
 
-
+/*
+valgrind --track-fds=yes --trace-children=yes --leak-check=full --show-leak-kinds=all ./minishell
+*/
 
 int main(int ac, char **av, char **env)
 {

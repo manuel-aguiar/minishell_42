@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_aux.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:27:58 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/14 19:35:34 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/14 17:01:58 by mnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	check_builtins(t_block *block)
 int	exec_builtin(t_block *block, int builtin)
 {
 	if (builtin == BI_CD)
-		return (1);											//replace run_cd
+		return (run_cd(block));
 	else if (builtin == BI_ENV)
 		return (run_env(block));
 	else if (builtin == BI_PWD)
@@ -55,10 +55,24 @@ int	exec_builtin(t_block *block, int builtin)
 	else if (builtin == BI_ECHO)
 		return (run_echo(block));
 	else if (builtin == BI_EXIT)
-		return (run_exit(block));
+		return (1);
 	else if (builtin == BI_UNSET)
-		return (1);
+		return (run_unset(block));
 	else if (builtin == BI_EXPORT)
-		return (1);
+		return (run_export(block));
 	return (1);
+}
+
+int	ft_isalpha(int c)
+{
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+		return (1);
+	return (0);
+}
+
+int	ft_isdigit(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
 }

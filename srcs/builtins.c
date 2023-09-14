@@ -3,40 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 17:09:22 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/14 18:35:27 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/14 19:24:42 by mnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-/*
-int	run_builtins(char **cmd, char **env, int final_out)
+int	run_pwd(t_block *block)
 {
-	int	len;
+	char	*pwd;
+	int		i;
 
-	len = ft_strlen(cmd[0]);
-	if (len == 2 && ft_strncmp(cmd[0], "cd", 2) == 0)
-		return (1);																		//replace with run_cd
-	else if (len == 3 && ft_strncmp(cmd[0], "env", 3) == 0)
-		run_env(env, final_out);
-	else if (len == 3 && ft_strncmp(cmd[0], "pwd", 3) == 0)
-		run_pwd(final_out);
-	else if (len == 4 && ft_strncmp(cmd[0], "echo", 4) == 0)
-		run_echo(cmd, final_out);
-	else if (len == 4 && ft_strncmp(cmd[0], "exit", 4) == 0)
-		run_exit();
-	else if (len == 5 && ft_strncmp(cmd[0], "unset", 5) == 0)
-		run_unset(cmd, env);
-	else if (len == 6 && ft_strncmp(cmd[0], "export", 6) == 0)
-		run_export(cmd, env, final_out);
-	else
-		return (0);
+	i = 0;
+	while (!ft_strnstr(block->ms->env[i], "PWD=", 4))
+		i++;
+	pwd = ft_strdup(&block->ms->env[i][4]);
+	if (!pwd)
+		return (perror_msg("malloc"));
+	ft_putstr_fd(pwd, block->final_out);
+	write(block->final_out, "\n", 1);
+	free(pwd);
 	return (1);
-}*/
+}
 
 int	run_echo(t_block *block)
 {
@@ -56,7 +47,7 @@ int	run_echo(t_block *block)
 	}
 	while (block->cmd_args[++i])
 	{
-		if (i > 1 + jump && ft_strlen(block->cmd_args[i - 1]) > 0)
+		if (i > 1 + jump)
 			write(block->final_out, " ", 1);
 		ft_putstr_fd(block->cmd_args[i], block->final_out);
 	}
@@ -64,8 +55,6 @@ int	run_echo(t_block *block)
 		write(block->final_out, "\n", 1);
 	return (1);
 }
-
-
 
 int	run_unset(t_block *block)
 {
@@ -77,34 +66,61 @@ int	run_unset(t_block *block)
 	j = 0;
 	while (block->cmd_args[++j])
 	{
-		i = get_corr_env(block->cmd_args[j], block->ms->env);
-		if (i != -1)
-			env_remove(block->ms->env, i);
+		i = get_corr_env(block, j, 'u');
+		if (i == -2)
+			continue ;
+		else if (i != -1)
+			env_remove(block, i);
 	}
 	return (1);
 }
 
+static int	run_exp_list(t_block *block)
+{
+	int	i;
+	int	f;
 
-/*
-void	run_export(char **cmd, char **env, int final_out)
+	i = 0;
+	if (!block->ms->env)
+		return (1);
+	while (block->ms->env[i])
+	{
+		f = -1;
+		write(block->final_out, "declare -x ", 11);
+		while (block->ms->env[i][++f] && block->ms->env[i][f] != '=')
+			write(block->final_out, &block->ms->env[i][f], 1);
+		write(block->final_out, &block->ms->env[i][f], 1);
+		f++;
+		if (ft_strchr(block->ms->env[i], '='))
+			write(block->final_out, "\"", 1);
+		ft_putstr_fd(&block->ms->env[i][f], block->final_out);
+		if (ft_strchr(block->ms->env[i], '='))
+			write(block->final_out, "\"", 1);
+		write(block->final_out, "\n", 1);
+		i++;
+	}
+	return (1);
+}
+
+int	run_export(t_block *block)
 {
 	int		i;
 	int		j;
 
 	j = 0;
-	if (!cmd[1])
-		run_env(env, final_out);
+	if (!block->cmd_args[1])
+		run_exp_list(block);
 	else
 	{
-		while (cmd[++j])
+		while (block->cmd_args[++j])
 		{
-			i = get_corr_env(cmd[j], env);
-			if (i == -1)
-				env_add(cmd[j], env);
-			else
-				env_substitute(cmd[j], env, i);
+			i = get_corr_env(block, j, 'e');
+			if (i == -2)
+				continue ;
+			else if (i != -1)
+				env_remove(block, i);
+			env_add(block, block->cmd_args[j]);
 		}
 	}
-	run_env(env, final_out);
+	return (1);
 }
-*/
