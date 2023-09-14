@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/14 19:16:54 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/14 19:33:33 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 
 int print_child_pids(t_block *block)
 {
-    printf("i am [%s], mypid %d, starting status %d, my children are:\n       ", block->prompt, block->my_status, getpid());
+    printf("i am [%s], starting status %d, mypid %d, my children are:\n       ", block->prompt, block->my_status, getpid());
     int i = 0;
     while (i < block->op_count + 1)
     {
