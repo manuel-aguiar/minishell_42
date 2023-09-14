@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:27:58 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/14 23:31:22 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/15 00:06:47 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	exec_builtin(t_block *block, int builtin)
 	else if (builtin == BI_ECHO)
 		return (run_echo(block));
 	else if (builtin == BI_EXIT)
-		return (1);
+		return (run_exit(block));
 	else if (builtin == BI_UNSET)
 		return (run_unset(block));
 	else if (builtin == BI_EXPORT)

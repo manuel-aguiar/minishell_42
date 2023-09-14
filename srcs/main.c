@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/14 23:31:46 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/15 00:05:58 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int waiting_for_my_children(t_block *block, int index)
     i = 0;
     //printf("block [%s] waiting for %d children \n", block->prompt, block->op_count + 1);
     //printf("i am [%s], starting status %d, waiting, mypid %d\n", block->prompt, block->my_status, getpid());
-    //print_child_pids(block);
+    print_child_pids(block);
     while (i < index)
     {
         //printf("child [%s], index, %d, has pid? %d\n", block->child_list[i]->prompt, i, block->child_pids[i]);
@@ -59,18 +59,18 @@ int waiting_for_my_children(t_block *block, int index)
             waitpid(block->child_pids[i], &block->my_status, 0);
             if (WIFEXITED(block->my_status))
                 block->my_status = WEXITSTATUS(block->my_status);
-			//printf("        [%s] changed status to %d\n", block->prompt, block->my_status);
+			printf("        [%s] changed status to %d\n", block->prompt, block->my_status);
             block->child_pids[i] = 0;
         }
 		else if (block->child_exit_status[i] >= 0)
 		{
-			//printf("        [%s] changed status to %d\n", block->prompt, block->my_status);
+			printf("        [%s] changed status to %d\n", block->prompt, block->my_status);
 			block->my_status = block->child_exit_status[i];
 			block->child_exit_status[i] = -1;
 		}
         i++;
     }
-    //printf("i am [%s], ending status %d, moving on, mypid %d\n", block->prompt, block->my_status, getpid());
+    printf("i am [%s], ending status %d, moving on, mypid %d\n", block->prompt, block->my_status, getpid());
     if (block->father)
         block->father->my_status = block->my_status;
     block->ms->exit_status = block->my_status;
@@ -283,10 +283,10 @@ int execution_tree(t_block *block, int i_am_forked)
     else
         block->my_status = 1;               //unnecessary parenthesis status
 
-    //printf("block [%s], my status %d, my address %p\n", block->prompt, block->my_status, block);
+    printf("block [%s], my status %d, my address %p\n", block->prompt, block->my_status, block);
     if(i_am_forked)
     {
-        //printf("block [%s] is forked, my status %d, my pid %d\n", block->prompt, block->my_status, getpid());
+        printf("block [%s] is forked, my status %d, my pid %d\n", block->prompt, block->my_status, getpid());
         status = block->my_status;
         destroy_ms(block->ms);
         exit(status);
@@ -295,7 +295,7 @@ int execution_tree(t_block *block, int i_am_forked)
 		block->father->child_exit_status[block->my_id] = block->my_status;
 	else
 		block->ms->exit_status = block->my_status;
-    //printf("block [%s], my status %d, my address %p, not forked ready to destroy\n", block->prompt, block->my_status, block);
+    printf("block [%s], my status %d, my address %p, not forked ready to destroy\n", block->prompt, block->my_status, block);
     destroy_block(block);
     return (1);
 }
@@ -356,7 +356,7 @@ int ms_prompt_loop(t_ms *ms)
     	    setup_execution_tree(ms, NULL, ms->prompt, 0);
     	    if (save_signal(NULL) != EXIT_SIGINT)
     	        get_all_here_docs(ms->first);
-    	    //print_execution_tree(ms->first);
+    	    print_execution_tree(ms->first);
     	    //printf("starting execution\n");
     	    if (save_signal(NULL) != EXIT_SIGINT)
     	        execution_tree(ms->first, 0);

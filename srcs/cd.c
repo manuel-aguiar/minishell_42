@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:26:37 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/14 23:28:31 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/15 00:07:14 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static int	upd_pwd(t_block *block)
 
 static int	cd_error(t_block *block, int arg)
 {
-	ft_putstr_fd("minishell: ", block->final_out);
+	ft_putstr_fd("minishell: cd: ", block->final_out);
 	ft_putstr_fd(block->cmd_args[arg], block->final_out);
 	ft_putstr_fd(": No such file or directory\n", block->final_out);
 	return (0);
