@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/14 20:47:48 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/14 23:31:46 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,15 @@ int waiting_for_my_children(t_block *block, int index)
             waitpid(block->child_pids[i], &block->my_status, 0);
             if (WIFEXITED(block->my_status))
                 block->my_status = WEXITSTATUS(block->my_status);
+			//printf("        [%s] changed status to %d\n", block->prompt, block->my_status);
             block->child_pids[i] = 0;
         }
 		else if (block->child_exit_status[i] >= 0)
 		{
+			//printf("        [%s] changed status to %d\n", block->prompt, block->my_status);
 			block->my_status = block->child_exit_status[i];
 			block->child_exit_status[i] = -1;
 		}
-
         i++;
     }
     //printf("i am [%s], ending status %d, moving on, mypid %d\n", block->prompt, block->my_status, getpid());
@@ -285,7 +286,7 @@ int execution_tree(t_block *block, int i_am_forked)
     //printf("block [%s], my status %d, my address %p\n", block->prompt, block->my_status, block);
     if(i_am_forked)
     {
-        //printf("block [%s] is forked, my status %d\n", block->prompt, block->my_status);
+        //printf("block [%s] is forked, my status %d, my pid %d\n", block->prompt, block->my_status, getpid());
         status = block->my_status;
         destroy_ms(block->ms);
         exit(status);

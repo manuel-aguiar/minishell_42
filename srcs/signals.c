@@ -63,5 +63,7 @@ int ms_prepare_signal(t_ms *ms, void (*handler)(int))
         return (perror_msg("sigaction"));
     if (sigaction(SIGQUIT, &ms->sigact, NULL) == -1)
         return (perror_msg("sigaction"));
+    if (sigaction(SIGPIPE, &ms->sigact, NULL) == -1)
+        return (perror_msg("sigaction"));
     return (1);
 }

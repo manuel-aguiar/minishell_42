@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 17:09:22 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/14 19:24:42 by mnascime         ###   ########.fr       */
+/*   Updated: 2023/09/14 23:29:04 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	run_unset(t_block *block)
 	j = 0;
 	while (block->cmd_args[++j])
 	{
-		i = get_corr_env(block, j, 'u');
+		i = get_corr_env(block, block->cmd_args[j], 0);
 		if (i == -2)
 			continue ;
 		else if (i != -1)
@@ -86,17 +86,18 @@ static int	run_exp_list(t_block *block)
 	while (block->ms->env[i])
 	{
 		f = -1;
-		write(block->final_out, "declare -x ", 11);
+		ft_putstr_fd("declare -x ", block->final_out);
 		while (block->ms->env[i][++f] && block->ms->env[i][f] != '=')
 			write(block->final_out, &block->ms->env[i][f], 1);
-		write(block->final_out, &block->ms->env[i][f], 1);
+		if (ft_strchr(block->ms->env[i], '='))
+			write(block->final_out, &block->ms->env[i][f], 1);
 		f++;
 		if (ft_strchr(block->ms->env[i], '='))
-			write(block->final_out, "\"", 1);
+			ft_putstr_fd("\"", block->final_out);
 		ft_putstr_fd(&block->ms->env[i][f], block->final_out);
 		if (ft_strchr(block->ms->env[i], '='))
-			write(block->final_out, "\"", 1);
-		write(block->final_out, "\n", 1);
+			ft_putstr_fd("\"", block->final_out);
+		ft_putstr_fd("\n", block->final_out);
 		i++;
 	}
 	return (1);
@@ -114,8 +115,9 @@ int	run_export(t_block *block)
 	{
 		while (block->cmd_args[++j])
 		{
-			i = get_corr_env(block, j, 'e');
-			if (i == -2)
+			i = get_corr_env(block, block->cmd_args[j], 1);
+			if (i == -2 || (i > -1 && !ft_strchr(block->cmd_args[j], '=') \
+			&& block->ms->env[i] && ft_strchr(block->ms->env[i], '=')))
 				continue ;
 			else if (i != -1)
 				env_remove(block, i);

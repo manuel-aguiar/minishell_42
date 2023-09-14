@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 19:21:09 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/14 19:10:24 by mnascime         ###   ########.fr       */
+/*   Updated: 2023/09/14 23:29:45 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,40 +31,48 @@ int	run_env(t_block *block)
 	return (1);
 }
 
-void	env_remove(t_block *block, int i)
+int	env_remove(t_block *block, int index)
 {
-	char	**dupenv;
-	int		f;
+	char	**res;
+	int		len;
+	int		i;
+	int		found;
 
-	while (block->ms->env[i] && block->ms->env[i + 1])
+	len = ft_matrixlen(block->ms->env);
+	res = malloc(len * sizeof(*res));
+	if (!res)
+		return (0);
+	i = 0;
+	found = 0;
+	while (i < len - 1)
 	{
-		block->ms->env[i] = block->ms->env[i + 1];
+		if (i == index)
+		{
+			found = 1;
+			free(block->ms->env[i]);
+		}
+		res[i] = block->ms->env[i + found];
 		i++;
 	}
-	block->ms->env[i] = NULL;
-	free(block->ms->env[i]);
-	if (!ft_charmatdup(&dupenv, block->ms->env))
-		return ;
-	f = -1;
-	while (block->ms->env[++f])
-		free(block->ms->env[f]);
+	res[i] = NULL;
 	free(block->ms->env);
-	block->ms->env = dupenv;
+	block->ms->env = res;
+	return (1);
 }
 
-static int	env_error(t_block *block, char t, int arg)
+static int	env_error(t_block *block, int is_exporting, char *arg)
 {
-	write(1, "minishell: ", 11);
-	if (t == 'e')
+	ft_putstr_fd("minishell: ", block->final_out);
+	if (is_exporting)
 		ft_putstr_fd("export: `", block->final_out);
-	else if (t == 'u')
+	else
 		ft_putstr_fd("unset: `", block->final_out);
-	ft_putstr_fd(block->cmd_args[arg], block->final_out);
-	write(1, "': not a valid identifier\n", 26);
+	ft_putstr_fd(arg, block->final_out);
+	ft_putstr_fd("': not a valid identifier\n", block->final_out);
 	return (-2);
 }
 
-int	get_corr_env(t_block *block, int b, char t)
+int	get_corr_env(t_block *block, char *arg, int is_exporting)
 {
 	int		i;
 	size_t	f;
@@ -72,13 +80,13 @@ int	get_corr_env(t_block *block, int b, char t)
 
 	i = -1;
 	j = 0;
-	while (block->cmd_args[b][j] && (ft_isalpha(block->cmd_args[b][j])) \
-	|| ft_isdigit(block->cmd_args[b][j]) \
-	|| (block->cmd_args[b][j] == '=' && t == 'e'))
+	while (arg[j] && (ft_isalpha(arg[j])) \
+	|| ft_isdigit(arg[j]) \
+	|| (arg[j] == '=' && is_exporting))
 		j++;
-	if ((block->cmd_args[b][0] == '=' && t == 'e') \
-	|| (ft_strchr(block->cmd_args[b], '=') && t == 'u'))
-		return (env_error(block, t, b));
+	if ((arg[0] == '=' && is_exporting) \
+	|| (ft_strchr(arg, '=') && !is_exporting))
+		return (env_error(block, is_exporting, arg));
 	while (block->ms->env[++i])
 	{
 		f = 0;
@@ -86,7 +94,7 @@ int	get_corr_env(t_block *block, int b, char t)
 			f++;
 		if (--f < --j)
 			f = j;
-		if (ft_strncmp(block->ms->env[i], block->cmd_args[b], f) == 0)
+		if (ft_strncmp(block->ms->env[i], arg, f) == 0)
 			return (i);
 	}
 	return (-1);

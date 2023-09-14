@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/14 20:01:45 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/14 23:28:00 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <readline/history.h>
 # include <dirent.h>
 # include <signal.h>
+# include <sys/ioctl.h>
 
 
 # include "libft.h"
@@ -355,13 +356,13 @@ char	*ft_strchr(const char *s, int c);
 
 void	rm_beg_end(char *curpath);
 
-void	env_remove(t_block *block, int i);
-int		get_corr_env(t_block *block, int b, char t);
-void	env_substitute(t_block *block, int i, int j);
+int	    get_corr_env(t_block *block, char *arg, int is_exporting);
 void	env_add(t_block *block, char *new);
 
 int	    ft_isdigit(int c);
 int	    ft_isalpha(int c);
+
+int     env_remove(t_block *block, int index);
 
 
 

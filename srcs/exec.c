@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/14 20:41:16 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/14 23:15:55 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,6 +252,7 @@ int	parent_process(t_block *block, pid_t pid)
     	waitpid(pid, &block->my_status, 0);
         if (WIFEXITED(block->my_status))
             block->my_status = WEXITSTATUS(block->my_status);
+		printf(" block [%s} returned with status %d\n", block->prompt, block->my_status);
 	}
 	return (1);
 }
@@ -265,6 +266,33 @@ int	parent_process(t_block *block, pid_t pid)
 
 */
 
+void    signal_builtin_pipes(int signum)
+{
+    int code;
+
+    if (signum == SIGINT)
+    {
+        printf("\n");
+    	rl_on_new_line();
+    	rl_replace_line("", 0);
+    	rl_redisplay();
+    	code = 130;
+    	save_signal(&code);
+    }
+    if (signum == SIGQUIT)
+    {
+        code = 131;
+		save_signal(&code);
+    	//rl_on_new_line();
+    	//rl_redisplay();
+    }
+    if (signum == SIGPIPE)
+    {
+    	destroy_ms(sigint_heredoc_where_ms_is(NULL));
+		exit(13);
+    }
+}
+
 int	process_execution(t_block *block)
 {
 	pid_t   pid;
@@ -274,7 +302,7 @@ int	process_execution(t_block *block)
 	if (!builtin)
 	{
 		pid = fork();
-		if (block->i_am_forked == 0)
+		if (!block->i_am_forked)
 		{
 			if (block->father)
 				block->father->child_pids[block->my_id] = pid;
@@ -288,6 +316,17 @@ int	process_execution(t_block *block)
 		parent_process(block, pid);
 	}
 	else
-		return (exec_builtin(block, builtin));
+	{
+		ms_prepare_signal(block->ms, signal_builtin_pipes);
+		exec_builtin(block, builtin);
+		close_in_fds(block);
+		close_out_fds(block);
+		ms_prepare_signal(block->ms, signal_handler);
+		//if (block->father && block->my_id > 0 && block->father->op_id[block->my_id - 1] == OP_PIPE)
+		//	close(block->prev_pipe[0]);
+		//if (block->father && block->my_id < block->father->op_count && block->father->op_id[block->my_id] == OP_PIPE)
+		//	close(block->pipefd[1]);
+	}
 	return (1);
 }
+
