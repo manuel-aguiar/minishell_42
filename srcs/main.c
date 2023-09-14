@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/14 18:36:33 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/14 19:16:54 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,13 @@ int waiting_for_my_children(t_block *block, int index)
             if (WIFEXITED(block->my_status))
                 block->my_status = WEXITSTATUS(block->my_status);
             block->child_pids[i] = 0;
-
         }
+		else if (block->child_exit_status[i] >= 0)
+		{
+			block->my_status = block->child_exit_status[i];
+			block->child_exit_status[i] = -1;
+		}
+
         i++;
     }
     //printf("i am [%s], ending status %d, moving on, mypid %d\n", block->prompt, block->my_status, getpid());
@@ -280,6 +285,10 @@ int execution_tree(t_block *block, int i_am_forked)
         destroy_ms(block->ms);
         exit(status);
     }
+	else if (block->father)
+		block->father->child_exit_status[block->my_id] = block->my_status;
+	else
+		block->ms->exit_status = block->my_status;
     //printf("block [%s], my status %d, my address %p, not forked ready to destroy\n", block->prompt, block->my_status, block);
     destroy_block(block);
     return (1);

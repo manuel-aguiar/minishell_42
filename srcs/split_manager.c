@@ -227,11 +227,13 @@ int dump_split_to_block(t_block *block, t_split_prompt *split)
     if (!block->is_cmd)
     {
         block->child_list = malloc(sizeof(*block->child_list) * (block->op_count + 2));
-        if (!block->child_list)
+		block->child_exit_status = malloc(sizeof(*block->child_list) * (block->op_count + 1));
+        if (!block->child_list || !block->child_exit_status)
         {
             destroy_block(block);
             return (perror_msg("malloc"));
         }
+		ft_memset(block->child_exit_status, -1, sizeof(int) * (block->op_count + 1));
     }
     return (1);
 }

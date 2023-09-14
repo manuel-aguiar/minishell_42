@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/14 18:46:34 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/14 19:04:51 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ struct s_block
     t_block     **child_list;
     char        **child_prompts;
     pid_t       *child_pids;
+	int			*child_exit_status;
     int         *op_id;
     int         op_count;
     int         is_cmd;

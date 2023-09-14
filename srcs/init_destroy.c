@@ -37,6 +37,8 @@ void	destroy_block(void *og_block)
 	    ft_free_charmat_null(&block->child_prompts, free);
 	if (block->child_pids)
 		ft_free_set_null(&block->child_pids);
+	if (block->child_exit_status)
+		ft_free_set_null(&block->child_exit_status);
 	if (block->op_id)
 		ft_free_set_null(&block->op_id);
     if (block->father)
@@ -89,6 +91,7 @@ t_block *init_block(t_ms *ms, t_block *father, char *pmt, int my_id)
 	new->child_prompts = NULL;
 	new->child_list = NULL;
 	new->child_pids = NULL;
+	new->child_exit_status = NULL;
     new->op_count = 0;
     new->op_id = NULL;
 	new->is_cmd = 0;
