@@ -39,12 +39,12 @@ void	destroy_block(void *og_block)
 		ft_free_set_null(&block->child_pids);
 	if (block->op_id)
 		ft_free_set_null(&block->op_id);
-	if (block->prompt)
+    if (block->father)
+        block->father->child_list[block->my_id] = NULL;
+    else
+        block->ms->first = NULL;
+    if (block->prompt)
 	    ft_free_set_null(&block->prompt);
-	if (block->father)
-	    block->father->child_list[block->my_id] = NULL;
-	else
-	    block->ms->first = NULL;
 	if (block->io_files)
 	    vdmlist_destroy(&block->io_files, destroy_redir);
 	if (block->here_doc)
@@ -92,6 +92,8 @@ t_block *init_block(t_ms *ms, t_block *father, char *pmt, int my_id)
     new->op_count = 0;
     new->op_id = NULL;
 	new->is_cmd = 0;
+	new->has_unnecessary_parenthesis = 0;
+	new->parenthesis_fork = 0;
 
 	new->pipefd[0] = -1;
 	new->pipefd[1] = -1;
@@ -204,7 +206,7 @@ int init_ms(t_ms *ms, char *avzero, char **env)
 	ms->errfd = STDERR_FILENO;
 	ms->first = NULL;
 	ms->my_kid = -1;
-	sigint_heredoc_where_ms_is(ms);
+	sigint_heredoc_where_ms_is(ms);                             // potentially remove this, check heredoc sigint
 	if (!ms_prepare_signal(ms, signal_handler))
 	return (destroy_ms(ms));
 	return (1);

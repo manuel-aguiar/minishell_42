@@ -74,7 +74,6 @@ char *split_copy_empty_quotes_and_parenthesis(char *prompt)
     }
     set_in_between_to(copy, '"', '"', -1);
     set_in_between_to(copy, '\'', '\'', -1);
-    rm_corner_parenthesis(copy, prompt);
     set_in_between_to(copy, '(', ')', -1);
     return (copy);
 }
@@ -83,7 +82,6 @@ char *split_copy_empty_quotes_and_parenthesis(char *prompt)
 int split_extract_redirections(t_split_prompt *split)
 {
     int     i;
-    char    *copy;
 
     split->get_redir = ft_split_count_replenish(split->prompt_copy, split->prompt_orig, " ", &split->redir_split_len);
     if (!split->get_redir)
@@ -99,12 +97,7 @@ int split_extract_redirections(t_split_prompt *split)
             i++;
     }
     free(split->children[0]);
-    copy = ft_strdup(split->get_redir[0]);
-    if (!copy)
-        return (perror_msg("malloc"));
-    rm_corner_parenthesis(copy, split->get_redir[0]);
     split->children[0] = split->get_redir[0];
-    free(copy);
     ft_free_set_null(&split->get_redir);
     return (1);
 }
@@ -203,6 +196,8 @@ int setup_split_prompt_struct(t_split_prompt *split, t_block *block)
     split->child_pids = NULL;
     split->get_redir = NULL;
     split->io_files = NULL;
+    split->parenthesis_fork = 0;
+    split->has_unnecessary_parenthesis = 0;
     split->prompt_copy = split_copy_empty_quotes_and_parenthesis(split->prompt_orig);
     if (!split->prompt_copy)
         return (free_split_prompt(split));
@@ -226,6 +221,8 @@ int dump_split_to_block(t_block *block, t_split_prompt *split)
     block->op_id = split->op_id;
     block->op_count = split->op_count;
     block->io_files = split->io_files;
+    block->parenthesis_fork = split->parenthesis_fork;
+    block->has_unnecessary_parenthesis = split->has_unnecessary_parenthesis;
     free(split->prompt_copy);
     if (!block->is_cmd)
     {
@@ -239,6 +236,72 @@ int dump_split_to_block(t_block *block, t_split_prompt *split)
     return (1);
 }
 
+int has_corner_parenthesis(char *copy, char *original)
+{
+    int i;
+    int open;
+    int start;
+    int end;
+
+    set_in_between_to(copy, '(', ')', ' ');
+    i = 0;
+    while (copy[i] && ft_isspace(copy[i]))
+        i++;
+    if (!copy[i] || copy[i] != '(')
+        return (0);
+    start = i++;
+    open = 1;
+    while (copy[i])
+    {
+        if (copy[i] == '(')
+            open++;
+        if (copy[i] == ')')
+            open--;
+        if (open == 0)
+        {
+            end = i;
+            while (ft_isspace(copy[++i]))
+                ;
+            if (!copy[i])
+            {
+                copy[start] = ' ';
+                copy[end] = ' ';
+                i = start + 1;
+                while (i < end)
+                {
+                    copy[i] = original[i];
+                    i++;
+                }
+                //printf("copy [%s] after removing corner\n", copy);
+                return (1);
+            }
+            return (0);
+        }
+        i++;
+    }
+    return (0);
+}
+
+int split_unnecessary_parenthesis(t_split_prompt *split)
+{
+    char    *copy;
+
+    copy = ft_strdup(split->children[0]);
+    if (!copy)
+        return (perror_msg("malloc"));
+    if (has_corner_parenthesis(copy, split->children[0]) \
+    && has_corner_parenthesis(copy, split->children[0]))
+        split->has_unnecessary_parenthesis = 1;
+    free(copy);
+    copy = ft_strdup(split->children[0]);
+    if (!copy)
+        return (perror_msg("malloc"));
+    //printf("split [%s] before removing\n", split->children[0]);
+    rm_corner_parenthesis(copy, split->children[0]);
+    //printf("split [%s] after removing\n", split->children[0]);
+    free(copy);
+    return (1);
+}
 
 int split_prompt(t_block *block)
 {
@@ -256,8 +319,15 @@ int split_prompt(t_block *block)
             i++;
         if (!split.prompt_copy[i])
             block->is_cmd = 1;
-        else if (!split_extract_redirections(&split))
-            return (free_split_prompt(&split));
+        else
+        {
+            //printf("split [%s] must be forked cause it has parenthesis\n", split.prompt_orig);
+            split.parenthesis_fork = 1;
+            if (!split_extract_redirections(&split) \
+            || !split_unnecessary_parenthesis(&split))
+                return (free_split_prompt(&split));
+            //printf("split [%s] has unnecessary? %d\n", split.prompt_orig, split.has_unnecessary_parenthesis);
+        }
     }
     if (!dump_split_to_block(block, &split))
         return (0);
@@ -292,6 +362,5 @@ void    print_split(t_split_prompt *split)
     }
     printf("total %d args\n", i);
 }
-
 
 

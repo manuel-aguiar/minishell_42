@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/13 18:41:52 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/14 18:46:34 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,9 @@
 
 # define EXIT_SIGINT 130
 
+# define EXIT_SYNTAX 2
+# define EXIT_AMBIG_REDIR 1
+
 typedef struct s_ms		t_ms;
 typedef struct s_block	t_block;
 typedef struct s_redir	t_redir;
@@ -70,11 +73,9 @@ struct s_ms
 	t_block		        *first;
 	pid_t               my_kid;
 	struct sigaction    sigact;
-	union sigval        value;
 };
 
-# define EXIT_SYNTAX 2
-# define EXIT_AMBIG_REDIR 1
+
 
 typedef struct s_prompt
 {
@@ -100,6 +101,8 @@ struct s_block
     int         *op_id;
     int         op_count;
     int         is_cmd;
+    int         has_unnecessary_parenthesis;
+    int         parenthesis_fork;
 
     int         pipefd[2];
     int         prev_pipe[2];                                    //posso precisar para unir os blocos filhos
@@ -137,7 +140,9 @@ typedef struct s_split_prompt
     int         op_count;
     char        **get_redir;
     int         redir_split_len;
-    t_vdmlist   *io_files;	            //decomposição do prompt, farão override ao infd do block, deixa de heredar do bloco anterior  void *list, com struct t_redir;
+    t_vdmlist   *io_files;
+    int         parenthesis_fork;
+    int         has_unnecessary_parenthesis;
 }   t_split_prompt;
 
 typedef struct s_prep_cmd
@@ -266,7 +271,8 @@ int     free_split_prompt(t_split_prompt *split);
 
 //functions to prepare commands
 
-int     setup_cmd(t_block *block);
+int     setup_cmd_pre_expansion(t_block *block);
+int     manage_cmd_expansions(t_block *block);
 void    print_cmd(t_block *block);
 
 //int dump_cmd_to_block(t_block *block, t_block *block);
@@ -337,6 +343,7 @@ int		run_env(t_block *block);
 int		run_pwd(t_block *block);
 int		run_echo(t_block *block);
 int		run_unset(t_block *block);
+int		run_exit(t_block *block);
 
 
 void	run_cd(char **cmd, char **env, int final_out);

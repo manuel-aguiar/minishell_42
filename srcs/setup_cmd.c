@@ -258,13 +258,6 @@ int get_cmd_args(t_prep_cmd *cmd)
     }
     cmd->cmd_args[len] = NULL;
     ft_free_set_null(&cmd->cmd_args_copy);
-    if (!cmd_args_expand_dollar_wildcard(cmd))
-        return (0);
-    if (!cmd_args_rm_quotes_and_split(cmd))
-        return (0);
-    cmd->cmd = ft_strdup(cmd->cmd_args[0]);
-    if (!cmd->cmd)
-        return (perror_msg("malloc"));
     return (1);
 }
 
@@ -330,8 +323,6 @@ int setup_prep_cmd_struct(t_prep_cmd *cmd, t_block *block)
     cmd->cmd_args = NULL;
     cmd->prompt_copy = NULL;
     cmd->cmd_args_copy = NULL;
-	cmd->split_len = 0;
-	cmd->args_len = 0;
     cmd->ms = block->ms;
     if (!split_cmd_by_quotes_spaces(cmd, block))
         return (0);
@@ -364,7 +355,7 @@ int dump_cmd_into_block(t_prep_cmd *cmd, t_block *block)
     return (1);
 }
 
-int setup_cmd(t_block *block)
+int setup_cmd_pre_expansion(t_block *block)
 {
     int         i;
     t_prep_cmd  cmd;
@@ -390,6 +381,29 @@ int setup_cmd(t_block *block)
     return (1);
 }
 
+int manage_cmd_expansions(t_block *block)
+{
+    t_prep_cmd  cmd;
+
+    cmd.cmd = NULL;
+    cmd.cmd_args = block->cmd_args;
+    cmd.prompt_copy = NULL;
+    cmd.cmd_args_copy = NULL;
+    cmd.ms = block->ms;
+    if (!cmd.cmd_args)
+        return (1);
+    cmd.args_len = ft_matrixlen(cmd.cmd_args);
+    if (!cmd_args_expand_dollar_wildcard(&cmd))
+        return (0);
+    if (!cmd_args_rm_quotes_and_split(&cmd))
+        return (0);
+    cmd.cmd = ft_strdup(cmd.cmd_args[0]);
+    if (!cmd.cmd)
+        return (free_cmd_struct(&cmd));
+    block->cmd = cmd.cmd;
+    block->cmd_args = cmd.cmd_args;
+    return (1);
+}
 
 /*
 

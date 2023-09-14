@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 17:09:22 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/12 22:42:47 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/14 18:35:27 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,7 @@ int	run_echo(t_block *block)
 	return (1);
 }
 
-void	run_exit(void)
-{
 
-}
 
 int	run_unset(t_block *block)
 {

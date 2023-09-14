@@ -38,6 +38,7 @@ FILES		=		main.c							\
 					env.c							\
 					builtins.c						\
 					builtins_aux.c					\
+					bi_exit.c						\
 					future_libft.c
 
 SRCS		:= 		$(addprefix $(SRC_PATH)/, $(FILES))

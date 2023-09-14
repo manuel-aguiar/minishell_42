@@ -29,8 +29,8 @@ int get_prompt(t_ms *ms)
         ms->exit_status = pmt.exit_status;
         return (syntax_error_msg(&pmt));
     }
-    if (pmt.parenthesis)
-        rm_unnecessary_parenthesis(&pmt);
+    //if (pmt.parenthesis)
+    //    rm_unnecessary_parenthesis(&pmt);
     ft_free_set_null(&pmt.copy);
     ms->prompt = pmt.prompt;
     return (1);
@@ -176,7 +176,7 @@ int syntax_operators_end(t_prompt *pmt)
     char        error[3];
 
     len = ft_strlen(pmt->copy) - 1;
-    while (len >= 0 && pmt->copy[len] == ' ')
+    while (len >= 0 && ft_isspace(pmt->copy[len]))
         len--;
     if (!pmt->copy[len])
         return (1);
@@ -198,7 +198,7 @@ int syntax_redir_end(t_prompt *pmt)
     int         len;
 
     len = ft_strlen(pmt->copy) - 1;
-    while (len >= 0 && pmt->copy[len] == ' ')
+    while (len >= 0 && ft_isspace(pmt->copy[len]))
         len--;
     if (!pmt->copy[len])
         return (1);
@@ -230,7 +230,7 @@ int syntax_redirections(t_prompt *pmt)
             i++;
             if (pmt->copy[i] == pmt->copy[i - 1])
                 i++;
-            while (pmt->copy[i] && pmt->copy[i] == ' ')
+            while (pmt->copy[i] && ft_isspace(pmt->copy[i]))
                 i++;
             if (!pmt->copy[i])
                 break ;
@@ -319,7 +319,7 @@ int close_prths_helper(char *copy, int index)
 
     len = ft_strlen(copy);
     ++index;
-    while (index < len && copy[index] == ' ')
+    while (index < len && ft_isspace(copy[index]))
         index++;
     if (index < len && copy[index] != '&' && copy[index] != '|'  \
         && copy[index] != ')' && copy[index] != '<' && copy[index] != '>')
@@ -375,7 +375,7 @@ int syntax_begin(t_prompt *pmt)
     int i;
 
     i = 0;
-    while (pmt->prompt[i] == ' ')
+    while (ft_isspace(pmt->prompt[i]))
         i++;
     if (pmt->prompt[i] == '|')
     {
@@ -667,6 +667,8 @@ void rm_corner_parenthesis(char *copy, char *original)
                 ;
             if (!copy[i])
             {
+                copy[start] = ' ';
+                copy[end] = ' ';
                 original[start] = ' ';
                 original[end] = ' ';
             }
@@ -676,8 +678,19 @@ void rm_corner_parenthesis(char *copy, char *original)
     }
 }
 
+/*
 void rm_unnecessary_parenthesis(t_prompt *pmt)
 {
+    //dprintf(2, "before parenthesis [%s]\n", pmt->prompt);
     rm_doubled_parenthesis(pmt);
+    //dprintf(2, "remove doubled [%s]\n", pmt->prompt);
     rm_corner_parenthesis(pmt->copy, pmt->prompt);
+    //dprintf(2, "remove corner [%s]\n", pmt->prompt);
 }
+
+*/
+
+
+
+
+
