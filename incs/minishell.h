@@ -225,7 +225,7 @@ int     destroy_ms(t_ms *ms);
 t_block	*init_block(t_ms *ms, t_block *father, char *pmt, int my_id);
 void	destroy_block(void *og_block);
 
-t_redir *init_redir(char *file, int type);
+t_redir *init_redir(char *file, int type, int has_quote_guard);
 void	destroy_redir(void *og_redir);
 
 /* ms_signals.c */
