@@ -111,7 +111,7 @@ t_block *init_block(t_ms *ms, t_block *father, char *pmt, int my_id)
 	new->final_out = -1;
 	new->here_doc = NULL;
 	new->here_doc_fd = -1;
-
+	new->here_doc_index = -1;
 	new->my_id = my_id;
 	return (new);
 }
