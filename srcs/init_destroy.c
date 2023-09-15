@@ -209,6 +209,7 @@ int init_ms(t_ms *ms, char *avzero, char **env)
 	ms->errfd = STDERR_FILENO;
 	ms->first = NULL;
 	ms->my_kid = -1;
+	ms->exit_status = 0;
 	sigint_heredoc_where_ms_is(ms);                             // potentially remove this, check heredoc sigint
 	if (!ms_prepare_signal(ms, signal_handler))
 	return (destroy_ms(ms));
