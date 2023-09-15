@@ -213,7 +213,7 @@ int open_here_docs_at_block(t_block *block)
                 ft_free_set_null(&block->here_doc);
             }
             if (!remove_unguarded_quotes(&redir->file, NULL)
-            || !here_doc(block, redir->file))
+            || !here_doc(block, redir->file, redir->has_quote_guard))
                 return (0);
 
 
