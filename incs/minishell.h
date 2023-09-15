@@ -287,7 +287,7 @@ int     outfiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i
 int     manage_io_files(t_block *block);
 
 
-int here_doc(t_block *block, char *eof);
+int here_doc(t_block *block, char *eof, int has_quote_guard);
 int remove_unguarded_quotes(char **str, int *has_guards);
 
 /* exec.c */
