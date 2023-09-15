@@ -129,6 +129,7 @@ struct s_redir
 {
     char    *file;
     int     type;
+    int     has_quote_guard;
 };
 
 
