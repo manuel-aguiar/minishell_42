@@ -23,27 +23,48 @@ LIB_INC_P	=		incs
 ## SOURCE LIBRARIES
 LIBFT		=		libft.a
 
+## SRC SUB-FOLDERS ##
+BUILTINS		=	builtins
+EXEC 			=	execution
+FD_MAN			=	fd_management
+STRUCT			=	structure
+EXPAND			=	expansions
+GENERIC			=	generic_utils
+
 ## SOURCE FILES ##
-FILES		=		main.c							\
-					init_destroy.c					\
-					ms_prompt.c						\
-					split_manager.c					\
-					setup_cmd.c						\
-					manage_files.c					\
-					exec.c							\
-					signals.c						\
-					wildcard.c						\
-					expansion.c						\
-					cd.c							\
-					env.c							\
-					builtins.c						\
-					builtins_aux.c					\
-					bi_exit.c						\
-					future_libft.c
 
-SRCS		:= 		$(addprefix $(SRC_PATH)/, $(FILES))
+FILES_BUILTINS	=	bi_exit.c 				\
+					builtins_aux.c 			\
+					builtins.c				\
+					cd.c					\
+					env.c
 
-OBJS		=		$(patsubst $(SRC_PATH)/%.c,$(OBJ_PATH)/%.o,$(SRCS))
+FILES_EXEC		=	exec.c					\
+					main.c
+
+FILES_FD_MAN	=	manage_files.c
+
+
+FILES_STRUCT	=	ms_prompt.c				\
+					init_destroy.c			\
+					split_manager.c			\
+					setup_cmd.c				\
+					signals.c
+
+
+FILES_EXPAND	=	wildcard.c				\
+					expansion.c
+
+FILES_GENERIC	=	future_libft.c
+
+## ALL SOURCE FOLDERS
+
+SRC_DIRS		=	$(BUILTINS)		$(EXEC)	$(FD_MAN)	$(STRUCT) 	\
+					$(EXPAND)		$(GENERIC)
+
+SRCS		:= 		$(foreach src_dir,$(SRC_DIRS),$(wildcard $(SRC_PATH)/$(src_dir)/*.c))
+
+OBJS 		=		$(patsubst $(SRC_PATH)/%.c,$(OBJ_PATH)/%.o,$(SRCS))
 
 INCS		= 		-I$(INC_PATH) -I$(LIB_PATH)/$(LIB_INC_P)
 
