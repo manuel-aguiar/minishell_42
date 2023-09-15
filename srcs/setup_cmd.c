@@ -200,15 +200,12 @@ int cmd_args_rm_quotes_and_split(t_prep_cmd *cmd)
 int cmd_args_expand_dollar_wildcard(t_prep_cmd *cmd)
 {
     int i;
-
+    
     i = 0;
     while (cmd->cmd_args[i])
     {
-        if (cmd->cmd_args[i][0] != '\'')
-            expand_dollars(&cmd->cmd_args[i], cmd->ms);
-        if (cmd->cmd_args[i][0] != '\'' \
-        && cmd->cmd_args[i][0] != '"')
-            expand_wildcards(&cmd->cmd_args[i], NULL);
+        expand_dollars(&cmd->cmd_args[i], cmd->ms);
+        expand_wildcards(&cmd->cmd_args[i], NULL);
         i++;
     }
     return (1);
