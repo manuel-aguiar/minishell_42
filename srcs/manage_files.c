@@ -25,12 +25,26 @@ void    close_out_fds(t_block *block)
         close(block->final_out);
 }
 
+int redir_has_quotes(char *arg)
+{
+    int i;
+    
+    i = 0;
+    while (arg[i])
+    {
+        if (arg[i] == '\'' || arg[i] == '"')
+            return (1);
+        i++;
+    }
+    return (0);
+}
+
 int outfiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i)
 {
     int     type;
     int     cur;
     int     c;
-
+    
     cur = *i;
     c = 1;
     if (!*io_files)
@@ -46,12 +60,12 @@ int outfiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i)
         type = RE_TRUNC;
     if (cmd_args[cur][c])
     {
-        if (!vdmlist_in_tail(*io_files, init_redir(ft_strdup(&cmd_args[cur][c]), type)))
+        if (!vdmlist_in_tail(*io_files, init_redir(ft_strdup(&cmd_args[cur][c]), type, redir_has_quotes(&cmd_args[cur][c]))))
             return (perror_msg("malloc"));
     }
     else
     {
-        if (!vdmlist_in_tail(*io_files, init_redir(cmd_args[cur + 1], type)))
+        if (!vdmlist_in_tail(*io_files, init_redir(cmd_args[cur + 1], type, redir_has_quotes(cmd_args[cur + 1]))))
             return (perror_msg("malloc"));
         cmd_args[cur + 1] = NULL;
         *i += 1;
@@ -66,7 +80,7 @@ int infiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i)
     int     type;
     int     cur;
     int     c;
-
+    
     cur = *i;
     c = 1;
     if (!*io_files)
@@ -82,12 +96,12 @@ int infiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i)
         type = RE_INFILE;
     if (cmd_args[cur][c])
     {
-        if (!vdmlist_in_tail(*io_files, init_redir(ft_strdup(&cmd_args[cur][c]), type)))
+        if (!vdmlist_in_tail(*io_files, init_redir(ft_strdup(&cmd_args[cur][c]), type, redir_has_quotes(&cmd_args[cur][c]))))
             return (perror_msg("malloc"));
     }
     else
     {
-        if (!vdmlist_in_tail(*io_files, init_redir(cmd_args[cur + 1], type)))
+        if (!vdmlist_in_tail(*io_files, init_redir(cmd_args[cur + 1], type, redir_has_quotes(cmd_args[cur + 1]))))
             return (perror_msg("malloc"));
         cmd_args[cur + 1] = NULL;
         *i += 1;
@@ -96,7 +110,6 @@ int infiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i)
     *i += 1;
     return (1);
 }
-
 /*
     manage_io_expansion
     This is called for every file saved on the t_vdmlist *files.
@@ -250,11 +263,11 @@ void    signal_handler_heredoc(int signum)
     }
 }
 
-static int here_doc_fill(t_block *block, char *eof)
+static int here_doc_fill(t_block *block, char *eof, int has_quote_guard)
 {
 	char	*line;
 	int     count;
-
+    
     count = 0;
 	while (1)
 	{
@@ -270,49 +283,46 @@ static int here_doc_fill(t_block *block, char *eof)
 			}
 			else
 			{
-			    if (!here_doc_expand_dollars(&line, block->ms))
+			    if (!has_quote_guard && !here_doc_expand_dollars(&line, block->ms))
 			    return (0);
 				ft_putstr_fd(line, block->here_doc_fd);
 				ft_putstr_fd("\n", block->here_doc_fd);
 			}
 			ft_free_set_null(&line);
 		}
+		
 		else
-		{
+		{   
 			printf("minishell: warning: here-document at line %d delimited by end-of-file (wanted `%s')\n", count, eof);            //dprintf ft_putstr_fd(block->ms->errfd);
 			break;
 		}
 	}
-	return (1);
+	return (1);    
 }
 
 
-int here_doc(t_block *block, char *eof)
+int here_doc(t_block *block, char *eof, int has_quote_guard)
 {
     int pid;
     int hc_status;
-
-	hc_status = 0;
+    
     if (!here_doc_temp(block))
-        return (0);
+        return (0);                 
     //printf("trying to open file [%s]\n", block->here_doc);
     block->here_doc_fd = open(block->here_doc, O_CREAT | O_TRUNC |O_RDWR, 0644);
     //printf("success? fd: %d\n", block->here_doc_fd);
     if (block->here_doc_fd == -1)
         return (perror_msg_func(block, block->here_doc, CODE_OPEN, 1));                 //open failed, perror(open) guarda exit status
-
+    ms_prepare_signal(block->ms, signal_handler_heredoc);
     pid = fork();
     if (pid == -1)
         return (perror_msg("fork"));
     if (!pid)
     {
-		ms_prepare_signal(block->ms, signal_handler_heredoc);
-        here_doc_fill(block, eof);
-		ms_prepare_signal(block->ms, signal_handler);
-		destroy_ms(block->ms);
+        here_doc_fill(block, eof, has_quote_guard);
         exit(0);
     }
-
+    ms_prepare_signal(block->ms, signal_handler);
     waitpid(pid, &hc_status, 0);
     //printf("exit status of child wifexited %d, status %d\n", WIFSIGNALED(hc_status), WTERMSIG(hc_status));
     if (WIFEXITED(hc_status) && WEXITSTATUS(hc_status))
@@ -322,7 +332,7 @@ int here_doc(t_block *block, char *eof)
         close(block->here_doc_fd);
         hc_status = 130;
         save_signal(&hc_status);
-        //rl_redisplay();
+        rl_redisplay();
         return (0);
     }
 	close(block->here_doc_fd);
