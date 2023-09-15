@@ -201,23 +201,6 @@ enum e_builtin
 	BI_EXPORT,
 };
 
-/*
-	if (len == 2 && ft_strncmp(cmd[0], "cd", 2) == 0)
-		run_cd(cmd, env, final_out);
-	else if (len == 3 && ft_strncmp(cmd[0], "env", 3) == 0)
-		run_env(env, final_out);
-	else if (len == 3 && ft_strncmp(cmd[0], "pwd", 3) == 0)
-		run_pwd(final_out);
-	else if (len == 4 && ft_strncmp(cmd[0], "echo", 4) == 0)
-		run_echo(cmd, final_out);
-	else if (len == 4 && ft_strncmp(cmd[0], "exit", 4) == 0)
-		run_exit();
-	else if (len == 5 && ft_strncmp(cmd[0], "unset", 5) == 0)
-		run_unset(cmd, env);
-	else if (len == 6 && ft_strncmp(cmd[0], "export", 6) == 0)
-
-*/
-
 /* init_destroy */
 int     init_ms(t_ms *ms, char *avzero, char **env);
 int     destroy_ms(t_ms *ms);
