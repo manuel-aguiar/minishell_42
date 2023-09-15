@@ -1,7 +1,7 @@
 
 #include "minishell.h"
 
-t_redir *init_redir(char *file, int type)
+t_redir *init_redir(char *file, int type, int has_quote_guard)
 {
     t_redir *redir;
 
@@ -10,6 +10,7 @@ t_redir *init_redir(char *file, int type)
         return (NULL);
     redir->file = file;
     redir->type = type;
+    redir->has_quote_guard = has_quote_guard;
     return (redir);
 }
 
