@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/14 23:15:55 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/15 01:06:02 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,7 +252,6 @@ int	parent_process(t_block *block, pid_t pid)
     	waitpid(pid, &block->my_status, 0);
         if (WIFEXITED(block->my_status))
             block->my_status = WEXITSTATUS(block->my_status);
-		printf(" block [%s} returned with status %d\n", block->prompt, block->my_status);
 	}
 	return (1);
 }
@@ -318,7 +317,12 @@ int	process_execution(t_block *block)
 	else
 	{
 		ms_prepare_signal(block->ms, signal_builtin_pipes);
-		exec_builtin(block, builtin);
+		if (exec_builtin(block, builtin))
+		{
+			if (block->father)
+				block->father->child_exit_status[block->my_id] = 0;						// success
+																						// manage for non success
+		}
 		close_in_fds(block);
 		close_out_fds(block);
 		ms_prepare_signal(block->ms, signal_handler);
