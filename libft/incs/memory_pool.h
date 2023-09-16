@@ -28,6 +28,8 @@ avoiding multiple calls to malloc and null
 # include <stdlib.h>
 # include <stddef.h>
 
+#include "error_handling.h"
+
 # define UPSIZE 2
 
 typedef unsigned int	t_uint;

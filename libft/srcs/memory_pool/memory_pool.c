@@ -18,10 +18,11 @@ t_mpool	*mpool_create(size_t block_size, t_uint block_num)
 
 	pool = malloc(sizeof(*pool));
 	if (!pool)
-		return (NULL);
+		return (perror_msg_ptr("malloc", NULL));
 	pool->pool_start = malloc(block_size * block_num);
 	if (!pool->pool_start)
 	{
+		perror_msg_ptr("malloc", NULL);
 		free(pool);
 		return (NULL);
 	}

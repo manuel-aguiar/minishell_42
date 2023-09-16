@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sl_list_malloc.c                                   :+:      :+:    :+:   */
+/*   isl_list_malloc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 20:11:55 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/05/31 20:12:37 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 13:06:39 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_ismnode	*ismnode_new(int nbr)
 
 	new = malloc(sizeof(*new));
 	if (!new)
-		return (NULL);
+		return (perror_msg_ptr("malloc", NULL));
 	new->data = nbr;
 	new->next = NULL;
 	return (new);
@@ -30,7 +30,7 @@ t_ismlist	*ismlist_new(void)
 
 	list = malloc(sizeof(*list));
 	if (!list)
-		return (NULL);
+		return (perror_msg_ptr("malloc", NULL));
 	list->head = NULL;
 	list->tail = NULL;
 	list->len = 0;

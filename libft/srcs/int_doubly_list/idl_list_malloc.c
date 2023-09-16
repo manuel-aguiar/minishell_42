@@ -18,7 +18,7 @@ t_idmnode	*new_idmnode(int nbr)
 
 	new = malloc(sizeof(*new));
 	if (!new)
-		return (NULL);
+		return (perror_msg_ptr("malloc", NULL));
 	new->data = nbr;
 	new->next = NULL;
 	new->prev = NULL;
@@ -31,7 +31,7 @@ t_idmlist	*idmlist_new(void)
 
 	list = malloc(sizeof(*list));
 	if (!list)
-		return (NULL);
+		return (perror_msg_ptr("malloc", NULL));
 	list->head = NULL;
 	list->tail = NULL;
 	list->len = 0;

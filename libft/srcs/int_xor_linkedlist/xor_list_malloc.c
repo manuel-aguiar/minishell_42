@@ -23,7 +23,7 @@ static t_ixmnode	*new_ixmnode(int nbr)
 
 	new = malloc(sizeof(t_ixmnode));
 	if (!new)
-		return (NULL);
+		return (perror_msg_ptr("malloc", NULL));
 	new->data = nbr;
 	new->xor_ptr = NULL;
 	return (new);
@@ -35,7 +35,7 @@ t_ixmlist	*ixmlist_new(void)
 
 	list = malloc(sizeof(*list));
 	if (!list)
-		return (NULL);
+		return (perror_msg_ptr("malloc", NULL));
 	list->head = NULL;
 	list->tail = NULL;
 	list->len = 0;

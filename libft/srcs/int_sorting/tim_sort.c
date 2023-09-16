@@ -94,7 +94,7 @@ static int	tim_sort_helper(int *arr, int n, int (*cmp)(int, int), int size)
 
 	copy = malloc(sizeof(*copy) * n);
 	if (!copy)
-		return (0);
+		return (perror_msg_int("malloc", 0));
 	while (size < n)
 	{
 		lmr[0] = 0;

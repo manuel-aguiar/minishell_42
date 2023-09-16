@@ -38,7 +38,7 @@ t_ixplist	*ixplist_new(int elements, t_mpool *shared_pool)
 
 	list = malloc(sizeof(*list));
 	if (!list)
-		return (NULL);
+		return (perror_msg_ptr("malloc", NULL));
 	if (!shared_pool || shared_pool->block_size != sizeof(t_ixpnode))
 	{
 		pool = mpool_create(sizeof(t_ixpnode), elements);

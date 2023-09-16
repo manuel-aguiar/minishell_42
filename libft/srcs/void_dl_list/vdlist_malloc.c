@@ -18,7 +18,7 @@ t_vdmnode	*new_vdmnode(void *data)
 
 	new = malloc(sizeof(*new));
 	if (!new)
-		return (NULL);
+		return (perror_msg_ptr("malloc", NULL));
 	new->data = data;
 	new->next = NULL;
 	new->prev = NULL;
@@ -31,7 +31,7 @@ t_vdmlist	*vdmlist_new(void)
 
 	list = malloc(sizeof(*list));
 	if (!list)
-		return (NULL);
+		return (perror_msg_ptr("malloc", NULL));
 	list->head = NULL;
 	list->tail = NULL;
 	list->len = 0;
