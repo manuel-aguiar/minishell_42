@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 20:10:15 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/16 21:53:14 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 22:10:26 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,9 +116,9 @@ int	token_is_redirection(t_token_node *token)
 	if (!token)
 		return (0);
 	if (token->type == T_INDIR_HD \
-	|| token->type == T_INDIR_INF \
-	|| token->type == T_OUTDIR_AP
-	|| token->type == T_OUTDIR_TRUN)
+	|| token->type == T_INDIR_OPEN \
+	|| token->type == T_OUTDIR_APPEND
+	|| token->type == T_OUTDIR_TRUNC)
 		return (1);
 	return (0);
 }

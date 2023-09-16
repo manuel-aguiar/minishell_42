@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:03:01 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/16 19:11:38 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 22:10:26 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,18 +57,18 @@ void	is_redirection_token(char **str, int *place_token)
 			(*str)++;
 		}
 		else
-			*place_token = T_INDIR_INF;
+			*place_token = T_INDIR_OPEN;
 	}
 	else if (**str == '>')
 	{
 		(*str)++;
 		if (**str == '>')
 		{
-			*place_token = T_OUTDIR_AP;
+			*place_token = T_OUTDIR_APPEND;
 			(*str)++;
 		}
 		else
-			*place_token = T_OUTDIR_TRUN;
+			*place_token = T_OUTDIR_TRUNC;
 	}
 }
 

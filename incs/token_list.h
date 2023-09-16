@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:50:30 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/16 21:52:24 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 22:10:26 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,9 @@ enum e_token
 	T_OP_AND,
 	T_OP_AMPER,
 	T_INDIR_HD,
-	T_INDIR_INF,
-	T_OUTDIR_AP,
-	T_OUTDIR_TRUN,
+	T_INDIR_OPEN,
+	T_OUTDIR_APPEND,
+	T_OUTDIR_TRUNC,
 	T_ARG,
 };
 
@@ -64,9 +64,9 @@ enum e_token
 # define PRINT_OP_AND "&&"
 # define PRINT_OP_AMPER "&"
 # define PRINT_INDIR_HD "<<"
-# define PRINT_INDIR_INF "<"
-# define PRINT_OUTDIR_AP ">>"
-# define PRINT_OUTDIR_TRUN ">"
+# define PRINT_INDIR_OPEN "<"
+# define PRINT_OUTDIR_APPEND ">>"
+# define PRINT_OUTDIR_TRUNC ">"
 # define PRINT_ARG "arg"
 
 

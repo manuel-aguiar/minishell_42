@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:47:59 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/16 19:11:16 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 22:10:26 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ char	*token_enum_to_text(int token)
 		return (PRINT_OP_AMPER);
 	if (token == T_INDIR_HD)
 		return (PRINT_INDIR_HD);
-	if (token == T_INDIR_INF)
-		return (PRINT_INDIR_INF);
-	if (token == T_OUTDIR_AP)
-		return (PRINT_OUTDIR_AP);
-	if (token == T_OUTDIR_TRUN)
-		return (PRINT_OUTDIR_TRUN);
+	if (token == T_INDIR_OPEN)
+		return (PRINT_INDIR_OPEN);
+	if (token == T_OUTDIR_APPEND)
+		return (PRINT_OUTDIR_APPEND);
+	if (token == T_OUTDIR_TRUNC)
+		return (PRINT_OUTDIR_TRUNC);
 	if (token == T_ARG)
 		return (PRINT_ARG);
 	if (token == T_OPEN_PAR)

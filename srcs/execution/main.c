@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/16 21:55:15 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 22:22:39 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,9 +191,9 @@ int execute(t_block *block)
 
 int open_here_docs_at_block(t_block *block)
 {
-    int         i;
-    t_redir     *redir;
-    t_vdmnode   *cur;
+    int         	i;
+	int				has_quotes;
+    t_token_node	*cur;
 
     if (!block->io_files)
         return (1);
@@ -202,9 +202,8 @@ int open_here_docs_at_block(t_block *block)
     //printf("checking here_docs at block [%s]\n", block->prompt);
     while (cur && save_signal(NULL) != EXIT_SIGINT)
     {
-        redir = (t_redir *)cur->data;
         //printf("checking redir [%s] of type %d\n", redir->file, redir->type);
-        if (redir->type == RE_HEREDOC)
+        if (cur->type == T_INDIR_HD)
         {
             if (block->here_doc)
             {
@@ -212,8 +211,8 @@ int open_here_docs_at_block(t_block *block)
                 unlink(block->here_doc);
                 ft_free_set_null(&block->here_doc);
             }
-            if (!remove_unguarded_quotes(&redir->file, NULL)
-            || !here_doc(block, redir->file, redir->has_quote_guard))
+            if (!remove_unguarded_quotes(&cur->text, &has_quotes)
+            || !here_doc(block, cur->text, has_quotes))
                 return (0);
 
 

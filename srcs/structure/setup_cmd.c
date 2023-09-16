@@ -354,6 +354,7 @@ int dump_cmd_into_block(t_prep_cmd *cmd, t_block *block)
     return (1);
 }
 
+/*
 int setup_cmd_pre_expansion(t_block *block)
 {
     int         i;
@@ -379,6 +380,8 @@ int setup_cmd_pre_expansion(t_block *block)
     dump_cmd_into_block(&cmd, block);
     return (1);
 }
+*/
+
 
 int manage_cmd_expansions(t_block *block)
 {

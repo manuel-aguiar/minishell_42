@@ -38,7 +38,7 @@ int redir_has_quotes(char *arg)
     }
     return (0);
 }
-
+/*
 int outfiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i)
 {
     int     type;
@@ -53,11 +53,11 @@ int outfiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i)
         return (perror_msg("malloc"));
     if (cmd_args[cur][c] == '>')
     {
-        type = RE_APPEND;
+        type = T_OUTDIR_APPEND;
         c++;
     }
     else
-        type = RE_TRUNC;
+        type = T_OUTDIR_TRUNC;
     if (cmd_args[cur][c])
     {
         if (!vdmlist_in_tail(*io_files, init_redir(ft_strdup(&cmd_args[cur][c]), type, redir_has_quotes(&cmd_args[cur][c]))))
@@ -89,11 +89,11 @@ int infiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i)
         return (perror_msg("malloc"));
     if (cmd_args[cur][c] == '<')
     {
-        type = RE_HEREDOC;
+        type = T_INDIR_HD;
         c++;
     }
     else
-        type = RE_INFILE;
+        type = T_INDIR_OPEN;
     if (cmd_args[cur][c])
     {
         if (!vdmlist_in_tail(*io_files, init_redir(ft_strdup(&cmd_args[cur][c]), type, redir_has_quotes(&cmd_args[cur][c]))))
@@ -110,6 +110,9 @@ int infiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i)
     *i += 1;
     return (1);
 }
+
+*/
+
 /*
     manage_io_expansion
     This is called for every file saved on the t_vdmlist *files.
@@ -127,6 +130,8 @@ int infiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i)
     will open/create a file called 'hey there' (without quotes) and will write "hello"
     in that file and close it.
 */
+
+///////////////////////////////////////////////////////////////////////////////////////////////  FT_PRINTF_FD
 
 int ambiguous_redirection_err(t_block *block, char **fail_return)
 {
@@ -149,7 +154,7 @@ int manage_io_expansion(t_block *block)
     char    *fail_return;
 
     fail_return = NULL;
-    redir_copy = ((t_redir *)block->io_files->head->data)->file;
+    redir_copy = block->io_files->head->text;
     if (redir_copy[0] != '\'')
         if (!expand_dollars(&redir_copy, block->ms))
             return (0);
@@ -169,7 +174,7 @@ int manage_io_expansion(t_block *block)
         free(redir_copy);
         redir_copy = temp;
     }
-    ((t_redir *)block->io_files->head->data)->file = redir_copy;
+    block->io_files->head->text = redir_copy;
     return (1);
 }
 
@@ -222,12 +227,12 @@ int manage_io_expansion(t_block *block)
 
 int manage_infile(t_block *block, int index)
 {
-    t_redir *redir;
+    t_token_node	*redir;
 
-    redir = (t_redir *)block->io_files->head->data;
+    redir = block->io_files->head;
     close_in_fds(block);
     //printf("redirection [%s] at [%s]\n", redir->file, block->prompt);
-    if (redir->type == RE_HEREDOC)
+    if (redir->type == T_INDIR_HD)
     {
         //printf("index   %d, here doc index %d\n", index, block->here_doc_index);
         if (index == block->here_doc_index)
@@ -244,29 +249,29 @@ int manage_infile(t_block *block, int index)
             unlink(block->here_doc);
             ft_free_set_null(&block->here_doc);
         }
-        block->final_in = open(redir->file, O_RDWR);
+        block->final_in = open(redir->text, O_RDWR);
         //printf("prompt [%s] final in is %d\n", block->prompt, block->final_in);
         if (block->final_in == -1)
-             return (perror_msg_func(block, redir->file, CODE_OPEN, 1));
+             return (perror_msg_func(block, redir->text, CODE_OPEN, 1));
 
     }
-    vdmlist_del_head(block->io_files, destroy_redir);
+    token_list_del_head(block->io_files);
     return (1);
 }
 
 int manage_outfile(t_block *block)
 {
-    t_redir *redir;
+    t_token_node *redir;
 
-    redir = (t_redir *)block->io_files->head->data;
+    redir = block->io_files->head->text;
     close_out_fds(block);
-    if (redir->type == RE_TRUNC)
-        block->final_out = open(redir->file, O_CREAT | O_RDWR | O_TRUNC, 0644);
+    if (redir->type == T_OUTDIR_TRUNC)
+        block->final_out = open(redir->text, O_CREAT | O_RDWR | O_TRUNC, 0644);
     else
-        block->final_out = open(redir->file, O_CREAT | O_RDWR | O_APPEND, 0644);
+        block->final_out = open(redir->text, O_CREAT | O_RDWR | O_APPEND, 0644);
     if (block->final_out == -1)
-        return (perror_msg_func(block, redir->file, CODE_OPEN, 1));
-    vdmlist_del_head(block->io_files, destroy_redir);
+        return (perror_msg_func(block, redir->text, CODE_OPEN, 1));
+    token_list_del_head(block->io_files);
     return (1);
 }
 
@@ -325,18 +330,18 @@ int manage_io_files(t_block *block)
     i = 0;
     while (block->io_files->head && success)
     {
-        type = ((t_redir *)block->io_files->head->data)->type;
+        type = block->io_files->head->type;
         success = manage_io_expansion(block);
         if (!success)
             break ;
-        if (type == RE_TRUNC || type == RE_APPEND)
+        if (type == T_OUTDIR_TRUNC || type == T_OUTDIR_APPEND)
             success = manage_outfile(block);
         else
             success = manage_infile(block, i);
         i++;
     }
     //printf("block [%s], final in %d, final out %d\n", block->prompt, block->final_in, block->final_out);
-    vdmlist_destroy(&block->io_files, destroy_redir);
+    token_list_destroy(&block->io_files);
     return (success);
 }
 

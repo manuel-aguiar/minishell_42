@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/16 21:28:51 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 22:10:26 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,10 +188,10 @@ enum e_op
 
 enum e_redir
 {
-    RE_HEREDOC = 1,
-    RE_INFILE,
-    RE_TRUNC,
-    RE_APPEND,
+    T_INDIR_HD = 1,
+    T_INDIR_OPEN,
+    T_OUTDIR_TRUNC,
+    T_OUTDIR_APPEND,
 };
 
 enum e_builtin
