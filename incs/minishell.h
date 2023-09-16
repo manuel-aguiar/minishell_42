@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/16 15:50:29 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 16:27:54 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -305,13 +305,15 @@ void	perror_child_exit(t_block *block, char *function, int errcode, int with_ms)
 
 /*wildcard_main.c*/
 char    *wildcard(char *pattern, int pat_len, int *match_count);
+void	*destroy_wildcard(t_wildc *wildcard, int clean_exit);
 
 /*wildcard_fit_candidates.c*/
+int		wildcard_fit_check(t_wildc *wc, char *file);
 
-/* wildcard.c */
+/* wildcard_search_files.c */
 void    void_putstr(void *str);
-char    *triple_join(char *first, char *second, char *third);
-
+int		list_all_wildcard_matches(t_wildc *wildc, char *path, int cur_lvl);
+char    **list_to_array(t_vdmlist *list);
 
 /* expansion.c */
 int     expand_dollars(char **to_expand, t_ms *ms);
@@ -321,14 +323,8 @@ int     here_doc_expand_dollars(char **to_expand, t_ms *ms);
 
 int     ms_prompt_loop(t_ms *ms);
 
-/* future_libft.c*/
-int		ft_matrixlen(void *mat);
-int		ft_charmatdup(char ***dest, char **src);
-void	*quicksort_pointers(void *arr, int size, int (*cmp)(void *, void *));
-int		env_strcmp(void *s1, void *s2);
-int     ft_matrixlen(void *mat);
-int     ft_charmatdup(char ***dest, char **src);
-char	**ft_split_count_replenish(t_cchar *s, t_cchar *og, char *sepset, int *place_count);
+
+
 
 //////////////////////////////////////
 //////////// BUILTINS ////////////////
@@ -360,9 +356,19 @@ int	    ft_isalpha(int c);
 
 int     env_remove(t_block *block, int index);
 
+//////////////////////////////////////
+//////////// GENERIC UTILS ///////////
+//////////////////////////////////////
 
-
-
-
+/* future_libft.c*/
+int		ft_matrixlen(void *mat);
+int		ft_charmatdup(char ***dest, char **src);
+void	*quicksort_pointers(void *arr, int size, int (*cmp)(void *, void *));
+int		env_strcmp(void *s1, void *s2);
+int     ft_matrixlen(void *mat);
+int     ft_charmatdup(char ***dest, char **src);
+char	**ft_split_count_replenish(t_cchar *s, t_cchar *og, char *sepset, int *place_count);
+char    *ft_split_join(char **split, char *sep);
+char    *ft_triple_join(char *first, char *second, char *third);
 
 #endif

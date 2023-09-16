@@ -178,7 +178,7 @@ int ms_increase_shell_level(t_ms *ms)
     new_lvl_itoa = ft_itoa(ft_atoi(&ms->env[i][6]) + 1);
     if (!new_lvl_itoa)
         return (perror_msg_int("malloc", 0));
-    new_shlvl_env = triple_join("SHLVL=", "", new_lvl_itoa);                        // substituir pelo ft_strjoin na boa;
+    new_shlvl_env = ft_triple_join("SHLVL=", "", new_lvl_itoa);                        // substituir pelo ft_strjoin na boa;
     if (!new_shlvl_env)
     {
         free(new_lvl_itoa);

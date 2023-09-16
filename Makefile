@@ -52,10 +52,16 @@ FILES_STRUCT	=	ms_prompt.c				\
 					signals.c
 
 
-FILES_EXPAND	=	wildcard.c				\
+FILES_EXPAND	=	wildcard_main.c				\
+					wildcard_search_files.c		\
+					wildcard_fit_candidates.c	\
 					expansion.c
 
-FILES_GENERIC	=	future_libft.c
+FILES_GENERIC	=	ft_split_count_replenish.c			\
+					ft_split_join.c			\
+					ft_triple_join.c		\
+					ft_charmatdup.c			\
+					ft_matrixlen.c
 
 ## ALL SOURCE FOLDERS
 

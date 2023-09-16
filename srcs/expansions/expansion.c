@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expansion.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/16 16:17:21 by mmaria-d          #+#    #+#             */
+/*   Updated: 2023/09/16 16:23:45 by mmaria-d         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /*
@@ -25,7 +37,7 @@ int dollar_exit_status(char **to_expand, t_ms *ms, int *index, int dol_len)
     if (!itoa)
         return (0);
     (*to_expand)[*index] = '\0';
-    new = triple_join(*to_expand, itoa, &((*to_expand)[*index + dol_len]));
+    new = ft_triple_join(*to_expand, itoa, &((*to_expand)[*index + dol_len]));
     if (!new)
         return (0);
     *index += ft_strlen(itoa);
@@ -49,7 +61,7 @@ int dollar_search_env(char **to_expand, t_ms *ms, int *index, int dol_len)
             if (!ft_strncmp(&((*to_expand)[*index + 1]), ms->env[i], dol_len) \
             && ms->env[i][dol_len] == '=')
             {
-                new = triple_join(*to_expand, &ms->env[i][dol_len + 1], &((*to_expand)[*index + 1 + dol_len]));
+                new = ft_triple_join(*to_expand, &ms->env[i][dol_len + 1], &((*to_expand)[*index + 1 + dol_len]));
                 if (!new)
                     return (0);
                 free(*to_expand);
@@ -60,7 +72,7 @@ int dollar_search_env(char **to_expand, t_ms *ms, int *index, int dol_len)
             i++;
         }
     }
-    new = triple_join(*to_expand, "\0", &((*to_expand)[*index + 1 + dol_len]));
+    new = ft_triple_join(*to_expand, "\0", &((*to_expand)[*index + 1 + dol_len]));
     if (!new)
         return (0);
     free(*to_expand);
@@ -164,12 +176,12 @@ int wildcard_search_replace(char **to_expand, int *index, char **fail_return)
     if (count > 1 && fail_return)
     {
         (*to_expand)[end] = '\0';
-        *fail_return = triple_join("\'", &((*to_expand)[start]), "\'");
+        *fail_return = ft_triple_join("\'", &((*to_expand)[start]), "\'");
         free(join);
         return (1);
     }
     *to_expand[start] = '\0';
-    new = triple_join(*to_expand, join, &((*to_expand)[end]));
+    new = ft_triple_join(*to_expand, join, &((*to_expand)[end]));
     if (!new)
         return (0);
     *index += (ft_strlen(join) - *index + start);
