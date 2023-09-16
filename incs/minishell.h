@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/16 17:41:31 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 18:27:33 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -380,5 +380,8 @@ int     ft_charmatdup(char ***dest, char **src);
 char	**ft_split_count_replenish(t_cchar *s, t_cchar *og, char *sepset, int *place_count);
 char    *ft_split_join(char **split, char *sep);
 char    *ft_triple_join(char *first, char *second, char *third);
+
+
+int	perror_msg(char *text);
 
 #endif

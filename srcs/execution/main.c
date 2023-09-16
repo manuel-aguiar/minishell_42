@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/16 16:14:04 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 19:10:37 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -390,7 +390,7 @@ valgrind --track-fds=yes --trace-children=yes --leak-check=full --show-leak-kind
 */
 
 
-
+/*
 
 int main(int ac, char **av, char **env)
 {
@@ -404,26 +404,28 @@ int main(int ac, char **av, char **env)
 	return (0);
 }
 
-
-/*
-int main(void)
-{
-    char            *line;
-	char *ptr;
-	int match;
-    while (1)
-    {
-        line = readline("line: ");
-        if (!line)
-            break ;
-		ptr = wildcard(line, ft_strlen(line), &match);
-		printf("wildcard [%s]\n", ptr);
-		free(ptr);
-
-	}
-return 0;
-}
 */
+
+int	main(void)
+{
+	char			*line;
+	t_token_list	*list;
+
+	while (1)
+	{
+		line = readline("line: ");
+		if (!line)
+			break ;
+		list = token_list_new();
+		printf("is there list %p\n", list);
+		prompt_to_list(list, line);
+		free(line);
+		token_list_head_print(list, print_token);
+		token_list_destroy(&list);
+	}
+	return (0);
+}
+
 /*
 
 ALTERAÇÕES:

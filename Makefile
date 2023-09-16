@@ -38,7 +38,8 @@ FILES_LEXICON	=	create_tokens.c 						\
 					prompt_to_list.c 						\
 					token_list_print.c						\
 					token_list1.c							\
-					token_list2.c
+					token_list2.c							\
+					token_list3.c
 
 FILES_BUILTINS	=	bi_exit.c 								\
 					bi_cd.c 								\
@@ -67,6 +68,8 @@ FILES_EXPAND	=	wildcard_return.c				\
 					dolar_heredoc.c
 
 FILES_GENERIC	=	ft_split_count_replenish.c			\
+					ft_isquote.c						\
+					ft_strdup_len.c						\
 					ft_split_join.c			\
 					ft_triple_join.c		\
 					ft_charmatdup.c			\
@@ -75,7 +78,7 @@ FILES_GENERIC	=	ft_split_count_replenish.c			\
 ## ALL SOURCE FOLDERS
 
 SRC_DIRS		=	$(BUILTINS)		$(EXEC)	$(FD_MAN)	$(STRUCT) 	\
-					$(EXPAND)		$(GENERIC)
+					$(EXPAND)		$(GENERIC)  $(LEXICON)
 
 SRCS		:= 		$(foreach src_dir,$(SRC_DIRS),$(wildcard $(SRC_PATH)/$(src_dir)/*.c))
 

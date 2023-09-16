@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:50:30 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/16 17:29:30 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 19:08:59 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define TOKEN_LIST_H
 
 # include <stdlib.h>
+# include "minishell.h"
 
 typedef struct s_token_node	t_token_node;
 typedef struct s_token_list	t_token_list;
@@ -68,14 +69,8 @@ enum e_token
 # define PRINT_OUTDIR_TRUN ">"
 # define PRINT_ARG "arg"
 
-size_t			ft_strlen(const char *s);
-void			print_token(t_token_node *token);
-int				ft_isspace(int c);
-int				ft_isquote(int c);
-void			*ft_free_set_null(void *ptr);
-void			*ft_free_charmat_null(void *table, void (*del)(void *));
-char			*ft_strdup_len(char *s, int len);
-void			*perror_msg_ptr(char *text);
+
+
 t_token_node	*new_token_node(int type, char *text);
 t_token_list	*token_list_new(void);
 int				token_list_in_head(t_token_list *list, int type, char *text);
@@ -83,6 +78,8 @@ int				token_list_in_tail(t_token_list *list, int type, char *text);
 void			token_list_del_head(t_token_list *list);
 void			token_list_del_tail(t_token_list *list);
 void			token_list_destroy(t_token_list **list);
+void			token_list_insert_after(t_token_list *list, t_token_node *after, t_token_node *node);
+void			token_list_move_top(t_token_list *to, t_token_list *from, t_token_node *until, int count);
 void			token_list_head_print(t_token_list *list, \
 void (*pnt)(t_token_node *));
 void			token_list_tail_print(t_token_list *list, \
@@ -91,9 +88,14 @@ void			token_list_head_print(t_token_list *list, \
 void (*pnt)(t_token_node *));
 void			token_list_tail_print(t_token_list *list, \
 void (*pnt)(t_token_node *));
+
+
+
+void			prompt_to_list(t_token_list *list, char *prompt);
 void			update_quote_count(char **prompt, int *squotes, int *dquotes);
 int				is_token(char **str, int *place_token, int to_update);
 int				token_is_operator(int token);
 char			*token_enum_to_text(int token);
+void			print_token(t_token_node *token);
 
 #endif

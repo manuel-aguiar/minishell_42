@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:26:37 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/16 16:49:37 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 18:26:02 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	run_cd(t_block *block)
 	char	*curr;
 
 	curr = getcwd(NULL, 0);
-	temp = ft_strjoin("OLDPWD=", curr);
+	temp = ft_strjoin("OLDPWD=", curr);								//protect
 	free(curr);
 	if (cd_exists(block) == 0)
 	{
@@ -57,10 +57,7 @@ static int	upd_pwd(t_block *block)
 	temp = ft_strjoin("PWD=", curr);
 	free(curr);
 	if (!temp)
-	{
-		perror_msg("malloc");
-		return (0);
-	}
+		return (perror_msg_int("malloc", 0));
 	env_add(block, temp);
 	free(temp);
 	return (1);

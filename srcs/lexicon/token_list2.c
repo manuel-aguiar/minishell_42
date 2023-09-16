@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenlist2.c                                       :+:      :+:    :+:   */
+/*   token_list2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:59:23 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/16 17:32:41 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 18:26:35 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,32 +65,4 @@ void	token_list_destroy(t_token_list **list)
 		delete = next;
 	}
 	ft_free_set_null(list);
-}
-
-void	token_list_head_print(t_token_list *list, void (*pnt)(t_token_node *))
-{
-	t_token_node	*cur;
-
-	if (!list)
-		return ;
-	cur = list->head;
-	while (cur)
-	{
-		pnt(cur);
-		cur = cur->next;
-	}
-}
-
-void	token_list_tail_print(t_token_list *list, void (*pnt)(t_token_node *))
-{
-	t_token_node	*cur;
-
-	if (!list)
-		return ;
-	cur = list->tail;
-	while (cur)
-	{
-		pnt(cur);
-		cur = cur->prev;
-	}
 }

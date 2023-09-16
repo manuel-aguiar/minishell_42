@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:32:56 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/16 17:33:07 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 19:12:31 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_token_node	*new_token_node(int type, char *text)
 
 	new = malloc(sizeof(*new));
 	if (!new)
-		return (perror_msg_ptr("malloc"));
+		return (perror_msg_ptr("malloc", NULL));
 	new->next = NULL;
 	new->prev = NULL;
 	new->type = type;
@@ -32,7 +32,7 @@ t_token_list	*token_list_new(void)
 
 	list = malloc(sizeof(*list));
 	if (!list)
-		return (perror_msg_ptr("malloc"));
+		return (perror_msg_ptr("malloc", NULL));
 	list->head = NULL;
 	list->tail = NULL;
 	list->len = 0;

@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:45:19 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/16 17:45:26 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 18:27:47 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*ft_strdup_len(char *s, int len)
 
 	dest = malloc(sizeof(*dest) * (len + 1));
 	if (!dest)
-		return (perror_msg_ptr("malloc"));
+		return (perror_msg_ptr("malloc", NULL));
 	if (dest)
 	{
 		memcpy(dest, s, len);
