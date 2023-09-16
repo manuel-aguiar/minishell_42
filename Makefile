@@ -33,11 +33,11 @@ GENERIC			=	generic_utils
 
 ## SOURCE FILES ##
 
-FILES_BUILTINS	=	bi_exit.c 				\
-					builtins_aux.c 			\
-					builtins.c				\
-					cd.c					\
-					env.c
+FILES_BUILTINS	=	bi_exit.c 								\
+					bi_cd.c 								\
+					bi_check_and_exec.c						\
+					bi_pwd_echo_unset_export.c				\
+					bi_env.c
 
 FILES_EXEC		=	exec.c					\
 					main.c
@@ -52,10 +52,12 @@ FILES_STRUCT	=	ms_prompt.c				\
 					signals.c
 
 
-FILES_EXPAND	=	wildcard_main.c				\
+FILES_EXPAND	=	wildcard_return.c				\
 					wildcard_search_files.c		\
 					wildcard_fit_candidates.c	\
-					expansion.c
+					wildcard_expansion.c		\
+					dollar_expansion.c			\
+					dolar_heredoc.c
 
 FILES_GENERIC	=	ft_split_count_replenish.c			\
 					ft_split_join.c			\

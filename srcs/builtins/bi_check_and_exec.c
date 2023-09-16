@@ -1,29 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins_aux.c                                     :+:      :+:    :+:   */
+/*   bi_check_and_exec.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:27:58 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/15 00:06:47 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 16:51:38 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*ft_strchr(const char *s, int c);
-
-char	*ft_strchr(const char *s, int c)
-{
-	while (*s != (char)c)
-	{
-		if (*s == '\0')
-			return (NULL);
-		s++;
-	}
-	return ((char *)s);
-}
 
 int	check_builtins(t_block *block)
 {
@@ -61,18 +48,4 @@ int	exec_builtin(t_block *block, int builtin)
 	else if (builtin == BI_EXPORT)
 		return (run_export(block));
 	return (1);
-}
-
-int	ft_isalpha(int c)
-{
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
-		return (1);
-	return (0);
-}
-
-int	ft_isdigit(int c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
 }

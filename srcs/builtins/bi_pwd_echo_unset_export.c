@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 17:09:22 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/14 23:29:04 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 16:51:38 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,11 @@ int	run_pwd(t_block *block)
 	int		i;
 
 	i = 0;
-	while (!ft_strnstr(block->ms->env[i], "PWD=", 4))
+	while (block->ms->env[i] && \
+	!ft_strnstr(block->ms->env[i], "PWD=", 4))
 		i++;
+	if (!block->ms->env[i])
+		return (1);
 	pwd = ft_strdup(&block->ms->env[i][4]);
 	if (!pwd)
 		return (perror_msg("malloc"));
@@ -80,25 +83,26 @@ static int	run_exp_list(t_block *block)
 	int	i;
 	int	f;
 
-	i = 0;
+	i = -1;
 	if (!block->ms->env)
 		return (1);
-	while (block->ms->env[i])
+	while (block->ms->env[++i])
 	{
 		f = -1;
 		ft_putstr_fd("declare -x ", block->final_out);
 		while (block->ms->env[i][++f] && block->ms->env[i][f] != '=')
 			write(block->final_out, &block->ms->env[i][f], 1);
-		if (ft_strchr(block->ms->env[i], '='))
-			write(block->final_out, &block->ms->env[i][f], 1);
-		f++;
-		if (ft_strchr(block->ms->env[i], '='))
+		if (block->ms->env[i][f] && block->ms->env[i][f] == '=')
+		{
+			write(block->final_out, &block->ms->env[i][f++], 1);
 			ft_putstr_fd("\"", block->final_out);
-		ft_putstr_fd(&block->ms->env[i][f], block->final_out);
-		if (ft_strchr(block->ms->env[i], '='))
+		}
+		if (block->ms->env[i][f])
+			ft_putstr_fd(&block->ms->env[i][f], block->final_out);
+		if ((block->ms->env[i][f] && block->ms->env[i][f] == '=') \
+		|| (block->ms->env[i][f - 1] && block->ms->env[i][f - 1] == '='))
 			ft_putstr_fd("\"", block->final_out);
 		ft_putstr_fd("\n", block->final_out);
-		i++;
 	}
 	return (1);
 }

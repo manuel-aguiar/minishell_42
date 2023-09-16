@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/16 16:27:54 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 16:51:35 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -303,7 +303,10 @@ void	perror_child_exit(t_block *block, char *function, int errcode, int with_ms)
 //////////// EXPANSIONS //////////////
 //////////////////////////////////////
 
-/*wildcard_main.c*/
+/*wildcard_expansion.c*/
+int		expand_wildcards(char **to_expand, char **fail_return);
+
+/*wildcard_return.c*/
 char    *wildcard(char *pattern, int pat_len, int *match_count);
 void	*destroy_wildcard(t_wildc *wildcard, int clean_exit);
 
@@ -315,9 +318,10 @@ void    void_putstr(void *str);
 int		list_all_wildcard_matches(t_wildc *wildc, char *path, int cur_lvl);
 char    **list_to_array(t_vdmlist *list);
 
-/* expansion.c */
+/* dollar_expansion.c */
 int     expand_dollars(char **to_expand, t_ms *ms);
-int     expand_wildcards(char **to_expand, char **fail_return);
+
+/* dollar_heredoc*/
 int     here_doc_expand_dollars(char **to_expand, t_ms *ms);
 
 
@@ -344,12 +348,12 @@ int		run_exit(t_block *block);
 int		set_beg_path(t_block *block, char **curpath, char *curr);
 int		cd_exists(t_block *block);
 
+int		set_beg_path(t_block *block, char **curpath, char *curr);
+int		cd_exists(t_block *block);
+
 char	*ft_strchr(const char *s, int c);
-
-void	rm_beg_end(char *curpath);
-
 int	    get_corr_env(t_block *block, char *arg, int is_exporting);
-void	env_add(t_block *block, char *new);
+int		env_add(t_block *block, char *new);
 
 int	    ft_isdigit(int c);
 int	    ft_isalpha(int c);

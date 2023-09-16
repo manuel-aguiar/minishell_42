@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   bi_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 19:21:09 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/14 23:29:45 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 16:49:58 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,23 +84,23 @@ int	get_corr_env(t_block *block, char *arg, int is_exporting)
 	|| ft_isdigit(arg[j]) \
 	|| (arg[j] == '=' && is_exporting))
 		j++;
-	if ((arg[0] == '=' && is_exporting) \
-	|| (ft_strchr(arg, '=') && !is_exporting))
+	if (j > 0 && (arg[0] == '=' && is_exporting) \
+	|| (ft_strrchr(arg, '=') && !is_exporting))
 		return (env_error(block, is_exporting, arg));
 	while (block->ms->env[++i])
 	{
 		f = 0;
 		while (block->ms->env[i][f] && block->ms->env[i][f] != '=')
 			f++;
-		if (--f < --j)
+		if (f < j)
 			f = j;
-		if (ft_strncmp(block->ms->env[i], arg, f) == 0)
+		if (f > 0 && ft_strncmp(block->ms->env[i], arg, --f) == 0)
 			return (i);
 	}
 	return (-1);
 }
 
-void	env_add(t_block *block, char *new)
+int	env_add(t_block *block, char *new)
 {
 	char	**res;
 	int		len;
@@ -109,7 +109,7 @@ void	env_add(t_block *block, char *new)
 	len = ft_matrixlen(block->ms->env);
 	res = malloc((len + 2) * sizeof(*res));
 	if (!res)
-		return ;
+		return (0);
 	i = -1;
 	while (++i < len + 1)
 	{
@@ -117,7 +117,7 @@ void	env_add(t_block *block, char *new)
 		{
 			res[i] = ft_strdup(new);
 			if (!res[i])
-				return (perror("malloc"));
+				return (perror_msg("malloc"));
 		}
 		else
 			res[i] = block->ms->env[i - 1];
@@ -125,4 +125,5 @@ void	env_add(t_block *block, char *new)
 	res[i] = NULL;
 	free(block->ms->env);
 	block->ms->env = res;
+	return (0);
 }
