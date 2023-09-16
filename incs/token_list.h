@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:50:30 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/16 23:30:04 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 00:30:13 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define TOKEN_LIST_H
 
 # include <stdlib.h>
-# include "minishell.h"
+# include "libft.h"
 
 typedef struct s_token_node	t_token_node;
 typedef struct s_token_list	t_token_list;

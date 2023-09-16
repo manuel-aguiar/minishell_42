@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 20:10:15 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/16 23:30:04 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 00:28:49 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int free_split_prompt(t_block *block)
     if (block->child_exit_status)
         ft_free_set_null(&block->child_exit_status);
     if (block->io_files)
-        vdmlist_destroy(&block->io_files, destroy_redir);
+        token_list_destroy(&block->io_files);
     return (0);
 }
 
@@ -87,14 +87,14 @@ int setup_split_prompt_struct(t_block *block)
 		if (!block->op_id || !block->child_prompts || !block->child_pids)
 		{
 			perror_msg("malloc");
-			return (new_free_split_prompt(block));
+			return (free_split_prompt(block));
 		}
 		i = 0;
 		while (i < block->op_count + 1)
 		{
 			block->child_prompts[i] = token_list_new();
 			if (!block->child_prompts[i])
-				return (new_free_split_prompt(block));
+				return (free_split_prompt(block));
 			i++;
 		}
 	}
@@ -156,7 +156,7 @@ int split_extract_redirections(t_block *block)
 	t_token_node *last;
 
 	last = block->prompt->tail;
-	while (last && !token_is_redirection(last->type))
+	while (last && !token_is_redirection(last))
 		last = last->prev;
 	block->io_files = token_list_new();
 	if (!block->io_files)
@@ -212,7 +212,6 @@ int split_prompt(t_block *block)
 {
     int             i;
 	int				has_parenthesis;
-    t_split_prompt  split;
 
     if (!setup_split_prompt_struct(block))
         return (free_split_prompt(block));

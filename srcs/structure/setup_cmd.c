@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 21:27:03 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/17 00:20:34 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 00:25:47 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,10 @@ int cmd_args_split_add_token(t_block *block, t_token_node *arg, int *move)
 	{
 		new = new_token_node(T_ARG, split[i++]);
 		if (!new)
-			return (ft_free_charmat_null(&split, free));
+		{
+			ft_free_charmat_null(&split, free);
+			return (0);
+		}
 		token_list_insert_after(block->prompt, arg, new);
 		arg = arg->next;
 	}
@@ -196,7 +199,7 @@ int manage_cmd_expansions(t_block *block)
 	if (!dump_list_to_cmd_args(block))
 		return (0);
 	block->cmd = ft_strdup(block->cmd_args[0]);
-	if (!block->cmd_arg)
+	if (!block->cmd)
 		return (0);
     return (1);
 }

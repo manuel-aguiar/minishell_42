@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/16 23:30:04 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 00:31:17 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 
 int print_child_pids(t_block *block)
 {
-    printf("i am [%s], starting status %d, mypid %d, my children are:\n       ", block->prompt, block->my_status, getpid());
+    //printf("i am [%s], starting status %d, mypid %d, my children are:\n       ", block->prompt, block->my_status, getpid());
     int i = 0;
     while (i < block->op_count + 1)
     {
@@ -314,7 +314,7 @@ void    print_execution_tree(t_block *block)
     i = 0;
     if (!block)
         return ;
-    printf("lvl %d, id %d, prompt [%s]\n", block->my_level, block->my_id, block->prompt);
+    //printf("lvl %d, id %d, prompt [%s]\n", block->my_level, block->my_id, block->prompt);
     if (!block->is_cmd)
     {
         i = 0;
@@ -390,7 +390,7 @@ valgrind --track-fds=yes --trace-children=yes --leak-check=full --show-leak-kind
 */
 
 
-/*
+
 
 int main(int ac, char **av, char **env)
 {
@@ -404,8 +404,8 @@ int main(int ac, char **av, char **env)
 	return (0);
 }
 
-*/
 
+/*
 int	main(void)
 {
 	char			*line;
@@ -425,7 +425,7 @@ int	main(void)
 	}
 	return (0);
 }
-
+*/
 /*
 
 ALTERAÇÕES:
