@@ -23,7 +23,7 @@ char	*ft_strmapi(char *s, char (*f)(t_uint, char))
 	len = ft_strlen(s);
 	new = malloc(sizeof(*new) * (len + 1));
 	if (!new)
-		return (NULL);
+		return (perror_msg_ptr("malloc", NULL));
 	i = 0;
 	while (i < len)
 	{

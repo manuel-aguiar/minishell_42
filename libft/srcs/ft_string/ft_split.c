@@ -69,21 +69,20 @@ char	**ft_split(t_cchar *s, char c)
 		return (NULL);
 	numwords = wordnum(s, c);
 	split = malloc(sizeof(*split) * (numwords + 1));
-	if (split)
+	if (!split)
+		return (perror_msg_ptr("malloc", NULL));
+	i = 0;
+	while (i < numwords)
 	{
-		i = 0;
-		while (i < numwords)
-		{
-			s = lenword(s, c, &wordlen);
-			split[i] = malloc(sizeof(*split[i]) * (wordlen + 1));
-			if (split[i])
-				s = copyword(split[i], s, wordlen);
-			else
-				return (ft_free_charmat_null(&split, &free));
-			i++;
-		}
-		split[i] = NULL;
+		s = lenword(s, c, &wordlen);
+		split[i] = malloc(sizeof(*split[i]) * (wordlen + 1));
+		if (!split[i])
+			return (perror_msg_ptr("malloc", \
+			ft_free_charmat_null(&split, &free)));
+		s = copyword(split[i], s, wordlen);
+		i++;
 	}
+	split[i] = NULL;
 	return (split);
 }
 

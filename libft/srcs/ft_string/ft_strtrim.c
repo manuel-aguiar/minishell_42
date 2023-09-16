@@ -38,10 +38,9 @@ char	*ft_strtrim(t_cchar *s1, t_cchar *set)
 	while (*s1 && in_set(s1[len - 1], set))
 		len--;
 	new = malloc(sizeof(*new) * (len + 1));
-	if (new)
-	{
-		ft_memcpy(new, s1, len);
-		new[len] = '\0';
-	}
+	if (!new)
+		return (perror_msg_ptr("malloc", NULL));
+	ft_memcpy(new, s1, len);
+	new[len] = '\0';
 	return (new);
 }

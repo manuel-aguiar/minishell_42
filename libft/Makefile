@@ -29,6 +29,7 @@ LVDBL			=	void_dl_list
 ISORT			=	int_sorting
 MATH			=	math
 MPOOL			=	memory_pool
+ERROR			=	error_handling
 
 
 ## SOURCE FILES ##
@@ -125,12 +126,14 @@ FILES_MATH		=	bin_srch.c					\
 FILES_MPOOL		=	memory_pool.c				\
 					memory_pool_utils.c
 
+FILES_ERROR		=	error_perror_msg.c
+
 ## ALL SOURCE FOLDERS
 
 SRC_DIRS		=	$(ATOI)		$(MEMFUNC)	$(OUTPUT)	$(PRINTF) 	\
 					$(STRING)	$(GNL)		$(HASHINT)	$(LICIRC)	\
 					$(LIDBL)	$(LISNGL)	$(LIXOR)	$(LVDBL)	\
-					$(ISORT)	$(MATH)		$(MPOOL)
+					$(ISORT)	$(MATH)		$(MPOOL)	$(ERROR)
 
 SRCS		:= 		$(foreach src_dir,$(SRC_DIRS),$(wildcard $(SRC_PATH)/$(src_dir)/*.c))
 

@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 19:30:27 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/06/21 23:10:32 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 13:02:21 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static int	increase_line(char **new, char **old, int *old_size, int inc_size)
 	*new = malloc(sizeof(*new) * (*old_size + inc_size + 1));
 	if (!*new)
 	{
+		perror_msg_ptr("malloc", NULL);
 		if (*old)
 			ft_free_set_null(old);
 		return (0);

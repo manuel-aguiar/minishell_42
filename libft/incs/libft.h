@@ -25,5 +25,6 @@
 # include "linked_lists.h"
 # include "ft_math.h"
 # include "get_next_line.h"
+# include "error_handling.h"
 
 #endif

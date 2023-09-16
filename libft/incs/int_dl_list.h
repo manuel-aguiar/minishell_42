@@ -19,6 +19,7 @@
 
 # include "memory_pool.h"
 # include "ft_memfunc.h"
+# include "error_handling.h"
 
 typedef struct s_idmnode
 {

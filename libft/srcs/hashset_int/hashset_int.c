@@ -24,7 +24,7 @@ t_ihs_table	*ihs_init_table(int size)
 
 	table = malloc(sizeof(*table));
 	if (!table)
-		return (NULL);
+		return (perror_msg_ptr("malloc", NULL));
 	array = ft_calloc(sizeof(*array), size);
 	table->data = array;
 	table->size = size;

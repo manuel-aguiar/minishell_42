@@ -77,21 +77,20 @@ char	**ft_split_count(t_cchar *s, char *sepset, int *place_count)
 		return (NULL);
 	*place_count = wordnum(s, sepset);
 	split = malloc(sizeof(*split) * (*place_count + 1));
-	if (split)
+	if (!split)
+		return (perror_msg_ptr("malloc", NULL));
+	i = 0;
+	while (i < *place_count)
 	{
-		i = 0;
-		while (i < *place_count)
-		{
-			s = lenword(s, sepset, &wordlen);
-			split[i] = malloc(sizeof(*split[i]) * (wordlen + 1));
-			if (split[i])
-				s = copyword(split[i], s, wordlen);
-			else
-				return (ft_free_charmat_null(&split, &free));
-			i++;
-		}
-		split[i] = NULL;
+		s = lenword(s, sepset, &wordlen);
+		split[i] = malloc(sizeof(*split[i]) * (wordlen + 1));
+		if (!split[i])
+			return (perror_msg_ptr("malloc", \
+			ft_free_charmat_null(&split, &free)));
+		s = copyword(split[i], s, wordlen);
+		i++;
 	}
+	split[i] = NULL;
 	return (split);
 }
 

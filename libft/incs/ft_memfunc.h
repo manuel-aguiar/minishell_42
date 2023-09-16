@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include <stddef.h>
 # include <limits.h>
+# include "error_handling.h"
 
 # if defined(__LP64__)
 #  define UL_SIZE 8

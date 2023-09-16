@@ -26,10 +26,9 @@ char	*ft_substr(t_cchar *s, t_uint start, size_t len)
 	if (start > og_len || len == 0)
 		new_len = 0;
 	new = malloc(sizeof(*new) * (new_len + 1));
-	if (new)
-	{
-		ft_memcpy(new, &s[start], new_len);
-		new[new_len] = '\0';
-	}
+	if (!new)
+		return (perror_msg_ptr("malloc", NULL));
+	ft_memcpy(new, &s[start], new_len);
+	new[new_len] = '\0';
 	return (new);
 }

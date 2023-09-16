@@ -27,10 +27,9 @@ char	*ft_strdup(t_cchar *s)
 
 	len = ft_strlen(s);
 	dest = malloc(sizeof(*dest) * (len + 1));
-	if (dest)
-	{
-		ft_memcpy(dest, s, len);
-		dest[len] = '\0';
-	}
+	if (!dest)
+		return (perror_msg_ptr("malloc", NULL));
+	ft_memcpy(dest, s, len);
+	dest[len] = '\0';
 	return (dest);
 }

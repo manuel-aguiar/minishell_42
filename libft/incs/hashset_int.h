@@ -19,6 +19,7 @@
 # include "int_sl_list.h"
 # include "ft_memfunc.h"
 # include "ft_math.h"
+# include "error_handling.h"
 
 typedef struct s_ihs_table
 {

@@ -15,8 +15,9 @@
 # define FT_ATOI_H
 
 # include <stdlib.h>
-
 # include <ft_string.h>
+
+# include "error_handling.h"
 /*
 	DESCRIPTION OF FUNCTIONS
 

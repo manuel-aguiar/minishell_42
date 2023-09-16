@@ -27,7 +27,8 @@ void	*ft_calloc(size_t nmemb, size_t bytes)
 	void	*new;
 
 	new = malloc(nmemb * bytes);
-	if (new)
-		ft_memset(new, 0, nmemb * bytes);
+	if (!new)
+		return (perror_msg_ptr("malloc", NULL));
+	ft_memset(new, 0, nmemb * bytes);
 	return (new);
 }

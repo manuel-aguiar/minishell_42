@@ -17,6 +17,7 @@
 # include <stdlib.h>
 
 # include "ft_memfunc.h"
+# include "error_handling.h"
 
 typedef unsigned long	t_ulong;
 typedef unsigned int	t_uint;

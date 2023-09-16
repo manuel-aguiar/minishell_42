@@ -58,11 +58,10 @@ char	*ft_itoa(int nb)
 		len++;
 	len += numdigits(nb);
 	str = malloc(sizeof(*str) * (len + 1));
-	if (str)
-	{
-		if (nb < 0)
-			str[0] = '-';
-		stringit(str, nb, len);
-	}
+	if (!str)
+		return (perror_msg_ptr("malloc", NULL));
+	if (nb < 0)
+		str[0] = '-';
+	stringit(str, nb, len);
 	return (str);
 }

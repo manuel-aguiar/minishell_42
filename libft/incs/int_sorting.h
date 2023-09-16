@@ -15,7 +15,7 @@
 # define INT_SORTING_H
 
 # include "ft_memfunc.h"
-
+# include "error_handling.h"
 # include <stdlib.h>
 
 # define TIM_SORT_RUN 32
