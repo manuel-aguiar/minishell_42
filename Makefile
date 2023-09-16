@@ -24,6 +24,7 @@ LIB_INC_P	=		incs
 LIBFT		=		libft.a
 
 ## SRC SUB-FOLDERS ##
+LEXICON			=	lexicon
 BUILTINS		=	builtins
 EXEC 			=	execution
 FD_MAN			=	fd_management
@@ -32,6 +33,12 @@ EXPAND			=	expansions
 GENERIC			=	generic_utils
 
 ## SOURCE FILES ##
+
+FILES_LEXICON	=	create_tokens.c 						\
+					prompt_to_list.c 						\
+					token_list_print.c						\
+					token_list1.c							\
+					token_list2.c
 
 FILES_BUILTINS	=	bi_exit.c 								\
 					bi_cd.c 								\

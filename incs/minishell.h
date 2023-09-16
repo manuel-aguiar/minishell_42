@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/16 16:51:35 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 17:41:31 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 
 
 # include "libft.h"
+# include "token_list.h"
 
 # define TRUE 1
 # define FALSE 0
@@ -272,6 +273,12 @@ int     infiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i)
 int     outfiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i);
 int     manage_io_files(t_block *block);
 
+//////////////////////////////////////
+//////////// MANAGE FILES ////////////
+//////////////////////////////////////
+
+/*heredoc_temp.c*/
+int	heredoc_temp_name(t_block *block);
 
 int here_doc(t_block *block, char *eof, int has_quote_guard);
 int remove_unguarded_quotes(char **str, int *has_guards);
@@ -286,7 +293,6 @@ int	exec_command(t_pipex *pipex, char *cmd);
 
 
 /* error_message.c */
-int	    perror_msg(char *text);
 int	    error_msg(char *text);
 
 
