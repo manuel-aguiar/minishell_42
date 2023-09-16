@@ -7,7 +7,7 @@ t_redir *init_redir(char *file, int type, int has_quote_guard)
 
     redir = malloc(sizeof(*redir));
     if (!redir)
-        return (NULL);
+        return (perror_msg_ptr("malloc", NULL));
     redir->file = file;
     redir->type = type;
     redir->has_quote_guard = has_quote_guard;
@@ -69,22 +69,19 @@ t_block *init_block(t_ms *ms, t_block *father, char *pmt, int my_id)
 
     new = malloc(sizeof(*new));
     if (!new)
-    {
-        perror("malloc");
-        return (0);
-    }
+		return (perror_msg_ptr("malloc", NULL));
     new->ms = ms;
 	new->father = father;
 	new->i_am_forked = 0;
 	if (father)
 	{
-		new->prompt = ft_strdup(pmt);
+		new->prompt = ft_strdup(pmt);						//check for NULL
 		new->father->child_list[my_id] = new;
 		new->my_level = new->father->my_level + 1;
 	}
 	else
 	{
-		new->prompt = ft_strdup(ms->prompt);
+		new->prompt = ft_strdup(ms->prompt);				//check for NULL
 		ms->first = new;
 		new->my_level = 0;
 	}
@@ -155,12 +152,12 @@ int ms_setup_initial_env(t_ms *ms, char **env)
     if (env)
     {
         if (!ft_charmatdup(&ms->env, env))
-	        return (perror_msg("malloc"));
+	        return (perror_msg_int("malloc", 0));
 	    return (1);
     }
     ms->env = malloc(sizeof(*ms->env) * 1);
     if (!ms->env)
-        return (perror_msg("malloc"));
+        return (perror_msg_int("malloc", 0));
     ms->env[0] = NULL;
     return (1);
 }
@@ -180,12 +177,12 @@ int ms_increase_shell_level(t_ms *ms)
         return (1);
     new_lvl_itoa = ft_itoa(ft_atoi(&ms->env[i][6]) + 1);
     if (!new_lvl_itoa)
-        return (perror_msg("malloc"));
+        return (perror_msg_int("malloc", 0));
     new_shlvl_env = triple_join("SHLVL=", "", new_lvl_itoa);                        // substituir pelo ft_strjoin na boa;
     if (!new_shlvl_env)
     {
         free(new_lvl_itoa);
-        return (perror_msg("malloc"));
+        return (perror_msg_int("malloc", 0));
     }
     free(new_lvl_itoa);
     free(ms->env[i]);

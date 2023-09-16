@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/16 12:52:17 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 15:50:29 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,16 +161,19 @@ typedef struct s_prep_cmd
 
 typedef struct s_wildc
 {
-    char        *pattern;
-    char        **sub_pats;
-    int         depth;
-    int         sub_count;
-    int         pat_len;
-    t_vdmlist   *files;
-    char        *test;
-    char        **split;
-    char        *join;
-    int         match_count;
+    char        	*pattern;
+    char       	 	**sub_pats;
+    int        		depth;
+    int        		sub_count;
+    int        		pat_len;
+    t_vdmlist  		*files;
+    char       		*test;
+    char        	**split;
+    char       		*join;
+    int         	match_count;
+	struct dirent   *entry;
+	char            *filename;
+	char			*copy_dir;
 }   t_wildc;
 
 
@@ -296,9 +299,16 @@ void	error_child_exit(t_block *block, char *function, char *cmd, int errcode, in
 int     perror_msg_func(t_block *block, char *function, int errcode, int with_ms);
 void	perror_child_exit(t_block *block, char *function, int errcode, int with_ms);
 
+//////////////////////////////////////
+//////////// EXPANSIONS //////////////
+//////////////////////////////////////
+
+/*wildcard_main.c*/
+char    *wildcard(char *pattern, int pat_len, int *match_count);
+
+/*wildcard_fit_candidates.c*/
 
 /* wildcard.c */
-char    *wildcard(char *pattern, int pat_len, int *match_count);
 void    void_putstr(void *str);
 char    *triple_join(char *first, char *second, char *third);
 
@@ -320,7 +330,9 @@ int     ft_matrixlen(void *mat);
 int     ft_charmatdup(char ***dest, char **src);
 char	**ft_split_count_replenish(t_cchar *s, t_cchar *og, char *sepset, int *place_count);
 
-/*BUILTINS*/
+//////////////////////////////////////
+//////////// BUILTINS ////////////////
+//////////////////////////////////////
 
 int		check_builtins(t_block *block);
 int		exec_builtin(t_block *block, int builtin);

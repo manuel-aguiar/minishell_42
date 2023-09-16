@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/15 01:06:41 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 16:14:04 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -389,6 +389,9 @@ int ms_prompt_loop(t_ms *ms)
 valgrind --track-fds=yes --trace-children=yes --leak-check=full --show-leak-kinds=all ./minishell
 */
 
+
+
+
 int main(int ac, char **av, char **env)
 {
 	t_ms	ms;
@@ -401,6 +404,26 @@ int main(int ac, char **av, char **env)
 	return (0);
 }
 
+
+/*
+int main(void)
+{
+    char            *line;
+	char *ptr;
+	int match;
+    while (1)
+    {
+        line = readline("line: ");
+        if (!line)
+            break ;
+		ptr = wildcard(line, ft_strlen(line), &match);
+		printf("wildcard [%s]\n", ptr);
+		free(ptr);
+
+	}
+return 0;
+}
+*/
 /*
 
 ALTERAÇÕES:
