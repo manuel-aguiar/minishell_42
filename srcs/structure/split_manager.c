@@ -1,111 +1,49 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   split_manager.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/16 20:10:15 by mmaria-d          #+#    #+#             */
+/*   Updated: 2023/09/16 21:53:14 by mmaria-d         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-
-    split_redirections
-    function used to extract the redirections from a split that is not final and as son-blocks below
-    The file descriptors present at this level must be extracted in order to be passed to its sons.
-
-    The function calls ft_split_count_replenish
-        this function, splits help_pmt that has been cleaned up of quotes and parenthesis in order
-        to correctly seperate the arguments. Then, it uses to original to copy the base values
-        found on the original prompt but split according to the required criteria (replenishes the former string)
-
-    A split with redirections can only have at most 1 set of open parent parenthesis. Since redirections affecting
-    parenthesis can only come afterwards, we will be sure that the parenthesis correspond to children[0];
-    After that, we safely remove the outside parenthesis and move on.
-
-
-*/
-
-
-
-/*
-    free_split_prompt
-    will free the pointers within the t_split_prompt structure
-    it doesn't free the structure itself since it is allocated on the stack by the "split_prompt"
-    function call;
-
-*/
-
-void    set_in_between_to(char *pmt, char start, char end, char newchar)
+void	destroy_child_prompts(t_block *block)
 {
-    int i;
-    int open;
+	int i;
 
-    open = 0;
-    i = 0;
-    while (pmt[i])
-    {
-        while (pmt[i] && pmt[i] != start)
-            i++;
-        if (pmt[i])
-        {
-            open = 1;
-            i++;
-            while (pmt[i] && open)
-            {
-                if (pmt[i] == start)
-                    open++;
-                if (pmt[i] == end)
-                {
-                    open--;
-                    if (end == start)
-                        open--;
-                }
-                if (open)
-                    pmt[i] = newchar;
-                i++;
-            }
-        }
-    }
+	while (i < block->op_count + 1)
+	{
+		if (block->child_prompts[i])
+			token_list_destroy(&block->child_prompts[i]);
+		i++;
+	}
+	ft_free_set_null(&block->child_list);
 }
 
-char *split_copy_empty_quotes_and_parenthesis(char *prompt)
+int free_split_prompt(t_block *block)
 {
-    char *copy;
-
-    copy = ft_strdup(prompt);
-    if (!copy)
-    {
-        perror("malloc");
-        return (0);
-    }
-    set_in_between_to(copy, '"', '"', -1);
-    set_in_between_to(copy, '\'', '\'', -1);
-    set_in_between_to(copy, '(', ')', -1);
-    return (copy);
+	destroy_child_prompts(block);
+	if (block->child_list)
+		ft_free_set_null(&block->child_list);
+    if (block->op_id)
+        ft_free_set_null(&block->op_id);
+    if (block->child_pids)
+        ft_free_set_null(&block->child_pids);
+    if (block->child_exit_status)
+        ft_free_set_null(&block->child_exit_status);
+    if (block->io_files)
+        vdmlist_destroy(&block->io_files, destroy_redir);
+    return (0);
 }
 
+int	token_is_big_operator(t_token_node *token);
 
-int split_extract_redirections(t_split_prompt *split)
-{
-    int     i;
-
-    split->get_redir = ft_split_count_replenish(split->prompt_copy, split->prompt_orig, " ", &split->redir_split_len);
-    if (!split->get_redir)
-        return (perror_msg("malloc"));
-    i = 0;
-    while (i < split->redir_split_len)
-    {
-        if (split->get_redir[i][0] == '<')
-            infiles_from_args_to_list(&split->io_files, split->get_redir, &i);
-        else if (split->get_redir[i][0] == '>')
-            outfiles_from_args_to_list(&split->io_files, split->get_redir, &i);
-        else
-            i++;
-    }
-    free(split->children[0]);
-    split->children[0] = split->get_redir[0];
-    ft_free_set_null(&split->get_redir);
-    return (1);
-}
-
-
-
-
-int split_count_operators(t_split_prompt *split)
+int check_if_cmd_and_count_operators(t_block *block)
 {
 	int open_par;
     int count;
@@ -113,253 +51,179 @@ int split_count_operators(t_split_prompt *split)
 
     count = 0;
 	open_par = 0;
-	cur = split->prompt->head;
+	cur = block->prompt->head;
     while (cur)
     {
         if (cur->type == T_OPEN_PAR)
+		{
+			block->must_subshell = 1;
 			open_par++;
+		}
 		if (cur->type == T_CLOSE_PAR)
 			open_par--;
-		if (!open_par && (cur->type == T_OP_PIPE || cur->type == T_OP_OR || cur->type == T_OP_AND))
+		if (!open_par && token_is_big_operator(cur))
 			count++;
 		cur = cur->next;
     }
+	if (!count && !block->must_subshell)
+		block->is_cmd = 1;
     return (count);
 }
 
-int split_get_operator(t_split_prompt *split, int index, int count)
+
+
+int setup_split_prompt_struct(t_block *block)
 {
-    if (split->prompt_copy[index] == split->prompt_copy[index + 1])
-    {
-        if (split->prompt_copy[index] == '|')
-            split->op_id[count] = OP_OR;
-        if (split->prompt_copy[index] == '&')
-            split->op_id[count] = OP_AND;
-        index++;
-    }
-    else
-        split->op_id[count] = OP_PIPE;
-    index++;
-    return (index);
+	int	i;
+
+    block->op_count = check_if_cmd_and_count_operators(block);
+	if (!block->is_cmd)
+	{
+		block->op_id = malloc(sizeof(*(block->op_id)) * block->op_count);
+		block->child_prompts = ft_calloc((block->op_count + 2), sizeof(*(block->child_prompts)));
+		block->child_list = ft_calloc((block->op_count + 2), sizeof(*(block->child_list)));
+		block->child_pids = ft_calloc(block->op_count + 1, sizeof(*(block->child_pids)));
+		block->child_exit_status = ft_calloc(block->op_count + 1, sizeof(*(block->child_exit_status)));
+		if (!block->op_id || !block->child_prompts || !block->child_pids)
+		{
+			perror_msg("malloc");
+			return (new_free_split_prompt(block));
+		}
+		i = 0;
+		while (i < block->op_count + 1)
+		{
+			block->child_prompts[i] = token_list_new();
+			if (!block->child_prompts[i])
+				return (new_free_split_prompt(block));
+			i++;
+		}
+	}
+    return (1);
 }
 
-int split_children_and_operators(t_split_prompt *split)
+int	token_is_big_operator(t_token_node *token)
 {
-    int len;
+	if (!token)
+		return (0);
+	if (token->type == T_OP_PIPE \
+	|| token->type == T_OP_OR || token->type == T_OP_AND)
+		return (1);
+	return (0);
+}
+
+int	token_is_redirection(t_token_node *token)
+{
+	if (!token)
+		return (0);
+	if (token->type == T_INDIR_HD \
+	|| token->type == T_INDIR_INF \
+	|| token->type == T_OUTDIR_AP
+	|| token->type == T_OUTDIR_TRUN)
+		return (1);
+	return (0);
+}
+
+int split_children_and_operators(t_block *block)
+{
+	t_token_node	*cur;
     int all;
     int i;
 
     all = 0;
     i = 0;
-    while (all < split->op_count)
+	cur = block->prompt->head;
+    while (all < block->op_count)
     {
-        len = 0;
-        while (split->prompt_copy[i + len] != '&' && split->prompt_copy[i + len] != '|')
-            len++;
-        split->children[all] = malloc(sizeof(*(split->children[all])) * (len + 1));
-        if (!split->children[all])
-            return (perror_msg("malloc"));
-        ft_memcpy(split->children[all], &split->prompt_orig[i], len);
-        split->children[all][len] = '\0';
-        i = split_get_operator(split, i + len, all);
-        all++;
-    }
-    split->children[all++] = ft_strdup(&split->prompt_orig[i]);
-    if (!split->children[all - 1])
-        return (0);
-    split->children[all] = NULL;
-    return (1);
-}
-
-int free_split_prompt(t_split_prompt *split)
-{
-    if (split->prompt_copy)
-        ft_free_set_null(&split->prompt_copy);
-    if (split->children)
-        ft_free_charmat_null(&split->children, free);
-    if (split->op_id)
-        ft_free_set_null(&split->op_id);
-    if (split->child_pids)
-        ft_free_set_null(&split->child_pids);
-    if (split->get_redir)
-        ft_free_charmat_null(&split->children, free);
-    if (split->io_files)
-        vdmlist_destroy(&split->io_files, destroy_redir);
-    return (0);
-}
-
-int setup_split_prompt_struct(t_split_prompt *split, t_block *block)
-{
-    split->prompt = block->prompt;
-    split->op_id = NULL;
-    split->children = NULL;
-    split->child_pids = NULL;
-    split->get_redir = NULL;
-    split->io_files = NULL;
-    split->parenthesis_fork = 0;
-    split->has_unnecessary_parenthesis = 0;
-    split->op_count = split_count_operators(split);
-    split->op_id = malloc(sizeof(*(split->op_id)) * split->op_count);
-    split->children = ft_calloc((split->op_count + 2), sizeof(*(split->children)));
-    split->child_pids = ft_calloc(split->op_count + 1, sizeof(*(split->child_pids)));
-    if (!split->op_id || !split->children || !split->child_pids)
-    {
-        perror_msg("malloc");
-        return (free_split_prompt(split));
+		i = 0;
+        while (cur && !token_is_big_operator(cur))
+		{
+			cur = cur->next;
+			i++;
+		}
+		if (cur)
+			token_list_move_top_to_new(block->child_prompts[all], \
+			block->prompt, cur->prev, i);
+		block->op_id[all] = cur->type;
+		token_list_del_head(block->prompt);
+		all++;
     }
     return (1);
 }
 
-
-int dump_split_to_block(t_block *block, t_split_prompt *split)
+int split_extract_redirections(t_block *block)
 {
-    block->child_prompts = split->children;
-    block->child_pids = split->child_pids;
-    block->op_id = split->op_id;
-    block->op_count = split->op_count;
-    block->io_files = split->io_files;
-    block->parenthesis_fork = split->parenthesis_fork;
-    block->has_unnecessary_parenthesis = split->has_unnecessary_parenthesis;
-    free(split->prompt_copy);
-    if (!block->is_cmd)
-    {
-        block->child_list = malloc(sizeof(*block->child_list) * (block->op_count + 2));
-		block->child_exit_status = malloc(sizeof(*block->child_list) * (block->op_count + 1));
-        if (!block->child_list || !block->child_exit_status)
-        {
-            destroy_block(block);
-            return (perror_msg("malloc"));
-        }
-		ft_memset(block->child_exit_status, -1, sizeof(int) * (block->op_count + 1));
-    }
+    int     i;
+	t_token_node *last;
+
+	last = block->prompt->tail;
+	while (last && !token_is_redirection(last->type))
+		last = last->prev;
+	block->io_files = token_list_new();
+	if (!block->io_files)
+		return (0);
+	block->io_files->head = last->next;
+	last->next->prev = NULL;
+	last->next = NULL;
+	block->prompt->tail = last;
     return (1);
 }
 
-int has_corner_parenthesis(char *copy, char *original)
+int	cmd_extract_redirections(t_block *block)
 {
-    int i;
-    int open;
-    int start;
-    int end;
+	t_token_node *cur;
 
-    set_in_between_to(copy, '(', ')', ' ');
-    i = 0;
-    while (copy[i] && ft_isspace(copy[i]))
-        i++;
-    if (!copy[i] || copy[i] != '(')
-        return (0);
-    start = i++;
-    open = 1;
-    while (copy[i])
-    {
-        if (copy[i] == '(')
-            open++;
-        if (copy[i] == ')')
-            open--;
-        if (open == 0)
-        {
-            end = i;
-            while (ft_isspace(copy[++i]))
-                ;
-            if (!copy[i])
-            {
-                copy[start] = ' ';
-                copy[end] = ' ';
-                i = start + 1;
-                while (i < end)
-                {
-                    copy[i] = original[i];
-                    i++;
-                }
-                //printf("copy [%s] after removing corner\n", copy);
-                return (1);
-            }
-            return (0);
-        }
-        i++;
-    }
-    return (0);
+	cur = block->prompt->head;
+	while (cur)
+	{
+		if (token_is_redirection(cur->type))
+		{
+			if (!block->io_files)
+				block->io_files = token_list_new();
+			if (!block->io_files)
+				return (0);
+			cur = move_node_to_list_and_retrive_next(block->io_files, block->prompt, cur);
+		}
+		else
+			cur = cur->next;
+	}
 }
 
-int split_unnecessary_parenthesis(t_split_prompt *split)
+int remove_corner_parenthesis_and_arithmatic(t_block *block)
 {
-    char    *copy;
+	int	remove_corner;
 
-    copy = ft_strdup(split->children[0]);
-    if (!copy)
-        return (perror_msg("malloc"));
-    if (has_corner_parenthesis(copy, split->children[0]) \
-    && has_corner_parenthesis(copy, split->children[0]))
-        split->has_unnecessary_parenthesis = 1;
-    free(copy);
-    copy = ft_strdup(split->children[0]);
-    if (!copy)
-        return (perror_msg("malloc"));
-    //printf("split [%s] before removing\n", split->children[0]);
-    rm_corner_parenthesis(copy, split->children[0]);
-    //printf("split [%s] after removing\n", split->children[0]);
-    free(copy);
-    return (1);
+	if (block->prompt->len < 4)
+		return (0);
+	if (block->prompt->head->type == T_OPEN_PAR \
+	&& block->prompt->tail->type == T_CLOSE_PAR)
+		remove_corner = 1;
+	if (remove_corner \
+	&& block->prompt->head->next->type == T_OPEN_PAR \
+	&& block->prompt->tail->prev->type == T_CLOSE_PAR)
+		block->has_arithmatic_parenthesis = 1;
+	if (remove_corner)
+	{
+		token_list_del_head(block->prompt);
+		token_list_del_tail(block->prompt);
+	}
 }
 
 int split_prompt(t_block *block)
 {
     int             i;
+	int				has_parenthesis;
     t_split_prompt  split;
 
-    if (!setup_split_prompt_struct(&split, block))
-        return (0);
-    if (!split_children_and_operators(&split))
-        return (free_split_prompt(&split));
-    if (split.op_count == 0)
+    if (!setup_split_prompt_struct(block))
+        return (free_split_prompt(block));
+    split_children_and_operators(block);
+    if (!block->op_count && block->must_subshell)
     {
-        i = 0;
-        while (split.prompt_copy[i] && split.prompt_copy[i] != '(')
-            i++;
-        if (!split.prompt_copy[i])
-            block->is_cmd = 1;
-        else
-        {
-            //printf("split [%s] must be forked cause it has parenthesis\n", split.prompt_orig);
-            split.parenthesis_fork = 1;
-            if (!split_extract_redirections(&split) \
-            || !split_unnecessary_parenthesis(&split))
-                return (free_split_prompt(&split));
-            //printf("split [%s] has unnecessary? %d\n", split.prompt_orig, split.has_unnecessary_parenthesis);
-        }
+        if (!split_extract_redirections(block))
+			return (free_split_prompt(block));
+		remove_corner_parenthesis_and_arithmatic(block);
     }
-    if (!dump_split_to_block(block, &split))
-        return (0);
+	if (block->is_cmd && !cmd_extract_redirections(block))
+		return (0);
     return (1);
 }
-
-/*
-
-    print_split
-    This function serves only to print the split during dev phase, will not be a part of the final binary
-
-
-*/
-
-
-
-void    print_split(t_split_prompt *split)
-{
-    printf("split operators: %d, they are:\n", split->op_count);
-    int i = 0;
-    if (split->op_id)
-    {
-        while (i < split->op_count)
-            printf("%d ", split->op_id[i++]);
-    }
-    printf("\n children are: \n");
-    i = 0;
-    if (split->children)
-    {
-        while (i < split->op_count + 1)
-            printf("%s\n", split->children[i++]);
-    }
-    printf("total %d args\n", i);
-}
-
-

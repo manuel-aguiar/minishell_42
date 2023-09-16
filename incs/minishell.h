@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/16 20:14:16 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 21:28:51 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,8 @@ struct s_block
     int        		 *op_id;
     int       		  op_count;
     int        		 is_cmd;
-    int      	   has_unnecessary_parenthesis;
-    int       	  parenthesis_fork;
+    int      	   has_arithmatic_parenthesis;
+    int       	  must_subshell;
 
     int       	  pipefd[2];
     int       	  prev_pipe[2];                                    //posso precisar para unir os blocos filhos
@@ -115,7 +115,7 @@ struct s_block
 
     char    		*cmd;	                //decomposição do prompt
     char    		**cmd_args;                 //decomposição do prompt
-    t_vdmlist  	 *io_files;	            //decomposição do prompt, farão override ao infd do block, deixa de heredar do bloco anterior  void *list, com struct t_redir;
+    t_token_list  	 *io_files;	            //decomposição do prompt, farão override ao infd do block, deixa de heredar do bloco anterior  void *list, com struct t_redir;
     char       	 *here_doc;              //here_doc, just in case, analisado um a um;
     int        	 here_doc_fd;
     int        	 here_doc_index;
@@ -263,7 +263,7 @@ int     split_count_operators(t_split_prompt *split);
 char    *split_copy_empty_quotes_and_parenthesis(char *prompt);
 void    set_in_between_to(char *pmt, char start, char end, char newchar);
 void    print_split(t_split_prompt *split);
-int     free_split_prompt(t_split_prompt *split);
+int     free_split_prompt(t_block *block);
 
 
 //functions to prepare commands

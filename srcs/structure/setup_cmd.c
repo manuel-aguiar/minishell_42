@@ -200,7 +200,7 @@ int cmd_args_rm_quotes_and_split(t_prep_cmd *cmd)
 int cmd_args_expand_dollar_wildcard(t_prep_cmd *cmd)
 {
     int i;
-    
+
     i = 0;
     while (cmd->cmd_args[i])
     {

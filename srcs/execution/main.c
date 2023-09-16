@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/16 19:49:48 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 21:55:15 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,8 @@ int pipes_and_conditionals(t_block *block, int index, int *must_fork)
         || (block->op_id[index - 1] == OP_OR && block->ms->exit_status  == 0))
             return (0);
     }
-    if (block->parenthesis_fork \
-    && !block->has_unnecessary_parenthesis && block->op_count == 0)
+    if (block->must_subshell \
+    && !block->has_arithmatic_parenthesis && block->op_count == 0)
     {
         //printf("child: [%s] has parenthesis and must be forked\n", block->child_list[index]->prompt);
         *must_fork = 1;
@@ -238,7 +238,7 @@ int get_all_here_docs(t_block *block)
     {
         i = 0;
         while (block->child_list[i] \
-        && !block->has_unnecessary_parenthesis \
+        && !block->has_arithmatic_parenthesis \
         && save_signal(NULL) != EXIT_SIGINT)
         {
             get_all_here_docs(block->child_list[i]);
@@ -262,7 +262,7 @@ int execution_tree(t_block *block, int i_am_forked)
         return (0);
     if (block->is_cmd)
         execute(block);
-    else if (!block->has_unnecessary_parenthesis)
+    else if (!block->has_arithmatic_parenthesis)
     {
 		//printf("anything not cmd?\n");
         i = 0;
@@ -327,6 +327,8 @@ void    print_execution_tree(t_block *block)
     }
 }
 
+
+
 int setup_execution_tree(t_ms *ms, t_block *father, t_token_list *prompt, int my_id)
 {
     int     i;
@@ -337,7 +339,7 @@ int setup_execution_tree(t_ms *ms, t_block *father, t_token_list *prompt, int my
         return (0);
     if (!split_prompt(block))
         return (0);
-    if (block->is_cmd && !setup_cmd_pre_expansion(block))
+    if (block->is_cmd)
         return (0);
     if (!block->is_cmd)
     {
@@ -347,8 +349,7 @@ int setup_execution_tree(t_ms *ms, t_block *father, t_token_list *prompt, int my
             setup_execution_tree(ms, block, block->child_prompts[i], i);
             i++;
         }
-        block->child_list[i] = NULL;
-        ft_free_charmat_null(&block->child_prompts, free);
+        destroy_child_prompts(block);
     }
     return (1);
 }

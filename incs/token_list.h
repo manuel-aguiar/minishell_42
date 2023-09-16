@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:50:30 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/16 20:38:04 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 21:52:24 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ void (*pnt)(t_token_node *));
 void			token_list_tail_print(t_token_list *list, \
 void (*pnt)(t_token_node *));
 
+t_token_node	*move_node_to_list_and_retrive_next(t_token_list *to, t_token_list *from, t_token_node *target);
 
 
 int				prompt_to_list(t_token_list *list, char *prompt);
@@ -97,5 +98,8 @@ int				is_token(char **str, int *place_token, int to_update);
 int				token_is_operator(int token);
 char			*token_enum_to_text(int token);
 void			print_token(t_token_node *token);
+
+void	destroy_child_prompts(t_block *block);
+
 
 #endif

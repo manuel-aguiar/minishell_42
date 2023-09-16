@@ -49,7 +49,7 @@ void	destroy_block(void *og_block)
     if (block->prompt)
 	    ft_free_set_null(&block->prompt);
 	if (block->io_files)
-	    vdmlist_destroy(&block->io_files, destroy_redir);
+	    token_list_destroy(&block->io_files);
 	if (block->here_doc)
 	{
 	    close(block->here_doc_fd);
@@ -98,8 +98,8 @@ t_block *init_block(t_ms *ms, t_block *father, t_token_list *prompt, int my_id)
     new->op_count = 0;
     new->op_id = NULL;
 	new->is_cmd = 0;
-	new->has_unnecessary_parenthesis = 0;
-	new->parenthesis_fork = 0;
+	new->has_arithmatic_parenthesis = 0;
+	new->must_subshell = 0;
 
 	new->pipefd[0] = -1;
 	new->pipefd[1] = -1;

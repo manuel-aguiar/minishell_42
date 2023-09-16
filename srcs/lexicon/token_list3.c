@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 18:29:11 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/16 19:56:06 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 21:47:21 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,47 @@ void	token_list_move_top_to_new(t_token_list *to, t_token_list *from, t_token_no
 	if (from->head)
 		from->head->prev = NULL;
 	else
+	{
 		from->tail = NULL;
+		from->head = NULL;
+	}
 	until->next = NULL;
 	to->len += count;
 	from->len -= count;
 	return ;
+}
+
+t_token_node *move_node_to_list_and_retrive_next(t_token_list *to, t_token_list *from, t_token_node *target)
+{
+	t_token_node *retrieve;
+
+	retrieve = target->next;
+	if (target->prev)
+		target->prev->next = target->next;
+	else
+		from->head = target->next;
+	if (target->next)
+		target->next->prev = target->prev;
+	else
+		from->tail = target->prev;
+	if (!to->tail)
+	{
+		to->head = target;
+		to->tail = target;
+	}
+	else
+	{
+		to->tail->next = target;
+		target->prev = to->tail;
+		target->next = NULL;
+		to->tail = target;
+	}
+	++(to->len);
+	--(from->len);
+	if (from->len == 0)
+	{
+		from->head = NULL;
+		from->tail = NULL;
+	}
+	return (retrieve);
 }
