@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:47:59 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/16 23:30:04 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 00:35:08 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,5 +73,11 @@ void	print_token(t_token_node *token)
 {
 	printf("type [%s]  ", token_enum_to_text(token->type));
 	printf("text, [%s]", token->text);
+	printf("\n");
+}
+
+void	print_token_args(t_token_node *token)
+{
+	printf("[%s]   ", token->text);
 	printf("\n");
 }

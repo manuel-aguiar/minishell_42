@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/17 00:31:17 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 00:54:02 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -359,6 +359,7 @@ int ms_prompt_loop(t_ms *ms)
 	{
     	if (get_prompt(ms))
     	{
+			//token_list_head_print(ms->prompt, print_token_args);
     	    //setup the whole fuckin tree;
     	    setup_execution_tree(ms, NULL, ms->prompt, 0);
     	    if (save_signal(NULL) != EXIT_SIGINT)

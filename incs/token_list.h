@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:50:30 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/17 00:30:13 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 00:53:14 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,12 @@ int				is_token(char **str, int *place_token, int to_update);
 int				token_is_operator(int token);
 char			*token_enum_to_text(int token);
 void			print_token(t_token_node *token);
+void			print_token_args(t_token_node *token);
 
 
+
+int		ft_isquote(int c);
+char	*ft_strdup_len(char *s, int len);
 
 
 #endif

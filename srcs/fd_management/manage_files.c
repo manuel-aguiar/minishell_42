@@ -263,7 +263,7 @@ int manage_outfile(t_block *block)
 {
     t_token_node *redir;
 
-    redir = block->io_files->head->text;
+    redir = block->io_files->head;
     close_out_fds(block);
     if (redir->type == T_OUTDIR_TRUNC)
         block->final_out = open(redir->text, O_CREAT | O_RDWR | O_TRUNC, 0644);

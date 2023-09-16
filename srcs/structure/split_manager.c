@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 20:10:15 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/17 00:28:49 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 00:53:53 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ int	cmd_extract_redirections(t_block *block)
 	cur = block->prompt->head;
 	while (cur)
 	{
-		if (token_is_redirection(cur->type))
+		if (token_is_redirection(cur))
 		{
 			if (!block->io_files)
 				block->io_files = token_list_new();
@@ -186,6 +186,7 @@ int	cmd_extract_redirections(t_block *block)
 		else
 			cur = cur->next;
 	}
+	return (1);
 }
 
 int remove_corner_parenthesis_and_arithmatic(t_block *block)
@@ -206,6 +207,7 @@ int remove_corner_parenthesis_and_arithmatic(t_block *block)
 		token_list_del_head(block->prompt);
 		token_list_del_tail(block->prompt);
 	}
+	return (1);
 }
 
 int split_prompt(t_block *block)
@@ -213,9 +215,11 @@ int split_prompt(t_block *block)
     int             i;
 	int				has_parenthesis;
 
+	//token_list_head_print(block->prompt, print_token_args);
     if (!setup_split_prompt_struct(block))
         return (free_split_prompt(block));
     split_children_and_operators(block);
+	//token_list_head_print(block->prompt, print_token_args);
     if (!block->op_count && block->must_subshell)
     {
         if (!split_extract_redirections(block))

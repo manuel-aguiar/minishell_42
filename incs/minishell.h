@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/17 00:22:20 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 00:53:10 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -308,7 +308,6 @@ int		ft_charmatdup(char ***dest, char **src);
 void	*quicksort_pointers(void *arr, int size, int (*cmp)(void *, void *));
 int		env_strcmp(void *s1, void *s2);
 int     ft_matrixlen(void *mat);
-int     ft_charmatdup(char ***dest, char **src);
 char	**ft_split_count_replenish(t_cchar *s, t_cchar *og, char *sepset, int *place_count);
 char    *ft_split_join(char **split, char *sep);
 char    *ft_triple_join(char *first, char *second, char *third);

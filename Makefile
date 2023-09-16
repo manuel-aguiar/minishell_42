@@ -7,7 +7,7 @@ NAME 		=		minishell
 
 CC 			= 		cc -g
 ## -Wall Wextra Werror
-FLAGS 		= 		-Wall -Werror -Wextra
+FLAGS 		= 		-Wall -Werror -Wextra -fsanitize=address
 ADD_LIB 	= 		-L./$(LIB_PATH) -lft -lreadline
 RM 			=		rm
 MAKE		=		make
@@ -50,7 +50,9 @@ FILES_BUILTINS	=	bi_exit.c 								\
 FILES_EXEC		=	exec.c					\
 					main.c
 
-FILES_FD_MAN	=	manage_files.c
+FILES_FD_MAN	=	manage_files.c			\
+					heredoc_read.c			\
+					heredoc_temp.c
 
 
 FILES_STRUCT	=	ms_prompt.c				\
