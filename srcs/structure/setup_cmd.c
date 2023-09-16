@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 21:27:03 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/16 23:15:00 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 23:23:10 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int cmd_args_split_add_token(t_block *block, t_token_node *arg, int *move)
     into further individual arguments.
 */
 
-int new_cmd_args_rm_quotes_and_split(t_block *block)
+int cmd_args_rm_quotes_and_split(t_block *block)
 {
     int				i;
     int				has_guards;
@@ -143,7 +143,7 @@ int new_cmd_args_rm_quotes_and_split(t_block *block)
     return (1);
 }
 
-int new_cmd_args_expand_dollar_wildcard(t_block *block)
+int cmd_args_expand_dollar_wildcard(t_block *block)
 {
     t_token_node	*cur;
 
@@ -157,19 +157,45 @@ int new_cmd_args_expand_dollar_wildcard(t_block *block)
     return (1);
 }
 
-int new_manage_cmd_expansions(t_block *block)
+int	dump_list_to_cmd_args(t_block *block)
 {
-    if (!new_cmd_args_expand_dollar_wildcard(block))
+	int				i;
+	int				total_args;
+	t_token_node	*cur;
+	char			**cmd_args;
+
+	total_args = block->prompt->len;
+	cmd_args = malloc(sizeof(*cmd_args) * (total_args + 1));
+	if (!cmd_args)
+		return (perror_msg_int("malloc", 0));
+	i = 0;
+	cur = block->prompt->head;
+	while (i < total_args)
+	{
+		cmd_args[i] = cur->text;
+		cur->text = NULL;
+		i++;
+	}
+	cmd_args[i] = NULL;
+	block->cmd_args = cmd_args;
+	token_list_destroy(&block->prompt);
+}
+
+int manage_cmd_expansions(t_block *block)
+{
+	if (!block->prompt->head)
+	{
+		token_list_destroy(&block->prompt);
+		return (1);
+	}
+    if (!cmd_args_expand_dollar_wildcard(block))
         return (0);
     if (!cmd_args_rm_quotes_and_split(block))
         return (0);
-	if (!dump_list_to_cmd_args)
+	if (!dump_list_to_cmd_args(block))
 		return (0);
-	/*
-    cmd.cmd = ft_strdup(cmd.cmd_args[0]);
-    if (!cmd.cmd)
-        return (free_cmd_struct(block));
-    block->cmd = cmd.cmd;
-    block->cmd_args = cmd.cmd_args;*/
+	block->cmd = ft_strdup(block->cmd_args[0]);
+	if (!block->cmd_arg)
+		return (0);
     return (1);
 }
