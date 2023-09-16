@@ -17,24 +17,54 @@ int get_prompt(t_ms *ms)
     if (ms->prompt)
         ft_free_set_null(&ms->prompt);
 
-    if(!setup_prompt_struct(&pmt, ms))
+    if(!new_setup_prompt(ms))
         return (0);
 
-    validate_syntax(&pmt);
-    validate_quote_close(&pmt);
-    validate_parenthesis_close(&pmt);
+    //validate_syntax(&pmt);
+    //validate_quote_close(&pmt);
+    //validate_parenthesis_close(&pmt);
 
-    if (pmt.exit_status)
-    {
-        ms->exit_status = pmt.exit_status;
-        return (syntax_error_msg(&pmt));
-    }
+    //if (pmt.exit_status)
+    //{
+    //    ms->exit_status = pmt.exit_status;
+    //    return (syntax_error_msg(&pmt));
+    //}
     //if (pmt.parenthesis)
     //    rm_unnecessary_parenthesis(&pmt);
-    ft_free_set_null(&pmt.copy);
-    ms->prompt = pmt.prompt;
+    //ft_free_set_null(&pmt.copy);
+    //ms->prompt = pmt.prompt;
     return (1);
 }
+
+int new_setup_prompt(t_ms *ms)
+{
+	char *line;
+
+    line = readline("minishell>$ ");
+    if (!line)
+    {
+        destroy_ms(ms);
+        printf("%s>$ exit\n", ms->name);
+        exit(0);
+    }
+    add_history(line);
+    if (!line[0] || is_only_spaces(line))
+    {
+
+        ft_free_set_null(&line);
+        return (0);
+    }
+	ms->prompt = token_list_new;
+	if (!prompt_to_list(ms->prompt, line))
+	{
+		free(line);
+		token_list_destroy(&ms->prompt);
+		return (0);
+	}
+	free(line);
+    return (1);
+}
+
 
 /*
     syntax_error_msg is a helper function to help print the error messages found in
@@ -43,6 +73,8 @@ int get_prompt(t_ms *ms)
     NOT DONE YET, we must change to write to ms->errfd, as it could be changed...? maybe x'D
 
 */
+
+
 
 int syntax_error_msg(t_prompt *pmt)
 {

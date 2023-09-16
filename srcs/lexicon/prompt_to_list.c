@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 15:42:02 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/16 17:34:29 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 19:43:44 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,9 @@ void	fill_in_token(char **prompt, int *token, char **temp)
 		(*temp) = NULL;
 }
 
-void	prompt_to_list(t_token_list *list, char *prompt)
+//NO CHECKSSSSSSSSSS
+
+int	prompt_to_list(t_token_list *list, char *prompt)
 {
 	int		token;
 	char	*temp;
@@ -134,6 +136,7 @@ void	prompt_to_list(t_token_list *list, char *prompt)
 		else if (*prompt)
 			deals_with_text(list, &prompt, &temp);
 	}
+	return (1);
 }
 /*
 int	main(void)

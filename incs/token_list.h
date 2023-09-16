@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:50:30 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/16 19:08:59 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 20:38:04 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void			token_list_del_head(t_token_list *list);
 void			token_list_del_tail(t_token_list *list);
 void			token_list_destroy(t_token_list **list);
 void			token_list_insert_after(t_token_list *list, t_token_node *after, t_token_node *node);
-void			token_list_move_top(t_token_list *to, t_token_list *from, t_token_node *until, int count);
+void			token_list_move_top_to_new(t_token_list *to, t_token_list *from, t_token_node *until, int count)
 void			token_list_head_print(t_token_list *list, \
 void (*pnt)(t_token_node *));
 void			token_list_tail_print(t_token_list *list, \
@@ -91,7 +91,7 @@ void (*pnt)(t_token_node *));
 
 
 
-void			prompt_to_list(t_token_list *list, char *prompt);
+int				prompt_to_list(t_token_list *list, char *prompt);
 void			update_quote_count(char **prompt, int *squotes, int *dquotes);
 int				is_token(char **str, int *place_token, int to_update);
 int				token_is_operator(int token);

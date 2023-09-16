@@ -63,7 +63,7 @@ void	destroy_block(void *og_block)
 	free(block);
 }
 
-t_block *init_block(t_ms *ms, t_block *father, char *pmt, int my_id)
+t_block *init_block(t_ms *ms, t_block *father, t_token_list *prompt, int my_id)
 {
     t_block *new;
 
@@ -73,20 +73,25 @@ t_block *init_block(t_ms *ms, t_block *father, char *pmt, int my_id)
     new->ms = ms;
 	new->father = father;
 	new->i_am_forked = 0;
+	new->prompt = prompt;
 	if (father)
 	{
-		new->prompt = ft_strdup(pmt);						//check for NULL
+		new->father->child_prompts[my_id] = NULL;
 		new->father->child_list[my_id] = new;
 		new->my_level = new->father->my_level + 1;
 	}
 	else
 	{
-		new->prompt = ft_strdup(ms->prompt);				//check for NULL
+		ms->prompt = NULL;
 		ms->first = new;
 		new->my_level = 0;
 	}
 
+
 	new->child_prompts = NULL;
+
+
+
 	new->child_list = NULL;
 	new->child_pids = NULL;
 	new->child_exit_status = NULL;

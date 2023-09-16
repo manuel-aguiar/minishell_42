@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 18:29:11 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/16 18:54:27 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 19:56:06 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,24 +48,20 @@ void	token_list_insert_after(t_token_list *list, t_token_node *after, t_token_no
 	++(list->len);
 }
 
-void	token_list_move_top(t_token_list *to, t_token_list *from, t_token_node *until, int count)
+void	token_list_move_top_to_new(t_token_list *to, t_token_list *from, t_token_node *until, int count)
 {
 	t_token_node *save_source;
 
 	if (!to || !from || !until || !(from->head))
 		return ;
-	save_source = from->head;
-	if (to->tail)
-	{
-		to->tail->next = save_source;
-		save_source->prev = to->tail;
-	}
-	else
-		to->head = from->head;
+	to->head = from->head;
 	to->tail = until;
 	from->head = until->next;
-	if (!from->head)
+	if (from->head)
+		from->head->prev = NULL;
+	else
 		from->tail = NULL;
+	until->next = NULL;
 	to->len += count;
 	from->len -= count;
 	return ;

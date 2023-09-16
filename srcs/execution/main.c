@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/16 19:10:37 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 19:49:48 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -327,12 +327,12 @@ void    print_execution_tree(t_block *block)
     }
 }
 
-int setup_execution_tree(t_ms *ms, t_block *father, char *pmt, int my_id)
+int setup_execution_tree(t_ms *ms, t_block *father, t_token_list *prompt, int my_id)
 {
     int     i;
     t_block *block;
 
-    block = init_block(ms, father, pmt, my_id);
+    block = init_block(ms, father, prompt, my_id);
     if (!block)
         return (0);
     if (!split_prompt(block))

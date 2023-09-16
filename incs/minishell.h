@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/16 18:27:33 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 20:14:16 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ struct s_ms
 {
 	char		        **env;
 	char		        **path;
-	char		        *prompt;
+	t_token_list		*prompt;
 	char		        *name;
 	int			        infd;
 	int			        outfd;
@@ -93,33 +93,34 @@ typedef struct s_prompt
 
 struct s_block
 {
-    char		*prompt;	             //herdado do bloco pai;
+    t_token_list	*prompt;	             //herdado do bloco pai;
 	t_ms		*ms;	                	//to access and change env and path
 	t_block		*father;                	// to comunicate exit status with the parent
 
-    t_block     **child_list;
-    char        **child_prompts;
-    pid_t       *child_pids;
-	int			*child_exit_status;
-    int         *op_id;
-    int         op_count;
-    int         is_cmd;
-    int         has_unnecessary_parenthesis;
-    int         parenthesis_fork;
 
-    int         pipefd[2];
-    int         prev_pipe[2];                                    //posso precisar para unir os blocos filhos
-    int         my_status;	                // recebido dos filhos para informar o avô;
-    int         i_am_forked;
+    t_block     	**child_list;
+    t_token_list    **child_prompts;
+    pid_t       	*child_pids;
+	int				*child_exit_status;
+    int        		 *op_id;
+    int       		  op_count;
+    int        		 is_cmd;
+    int      	   has_unnecessary_parenthesis;
+    int       	  parenthesis_fork;
 
-    char    	*cmd;	                //decomposição do prompt
-    char    	**cmd_args;                 //decomposição do prompt
-    t_vdmlist   *io_files;	            //decomposição do prompt, farão override ao infd do block, deixa de heredar do bloco anterior  void *list, com struct t_redir;
-    char        *here_doc;              //here_doc, just in case, analisado um a um;
-    int         here_doc_fd;
-    int         here_doc_index;
-    int         final_in;
-    int         final_out;
+    int       	  pipefd[2];
+    int       	  prev_pipe[2];                                    //posso precisar para unir os blocos filhos
+    int       	  my_status;	                // recebido dos filhos para informar o avô;
+    int      	   i_am_forked;
+
+    char    		*cmd;	                //decomposição do prompt
+    char    		**cmd_args;                 //decomposição do prompt
+    t_vdmlist  	 *io_files;	            //decomposição do prompt, farão override ao infd do block, deixa de heredar do bloco anterior  void *list, com struct t_redir;
+    char       	 *here_doc;              //here_doc, just in case, analisado um a um;
+    int        	 here_doc_fd;
+    int        	 here_doc_index;
+    int        	 final_in;
+    int        	 final_out;
 
     //char        **help_cmd;
     int         my_level;
@@ -136,17 +137,16 @@ struct s_redir
 
 typedef struct s_split_prompt
 {
-    char        *prompt_orig;
-    char        *prompt_copy;
-    char        **children;
-    pid_t       *child_pids;
-    int         *op_id;
-    int         op_count;
-    char        **get_redir;
-    int         redir_split_len;
-    t_vdmlist   *io_files;
-    int         parenthesis_fork;
-    int         has_unnecessary_parenthesis;
+	t_token_list       *prompt;
+    t_token_list        **children;
+    pid_t       		*child_pids;
+    int        			 *op_id;
+    int         		op_count;
+    char        		**get_redir;
+    int         		redir_split_len;
+    t_vdmlist   		*io_files;
+    int         		parenthesis_fork;
+    int         		has_unnecessary_parenthesis;
 }   t_split_prompt;
 
 typedef struct s_prep_cmd
@@ -205,11 +205,18 @@ enum e_builtin
 	BI_EXPORT,
 };
 
+//////////////////////////////////////
+//////////// EXPANSIONS //////////////
+//////////////////////////////////////
+
+int		setup_execution_tree(t_ms *ms, t_block *father, t_token_list *prompt, int my_id);
+
+
 /* init_destroy */
 int     init_ms(t_ms *ms, char *avzero, char **env);
 int     destroy_ms(t_ms *ms);
 
-t_block	*init_block(t_ms *ms, t_block *father, char *pmt, int my_id);
+t_block *init_block(t_ms *ms, t_block *father, t_token_list *prompt, int my_id);
 void	destroy_block(void *og_block);
 
 t_redir *init_redir(char *file, int type, int has_quote_guard);

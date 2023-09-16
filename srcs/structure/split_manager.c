@@ -107,21 +107,22 @@ int split_extract_redirections(t_split_prompt *split)
 
 int split_count_operators(t_split_prompt *split)
 {
-    int i;
+	int open_par;
     int count;
+	t_token_node *cur;
 
     count = 0;
-    i = 0;
-    while (split->prompt_copy[i])
+	open_par = 0;
+	cur = split->prompt->head;
+    while (cur)
     {
-        if (split->prompt_copy[i] == '&' || split->prompt_copy[i] == '|')
-        {
-            count++;
-            i++;
-            if (split->prompt_copy[i] && split->prompt_copy[i] == split->prompt_copy[i - 1])
-                i++;
-        }
-        i++;
+        if (cur->type == T_OPEN_PAR)
+			open_par++;
+		if (cur->type == T_CLOSE_PAR)
+			open_par--;
+		if (!open_par && (cur->type == T_OP_PIPE || cur->type == T_OP_OR || cur->type == T_OP_AND))
+			count++;
+		cur = cur->next;
     }
     return (count);
 }
@@ -189,8 +190,7 @@ int free_split_prompt(t_split_prompt *split)
 
 int setup_split_prompt_struct(t_split_prompt *split, t_block *block)
 {
-    split->prompt_orig = block->prompt;
-    split->prompt_copy = NULL;
+    split->prompt = block->prompt;
     split->op_id = NULL;
     split->children = NULL;
     split->child_pids = NULL;
@@ -198,9 +198,6 @@ int setup_split_prompt_struct(t_split_prompt *split, t_block *block)
     split->io_files = NULL;
     split->parenthesis_fork = 0;
     split->has_unnecessary_parenthesis = 0;
-    split->prompt_copy = split_copy_empty_quotes_and_parenthesis(split->prompt_orig);
-    if (!split->prompt_copy)
-        return (free_split_prompt(split));
     split->op_count = split_count_operators(split);
     split->op_id = malloc(sizeof(*(split->op_id)) * split->op_count);
     split->children = ft_calloc((split->op_count + 2), sizeof(*(split->children)));
