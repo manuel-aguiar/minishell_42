@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 21:27:03 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/16 23:13:52 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 23:15:00 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,8 @@ int new_manage_cmd_expansions(t_block *block)
         return (0);
     if (!cmd_args_rm_quotes_and_split(block))
         return (0);
+	if (!dump_list_to_cmd_args)
+		return (0);
 	/*
     cmd.cmd = ft_strdup(cmd.cmd_args[0]);
     if (!cmd.cmd)
