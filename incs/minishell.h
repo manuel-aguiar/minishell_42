@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/16 22:10:26 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 00:22:20 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@
 
 typedef struct s_ms		t_ms;
 typedef struct s_block	t_block;
-typedef struct s_redir	t_redir;
 
 struct s_ms
 {
@@ -76,8 +75,6 @@ struct s_ms
 	pid_t               my_kid;
 	struct sigaction    sigact;
 };
-
-
 
 typedef struct s_prompt
 {
@@ -127,38 +124,6 @@ struct s_block
     int         my_id;
 };
 
-struct s_redir
-{
-    char    *file;
-    int     type;
-    int     has_quote_guard;
-};
-
-
-typedef struct s_split_prompt
-{
-	t_token_list       *prompt;
-    t_token_list        **children;
-    pid_t       		*child_pids;
-    int        			 *op_id;
-    int         		op_count;
-    char        		**get_redir;
-    int         		redir_split_len;
-    t_vdmlist   		*io_files;
-    int         		parenthesis_fork;
-    int         		has_unnecessary_parenthesis;
-}   t_split_prompt;
-
-typedef struct s_prep_cmd
-{
-    char    	*cmd;	                //decomposição do prompt
-    char    	**cmd_args;                 //decomposição do prompt
-    char        *prompt_copy;
-    char        **cmd_args_copy;
-    int         args_len;
-    int         split_len;
-    t_ms        *ms;
-}   t_prep_cmd;
 
 typedef struct s_wildc
 {
@@ -177,22 +142,6 @@ typedef struct s_wildc
 	char			*copy_dir;
 }   t_wildc;
 
-
-
-enum e_op
-{
-	OP_AND = 1,
-	OP_OR,
-	OP_PIPE,
-};
-
-enum e_redir
-{
-    T_INDIR_HD = 1,
-    T_INDIR_OPEN,
-    T_OUTDIR_TRUNC,
-    T_OUTDIR_APPEND,
-};
 
 enum e_builtin
 {
@@ -219,9 +168,6 @@ int     destroy_ms(t_ms *ms);
 t_block *init_block(t_ms *ms, t_block *father, t_token_list *prompt, int my_id);
 void	destroy_block(void *og_block);
 
-t_redir *init_redir(char *file, int type, int has_quote_guard);
-void	destroy_redir(void *og_redir);
-
 /* ms_signals.c */
 
 int     save_signal(int *num);
@@ -233,36 +179,13 @@ void    signal_handler_heredoc(int signum);
 
 /* ms_prompt.c */
 int     get_prompt(t_ms *ms);
-int     setup_prompt_struct(t_prompt *pmt, t_ms *ms);
-int     syntax_error_msg(t_prompt *pmt);
-int     syntax_error_manager(t_prompt *pmt, int err_code, char *err, int position);
-int     validate_parenthesis_close(t_prompt *pmt);
-int     validate_quote_close(t_prompt *pmt);
-int     syntax_operators_end(t_prompt *pmt);
-int     syntax_redir_end(t_prompt *pmt);
-int     syntax_redirections(t_prompt *pmt);
-int     syntax_operators(t_prompt *pmt);
-int     open_prths_helper(char *copy, int index);
-int     close_prths_helper(char *copy, int index);
-int     syntax_parenthesis(t_prompt *pmt);
-int     syntax_begin(t_prompt *pmt);
-int     validate_syntax(t_prompt *pmt);
-int     copy_empty_quotes(t_prompt *pmt);
-void    rm_unnecessary_parenthesis(t_prompt *pmt);
-void    rm_corner_parenthesis(char *copy, char *original);
+int		setup_prompt(t_ms *ms);
 
 
 
 //functions to split prompt into children
 
 int     split_prompt(t_block *block);
-int     split_children(t_split_prompt *split);
-int     new_split_get_operator(t_split_prompt *split, int index, int count);
-
-int     split_count_operators(t_split_prompt *split);
-char    *split_copy_empty_quotes_and_parenthesis(char *prompt);
-void    set_in_between_to(char *pmt, char start, char end, char newchar);
-void    print_split(t_split_prompt *split);
 int     free_split_prompt(t_block *block);
 
 
@@ -283,6 +206,8 @@ int     manage_io_files(t_block *block);
 //////////////////////////////////////
 //////////// MANAGE FILES ////////////
 //////////////////////////////////////
+
+void			destroy_child_prompts(t_block *block);
 
 /*heredoc_temp.c*/
 int	heredoc_temp_name(t_block *block);

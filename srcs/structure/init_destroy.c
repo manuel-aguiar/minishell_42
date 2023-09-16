@@ -1,27 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_destroy.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/17 00:11:09 by mmaria-d          #+#    #+#             */
+/*   Updated: 2023/09/17 00:11:32 by mmaria-d         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
-
-t_redir *init_redir(char *file, int type, int has_quote_guard)
-{
-    t_redir *redir;
-
-    redir = malloc(sizeof(*redir));
-    if (!redir)
-        return (perror_msg_ptr("malloc", NULL));
-    redir->file = file;
-    redir->type = type;
-    redir->has_quote_guard = has_quote_guard;
-    return (redir);
-}
-
-void	destroy_redir(void *og_redir)
-{
-	t_redir *rdir;
-
-	rdir = (t_redir *)og_redir;
-	ft_free_set_null(&rdir->file);
-	free(og_redir);
-}
 
 void	destroy_block(void *og_block)
 {
@@ -29,7 +18,6 @@ void	destroy_block(void *og_block)
 
 
     block = (t_block *)og_block;
-
     if (!block)
     return ;
 	if (block->child_list)

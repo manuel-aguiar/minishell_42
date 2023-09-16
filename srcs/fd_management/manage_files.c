@@ -305,11 +305,11 @@ int manage_inherited_fds(t_block *block)
     block->final_in = block->father->final_in;
     if (block->my_id < block->father->op_count \
     && block->father->op_id \
-    && block->father->op_id[block->my_id] == OP_PIPE)
+    && block->father->op_id[block->my_id] == T_OP_PIPE)
         block->final_out = block->father->pipefd[1];
     if (block->my_id > 0 \
     && block->father->op_id \
-    && block->father->op_id[block->my_id - 1] == OP_PIPE)
+    && block->father->op_id[block->my_id - 1] == T_OP_PIPE)
         block->final_in = block->father->prev_pipe[0];
     return (1);
 }

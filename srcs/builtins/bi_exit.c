@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 18:28:24 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/15 01:15:08 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 23:27:36 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int exit_execution(t_block *block, char *arg, int is_exiting, int is_error)
 {
     int save_status;
 
-    if (!block->i_am_forked || (block->father && !block->father->parenthesis_fork))               //só escreve stdou se for o main process a chamar
+    if (!block->i_am_forked || (block->father && !block->father->must_subshell))               //só escreve stdou se for o main process a chamar
         ft_putstr_fd("exit\n", block->ms->outfd);
     if (is_error)
     {

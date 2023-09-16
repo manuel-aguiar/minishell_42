@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/16 16:56:12 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 23:29:06 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -326,9 +326,9 @@ int	process_execution(t_block *block)
 		close_in_fds(block);
 		close_out_fds(block);
 		ms_prepare_signal(block->ms, signal_handler);
-		//if (block->father && block->my_id > 0 && block->father->op_id[block->my_id - 1] == OP_PIPE)
+		//if (block->father && block->my_id > 0 && block->father->op_id[block->my_id - 1] == T_OP_PIPE)
 		//	close(block->prev_pipe[0]);
-		//if (block->father && block->my_id < block->father->op_count && block->father->op_id[block->my_id] == OP_PIPE)
+		//if (block->father && block->my_id < block->father->op_count && block->father->op_id[block->my_id] == T_OP_PIPE)
 		//	close(block->pipefd[1]);
 	}
 	return (1);

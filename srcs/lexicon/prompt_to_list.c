@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 15:42:02 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/16 19:43:44 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 00:20:10 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ void	deals_with_text(t_token_list *list, char **prompt, char **temp)
 	(*prompt) -= rewind - ft_strlen(*prompt);
 	if (len > 0)
 	{
-		(*temp) = ft_strdup_len(*prompt, len);
+		(*temp) = ft_strdup_len(*prompt, len);					//malloc
 		(*prompt) += len;
-		token_list_in_tail(list, T_ARG, (*temp));
+		token_list_in_tail(list, T_ARG, (*temp));				//malloc
 	}
 }
 
@@ -56,7 +56,7 @@ void	deals_with_quotes(char **prompt, char **temp)
 		if (str[len] && str[len] == current)
 			len++;
 	}
-	(*temp) = ft_strdup_len((*prompt), len + 1);
+	(*temp) = ft_strdup_len((*prompt), len + 1);					//malloc
 	(*prompt) += len;
 	if (**prompt && **prompt + 1)
 		(*prompt)++;
@@ -86,7 +86,7 @@ int token, int *dummy_token, char **temp)
 	}
 	(*prompt) -= rewind - ft_strlen(*prompt);
 	if (len > 0)
-		(*temp) = ft_strdup_len((*prompt), len);
+		(*temp) = ft_strdup_len((*prompt), len);								//malloc
 	(*prompt) += len;
 	if (token_is_operator(token))
 		(*temp) = NULL;

@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/16 22:22:39 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/16 23:30:04 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,24 +94,24 @@ int waiting_for_my_children(t_block *block, int index)
 int pipes_and_conditionals(t_block *block, int index, int *must_fork)
 {
     *must_fork = 0;
-    if (index > 0 && block->op_id[index - 1] == OP_PIPE)
+    if (index > 0 && block->op_id[index - 1] == T_OP_PIPE)
     {
         block->prev_pipe[0] = block->pipefd[0];
         block->prev_pipe[1] = block->pipefd[1];
         *must_fork = 1;
     }
-    if (index < block->op_count && block->op_id[index] == OP_PIPE)
+    if (index < block->op_count && block->op_id[index] == T_OP_PIPE)
     {
         if (pipe(block->pipefd) == -1)
             return (perror_msg("pipe"));
         *must_fork = 1;
     }
     if (index > 0 && index <= block->op_count \
-    && (block->op_id[index - 1] == OP_AND || block->op_id[index - 1] == OP_OR))
+    && (block->op_id[index - 1] == T_OP_AND || block->op_id[index - 1] == T_OP_OR))
     {
         waiting_for_my_children(block, index);
-        if ((block->op_id[index - 1] == OP_AND && block->ms->exit_status != 0) \
-        || (block->op_id[index - 1] == OP_OR && block->ms->exit_status  == 0))
+        if ((block->op_id[index - 1] == T_OP_AND && block->ms->exit_status != 0) \
+        || (block->op_id[index - 1] == T_OP_OR && block->ms->exit_status  == 0))
             return (0);
     }
     if (block->must_subshell \
@@ -127,9 +127,9 @@ int pipes_and_conditionals(t_block *block, int index, int *must_fork)
             return (perror_msg("fork"));
         if (!block->child_pids[index])
 		{
-			if (index < block->op_count && block->op_id[index] == OP_PIPE)
+			if (index < block->op_count && block->op_id[index] == T_OP_PIPE)
 				close(block->pipefd[0]);
-			//if (index > 0 && block->op_id[index - 1] == OP_PIPE)
+			//if (index > 0 && block->op_id[index - 1] == T_OP_PIPE)
 			//	close(block->prev_pipe[1]);
 		}
     }
@@ -268,14 +268,14 @@ int execution_tree(t_block *block, int i_am_forked)
         while (block->child_list[i])
         {
 			//printf("got in loop\n");
-            if (i > 0 && block->op_id[i - 1] == OP_PIPE)
+            if (i > 0 && block->op_id[i - 1] == T_OP_PIPE)
                 close(block->pipefd[1]);
             if (block->op_id && pipes_and_conditionals(block, i, &must_fork))
             {
                 if (!(must_fork && block->child_pids[i] != 0))
                     execution_tree(block->child_list[i], must_fork);
             }
-            if (i > 0 && block->op_id[i - 1] == OP_PIPE)
+            if (i > 0 && block->op_id[i - 1] == T_OP_PIPE)
                 close(block->prev_pipe[0]);
             i++;
         }

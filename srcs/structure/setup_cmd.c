@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 21:27:03 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/16 23:23:10 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 00:20:34 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,7 @@ int	dump_list_to_cmd_args(t_block *block)
 	cmd_args[i] = NULL;
 	block->cmd_args = cmd_args;
 	token_list_destroy(&block->prompt);
+	return (1);
 }
 
 int manage_cmd_expansions(t_block *block)

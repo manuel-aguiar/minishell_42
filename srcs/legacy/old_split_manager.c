@@ -134,13 +134,13 @@ int split_get_operator(t_split_prompt *split, int index, int count)
     if (split->prompt_copy[index] == split->prompt_copy[index + 1])
     {
         if (split->prompt_copy[index] == '|')
-            split->op_id[count] = OP_OR;
+            split->op_id[count] = T_OP_OR;
         if (split->prompt_copy[index] == '&')
-            split->op_id[count] = OP_AND;
+            split->op_id[count] = T_OP_AND;
         index++;
     }
     else
-        split->op_id[count] = OP_PIPE;
+        split->op_id[count] = T_OP_PIPE;
     index++;
     return (index);
 }
