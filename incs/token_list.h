@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:50:30 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/17 00:53:14 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 03:48:13 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void			token_list_tail_print(t_token_list *list, \
 void (*pnt)(t_token_node *));
 
 t_token_node	*move_node_to_list_and_retrive_next(t_token_list *to, t_token_list *from, t_token_node *target);
-
+void	token_list_del_node(t_token_list *list, t_token_node *node);
 
 int				prompt_to_list(t_token_list *list, char *prompt);
 void			update_quote_count(char **prompt, int *squotes, int *dquotes);

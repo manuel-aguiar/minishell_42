@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/17 00:54:02 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 01:20:33 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,7 +254,8 @@ int execution_tree(t_block *block, int i_am_forked)
     int         status;
     int         must_fork;
 
-	//printf("executing prompt [%s]\n", block->prompt);
+	printf("executing prompt:");
+	token_list_head_print(block->prompt, print_token_args);
     if (i_am_forked)
         block->i_am_forked = 1;
     if (!manage_io_files(block))

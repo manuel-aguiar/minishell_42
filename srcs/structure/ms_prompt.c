@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 00:13:38 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/17 00:53:46 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 03:57:45 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int setup_prompt(t_ms *ms)
 		token_list_destroy(&ms->prompt);
 		return (0);
 	}
-	//token_list_head_print(ms->prompt, print_token_args);
+
 	free(line);
     return (1);
 }
