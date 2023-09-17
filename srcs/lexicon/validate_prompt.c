@@ -15,13 +15,13 @@
 static void	prepare_pars_error(t_token_list *list, int *parenthesis);
 static int	valid_num_of_pars(t_token_list *list);
 static int	valid_quote_num(t_token_list *list);
-static int	has_amper(t_token_list *list);
+static int	not_has_amper(t_token_list *list);
 
 int	prompt_is_valid(t_token_list *list)
 {
 	if (valid_elem_order(list) && valid_num_of_pars(list) \
 	&& valid_redir_texts(list) && valid_quote_num(list) \
-	&& !has_amper(list))
+	&& not_has_amper(list))
 		return (1);
 	return (0);
 }
@@ -86,7 +86,7 @@ static int	valid_quote_num(t_token_list *list)
 	return (1);
 }
 
-static int	has_amper(t_token_list *list)
+static int	not_has_amper(t_token_list *list)
 {
 	t_token_node	*cur;
 
