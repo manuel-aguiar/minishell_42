@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_count_replenish.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:31:56 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/16 16:33:06 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 13:46:32 by mnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ char	**ft_split_count_replenish(t_cchar *s, t_cchar *og, \
 	size_t	wordlen;
 	int		i;
 	char	**split;
-	char    *save;
+	char	*save;
 
 	if (!s)
 		return (NULL);

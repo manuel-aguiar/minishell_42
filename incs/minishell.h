@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/17 00:53:10 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 15:52:30 by mnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,85 +63,83 @@ typedef struct s_block	t_block;
 
 struct s_ms
 {
-	char		        **env;
-	char		        **path;
+	char				**env;
+	char				**path;
 	t_token_list		*prompt;
-	char		        *name;
-	int			        infd;
-	int			        outfd;
-	int                 errfd;
-	int			        exit_status;
-	t_block		        *first;
-	pid_t               my_kid;
-	struct sigaction    sigact;
+	char				*name;
+	int					infd;
+	int					outfd;
+	int					errfd;
+	int					exit_status;
+	t_block				*first;
+	pid_t				my_kid;
+	struct sigaction	sigact;
 };
 
 typedef struct s_prompt
 {
-    char    *prompt;
-    char    *copy;
-    int     parenthesis;
-    int     first_error_index;
-    int     exit_status;
-    char    *err_token;
-    int     errfd;
-}   t_prompt;
+	char	*prompt;
+	char	*copy;
+	int		parenthesis;
+	int		first_error_index;
+	int		exit_status;
+	char	*err_token;
+	int		errfd;
+}	t_prompt;
 
 
 struct s_block
 {
-    t_token_list	*prompt;	             //herdado do bloco pai;
-	t_ms		*ms;	                	//to access and change env and path
-	t_block		*father;                	// to comunicate exit status with the parent
+	t_token_list	*prompt;				//herdado do bloco pai;
+	t_ms			*ms;					//to access and change env and path
+	t_block			*father;				// to comunicate exit status with the parent
 
 
-    t_block     	**child_list;
-    t_token_list    **child_prompts;
-    pid_t       	*child_pids;
+	t_block			**child_list;
+	t_token_list	**child_prompts;
+	pid_t			*child_pids;
 	int				*child_exit_status;
-    int        		 *op_id;
-    int       		  op_count;
-    int        		 is_cmd;
-    int      	   has_arithmatic_parenthesis;
-    int       	  must_subshell;
+	int				*op_id;
+	int				op_count;
+	int				is_cmd;
+	int				has_arithmatic_parenthesis;
+	int				must_subshell;
 
-    int       	  pipefd[2];
-    int       	  prev_pipe[2];                                    //posso precisar para unir os blocos filhos
-    int       	  my_status;	                // recebido dos filhos para informar o avô;
-    int      	   i_am_forked;
+	int				pipefd[2];
+	int				prev_pipe[2];				//posso precisar para unir os blocos filhos
+	int				my_status;					// recebido dos filhos para informar o avô;
+	int				i_am_forked;
 
-    char    		*cmd;	                //decomposição do prompt
-    char    		**cmd_args;                 //decomposição do prompt
-    t_token_list  	 *io_files;	            //decomposição do prompt, farão override ao infd do block, deixa de heredar do bloco anterior  void *list, com struct t_redir;
-    char       	 *here_doc;              //here_doc, just in case, analisado um a um;
-    int        	 here_doc_fd;
-    int        	 here_doc_index;
-    int        	 final_in;
-    int        	 final_out;
+	char			*cmd;						//decomposição do prompt
+	char			**cmd_args;					//decomposição do prompt
+	t_token_list	*io_files;					//decomposição do prompt, farão override ao infd do block, deixa de heredar do bloco anterior  void *list, com struct t_redir;
+	char			*here_doc;					//here_doc, just in case, analisado um a um;
+	int				here_doc_fd;
+	int				here_doc_index;
+	int				final_in;
+	int				final_out;
 
-    //char        **help_cmd;
-    int         my_level;
-    int         my_id;
+	//char			**help_cmd;
+	int				my_level;
+	int				my_id;
 };
-
 
 typedef struct s_wildc
 {
-    char        	*pattern;
-    char       	 	**sub_pats;
-    int        		depth;
-    int        		sub_count;
-    int        		pat_len;
-    t_vdmlist  		*files;
-    char       		*test;
-    char        	**split;
-    char       		*join;
-    int         	match_count;
-	struct dirent   *entry;
-	char            *filename;
+	char			*pattern;
+	char			**sub_pats;
+	int				depth;
+	int				sub_count;
+	int				pat_len;
+	t_vdmlist		*files;
+	char			*test;
+	char			**split;
+	char			*join;
+	int				match_count;
+	struct dirent	*entry;
+	char			*filename;
 	char			*copy_dir;
-}   t_wildc;
-
+}	t_wildc;
 
 enum e_builtin
 {
@@ -162,58 +160,64 @@ int		setup_execution_tree(t_ms *ms, t_block *father, t_token_list *prompt, int m
 
 
 /* init_destroy */
-int     init_ms(t_ms *ms, char *avzero, char **env);
-int     destroy_ms(t_ms *ms);
+int		init_ms(t_ms *ms, char *avzero, char **env);
+int		destroy_ms(t_ms *ms);
 
-t_block *init_block(t_ms *ms, t_block *father, t_token_list *prompt, int my_id);
+t_block	*init_block(t_ms *ms, t_block *father, t_token_list *prompt, int my_id);
 void	destroy_block(void *og_block);
+
 
 /* ms_signals.c */
 
-int     save_signal(int *num);
-int     check_for_signals(t_ms *ms);
-void    signal_handler(int signum);
-int     ms_prepare_signal(t_ms *ms, void (*handler)(int));
-t_ms    *sigint_heredoc_where_ms_is(t_ms *ms);									// not in use atm
-void    signal_handler_heredoc(int signum);
+int		save_signal(int *num);
+int		check_for_signals(t_ms *ms);
+void	signal_handler(int signum);
+int		ms_prepare_signal(t_ms *ms, void (*handler)(int));
+t_ms	*sigint_heredoc_where_ms_is(t_ms *ms);									// not in use atm
+void	signal_handler_heredoc(int signum);
+
 
 /* ms_prompt.c */
-int     get_prompt(t_ms *ms);
-int		setup_prompt(t_ms *ms);
 
+int		get_prompt(t_ms *ms);
+int		setup_prompt(t_ms *ms);
 
 
 //functions to split prompt into children
 
-int     split_prompt(t_block *block);
-int     free_split_prompt(t_block *block);
+int		split_prompt(t_block *block);
+int		free_split_prompt(t_block *block);
 
 
 //functions to prepare commands
 
-int     setup_cmd_pre_expansion(t_block *block);
-int     manage_cmd_expansions(t_block *block);
-void    print_cmd(t_block *block);
+int		setup_cmd_pre_expansion(t_block *block);
+int		manage_cmd_expansions(t_block *block);
+void	print_cmd(t_block *block);
+
 
 //int dump_cmd_to_block(t_block *block, t_block *block);
 
-void    close_in_fds(t_block *block);
-void    close_out_fds(t_block *block);
-int     infiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i);
-int     outfiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i);
-int     manage_io_files(t_block *block);
+void	close_in_fds(t_block *block);
+void	close_out_fds(t_block *block);
+int		infiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i);
+int		outfiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i);
+int		manage_io_files(t_block *block);
 
 //////////////////////////////////////
 //////////// MANAGE FILES ////////////
 //////////////////////////////////////
 
-void			destroy_child_prompts(t_block *block);
+void	destroy_child_prompts(t_block *block);
+
 
 /*heredoc_temp.c*/
-int	heredoc_temp_name(t_block *block);
 
-int here_doc(t_block *block, char *eof, int has_quote_guard);
-int remove_unguarded_quotes(char **str, int *has_guards);
+int		heredoc_temp_name(t_block *block);
+
+int		here_doc(t_block *block, char *eof, int has_quote_guard);
+int		remove_unguarded_quotes(char **str, int *has_guards);
+
 
 /* exec.c */
 /*
@@ -225,16 +229,16 @@ int	exec_command(t_pipex *pipex, char *cmd);
 
 
 /* error_message.c */
-int	    error_msg(char *text);
+int		error_msg(char *text);
 
 
-int     exec_command(t_block *block);
-int     process_execution(t_block *block);
+int		exec_command(t_block *block);
+int		process_execution(t_block *block);
 
 
 
 void	error_child_exit(t_block *block, char *function, char *cmd, int errcode, int with_ms);
-int     perror_msg_func(t_block *block, char *function, int errcode, int with_ms);
+int		perror_msg_func(t_block *block, char *function, int errcode, int with_ms);
 void	perror_child_exit(t_block *block, char *function, int errcode, int with_ms);
 
 //////////////////////////////////////
@@ -245,25 +249,25 @@ void	perror_child_exit(t_block *block, char *function, int errcode, int with_ms)
 int		expand_wildcards(char **to_expand, char **fail_return);
 
 /*wildcard_return.c*/
-char    *wildcard(char *pattern, int pat_len, int *match_count);
+char	*wildcard(char *pattern, int pat_len, int *match_count);
 void	*destroy_wildcard(t_wildc *wildcard, int clean_exit);
 
 /*wildcard_fit_candidates.c*/
 int		wildcard_fit_check(t_wildc *wc, char *file);
 
 /* wildcard_search_files.c */
-void    void_putstr(void *str);
+void	void_putstr(void *str);
 int		list_all_wildcard_matches(t_wildc *wildc, char *path, int cur_lvl);
-char    **list_to_array(t_vdmlist *list);
+char	**list_to_array(t_vdmlist *list);
 
 /* dollar_expansion.c */
-int     expand_dollars(char **to_expand, t_ms *ms);
+int		expand_dollars(char **to_expand, t_ms *ms);
 
 /* dollar_heredoc*/
-int     here_doc_expand_dollars(char **to_expand, t_ms *ms);
+int		here_doc_expand_dollars(char **to_expand, t_ms *ms);
 
 
-int     ms_prompt_loop(t_ms *ms);
+int		ms_prompt_loop(t_ms *ms);
 
 
 
@@ -275,7 +279,7 @@ int     ms_prompt_loop(t_ms *ms);
 int		check_builtins(t_block *block);
 int		exec_builtin(t_block *block, int builtin);
 
-int     run_cd(t_block *block);
+int		run_cd(t_block *block);
 int		run_env(t_block *block);
 int		run_pwd(t_block *block);
 int		run_echo(t_block *block);
@@ -290,13 +294,13 @@ int		set_beg_path(t_block *block, char **curpath, char *curr);
 int		cd_exists(t_block *block);
 
 char	*ft_strchr(const char *s, int c);
-int	    get_corr_env(t_block *block, char *arg, int is_exporting);
+int		get_corr_env(t_block *block, char *arg, int is_exporting);
 int		env_add(t_block *block, char *new);
 
-int	    ft_isdigit(int c);
-int	    ft_isalpha(int c);
+int		ft_isdigit(int c);
+int		ft_isalpha(int c);
 
-int     env_remove(t_block *block, int index);
+int		env_remove(t_block *block, int index);
 
 //////////////////////////////////////
 //////////// GENERIC UTILS ///////////
@@ -307,12 +311,13 @@ int		ft_matrixlen(void *mat);
 int		ft_charmatdup(char ***dest, char **src);
 void	*quicksort_pointers(void *arr, int size, int (*cmp)(void *, void *));
 int		env_strcmp(void *s1, void *s2);
-int     ft_matrixlen(void *mat);
-char	**ft_split_count_replenish(t_cchar *s, t_cchar *og, char *sepset, int *place_count);
-char    *ft_split_join(char **split, char *sep);
-char    *ft_triple_join(char *first, char *second, char *third);
+int		ft_matrixlen(void *mat);
+char	**ft_split_count_replenish(t_cchar *s, t_cchar *og, \
+char *sepset, int *place_count);
+char	*ft_split_join(char **split, char *sep);
+char	*ft_triple_join(char *first, char *second, char *third);
 
 
-int	perror_msg(char *text);
+int		perror_msg(char *text);
 
 #endif

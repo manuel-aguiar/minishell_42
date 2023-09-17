@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 21:27:03 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/17 00:25:47 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 14:53:12 by mnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,11 @@ int cmd_args_split_add_token(t_block *block, t_token_node *arg, int *move)
 	t_token_node	*new;
 
 	split = ft_split_count(arg->text, "\t\v\n\r ", move);
+    //printf("printing [%s] and split\n", arg->text);
+    //int j = 0;
+    //while (split[j])
+    //    printf("[%s] ", split[j++]);
+    //printf ("\n");
     if (!split)
         return (perror_msg("malloc"));
 	if (*move == 1)
@@ -143,6 +148,8 @@ int cmd_args_rm_quotes_and_split(t_block *block)
         }
 		cur = cur->next;
     }
+    //printf("args list after expansion split: \n");
+    //token_list_head_print(block->prompt, print_token_args);
     return (1);
 }
 
@@ -153,8 +160,11 @@ int cmd_args_expand_dollar_wildcard(t_block *block)
     cur = block->prompt->head;
     while (cur)
     {
+        //printf("cur arg [%s] \n", cur->text);
         expand_dollars(&cur->text, block->ms);					// protect
+        //printf("cur arg after dolar [%s] \n", cur->text);
         expand_wildcards(&cur->text, NULL);						//protect
+        //printf("cur arg after wildcard [%s] \n", cur->text);
         cur = cur->next;
     }
     return (1);
@@ -173,13 +183,20 @@ int	dump_list_to_cmd_args(t_block *block)
 		return (perror_msg_int("malloc", 0));
 	i = 0;
 	cur = block->prompt->head;
+    //token_list_head_print(block->prompt, print_token_args);
 	while (i < total_args)
 	{
 		cmd_args[i] = cur->text;
 		cur->text = NULL;
+        cur = cur->next;
 		i++;
 	}
 	cmd_args[i] = NULL;
+    i = 0;
+    //printf("printing cmd args dump list\n");
+    //while (cmd_args[i])
+    //    printf("[%s] ", cmd_args[i++]);
+    //printf("\n");
 	block->cmd_args = cmd_args;
 	token_list_destroy(&block->prompt);
 	return (1);
@@ -187,6 +204,8 @@ int	dump_list_to_cmd_args(t_block *block)
 
 int manage_cmd_expansions(t_block *block)
 {
+    //printf("checking expansions\n");
+    //printf("arg head [%s]\n", block->prompt->head->text);
 	if (!block->prompt->head)
 	{
 		token_list_destroy(&block->prompt);
@@ -201,5 +220,6 @@ int manage_cmd_expansions(t_block *block)
 	block->cmd = ft_strdup(block->cmd_args[0]);
 	if (!block->cmd)
 		return (0);
+    
     return (1);
 }

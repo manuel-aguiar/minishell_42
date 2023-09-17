@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_matrixlen.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:29:34 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/16 16:32:09 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 13:47:30 by mnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	ft_matrixlen(void *mat)
 {
-	t_uchar **move;
-	int			i;
+	t_uchar	**move;
+	int		i;
 
 	if (!mat)
 		return (-1);

@@ -3,17 +3,11 @@
 /*                                                        :::      ::::::::   */
 /*   dollar_heredoc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:17:21 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/16 16:45:04 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 13:31:28 by mnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
-
-
-
-

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bi_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:26:37 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/16 18:26:02 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 13:14:07 by mnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,12 @@ int	run_cd(t_block *block)
 	char	*curr;
 
 	curr = getcwd(NULL, 0);
-	temp = ft_strjoin("OLDPWD=", curr);								//protect
+	temp = ft_strjoin("OLDPWD=", curr);
+	if (!temp)
+	{
+		free(temp);
+		return (0);
+	}
 	free(curr);
 	if (cd_exists(block) == 0)
 	{

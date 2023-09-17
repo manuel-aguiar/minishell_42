@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_list_print.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:47:59 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/17 00:35:08 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 15:42:23 by mnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	token_list_head_print(t_token_list *list, void (*pnt)(t_token_node *))
 		pnt(cur);
 		cur = cur->next;
 	}
+	printf("\n");
 }
 
 void	token_list_tail_print(t_token_list *list, void (*pnt)(t_token_node *))
@@ -67,6 +68,7 @@ void	token_list_tail_print(t_token_list *list, void (*pnt)(t_token_node *))
 		pnt(cur);
 		cur = cur->prev;
 	}
+	printf("\n");
 }
 
 void	print_token(t_token_node *token)
@@ -79,5 +81,4 @@ void	print_token(t_token_node *token)
 void	print_token_args(t_token_node *token)
 {
 	printf("[%s]   ", token->text);
-	printf("\n");
 }

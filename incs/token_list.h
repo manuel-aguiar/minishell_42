@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_list.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:50:30 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/17 04:00:59 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 12:57:49 by mnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,6 @@ enum e_token
 # define PRINT_OUTDIR_TRUNC ">"
 # define PRINT_ARG "arg"
 
-
-
 t_token_node	*new_token_node(int type, char *text);
 t_token_list	*token_list_new(void);
 int				token_list_in_head(t_token_list *list, int type, char *text);
@@ -78,8 +76,10 @@ int				token_list_in_tail(t_token_list *list, int type, char *text);
 void			token_list_del_head(t_token_list *list);
 void			token_list_del_tail(t_token_list *list);
 void			token_list_destroy(t_token_list **list);
-void			token_list_insert_after(t_token_list *list, t_token_node *after, t_token_node *node);
-void			token_list_move_top_to_new(t_token_list *to, t_token_list *from, t_token_node *until, int count);
+void			token_list_insert_after(t_token_list *list, \
+t_token_node *after, t_token_node *node);
+void			token_list_move_top_to_new(t_token_list *to, \
+t_token_list *from, t_token_node *until, int count);
 void			token_list_head_print(t_token_list *list, \
 void (*pnt)(t_token_node *));
 void			token_list_tail_print(t_token_list *list, \
@@ -89,8 +89,9 @@ void (*pnt)(t_token_node *));
 void			token_list_tail_print(t_token_list *list, \
 void (*pnt)(t_token_node *));
 
-t_token_node	*move_node_to_list_and_retrive_next(t_token_list *to, t_token_list *from, t_token_node *target);
-void	token_list_del_node(t_token_list *list, t_token_node *node);
+t_token_node	*move_node_to_list_and_retrive_next(t_token_list *to, \
+t_token_list *from, t_token_node *target);
+void			token_list_del_node(t_token_list *list, t_token_node *node);
 
 int				prompt_to_list(t_token_list *list, char *prompt);
 void			update_quote_count(char **prompt, int *squotes, int *dquotes);
@@ -100,10 +101,8 @@ char			*token_enum_to_text(int token);
 void			print_token(t_token_node *token);
 void			print_token_args(t_token_node *token);
 
-
-
-int		ft_isquote(int c);
-char	*ft_strdup_len(char *s, int len);
+int				ft_isquote(int c);
+char			*ft_strdup_len(char *s, int len);
 
 int				prompt_is_valid(t_token_list *list);
 int				valid_elem_order(t_token_list *list);

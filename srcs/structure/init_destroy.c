@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_destroy.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 00:11:09 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/17 04:03:30 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 15:49:55 by mnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	destroy_block(void *og_block)
     else
         block->ms->first = NULL;
     if (block->prompt)
-	    ft_free_set_null(&block->prompt);
+	    token_list_destroy(&block->prompt);
 	if (block->io_files)
 	    token_list_destroy(&block->io_files);
 	if (block->here_doc)

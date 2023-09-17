@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_manager.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 20:10:15 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/17 00:53:53 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 16:24:39 by mnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	destroy_child_prompts(t_block *block)
 			token_list_destroy(&block->child_prompts[i]);
 		i++;
 	}
-	ft_free_set_null(&block->child_list);
+	ft_free_set_null(&block->child_prompts);
 }
 
 int free_split_prompt(t_block *block)
@@ -79,6 +79,7 @@ int setup_split_prompt_struct(t_block *block)
     block->op_count = check_if_cmd_and_count_operators(block);
 	if (!block->is_cmd)
 	{
+		//printf("i'm not a cmd, must subshell %d\n", block->must_subshell);
 		block->op_id = malloc(sizeof(*(block->op_id)) * block->op_count);
 		block->child_prompts = ft_calloc((block->op_count + 2), sizeof(*(block->child_prompts)));
 		block->child_list = ft_calloc((block->op_count + 2), sizeof(*(block->child_list)));
@@ -158,6 +159,8 @@ int split_extract_redirections(t_block *block)
 	last = block->prompt->tail;
 	while (last && !token_is_redirection(last))
 		last = last->prev;
+	if (!token_is_redirection(last))
+		return (1);
 	block->io_files = token_list_new();
 	if (!block->io_files)
 		return (0);
@@ -193,20 +196,26 @@ int remove_corner_parenthesis_and_arithmatic(t_block *block)
 {
 	int	remove_corner;
 
-	if (block->prompt->len < 4)
-		return (0);
-	if (block->prompt->head->type == T_OPEN_PAR \
-	&& block->prompt->tail->type == T_CLOSE_PAR)
-		remove_corner = 1;
-	if (remove_corner \
+	remove_corner = 0;
+	if (block->prompt->len >= 2)
+	{
+		if (block->prompt->head->type == T_OPEN_PAR \
+		&& block->prompt->tail->type == T_CLOSE_PAR)
+			remove_corner = 1;
+	}
+	if (block->prompt->len >= 4 && remove_corner \
 	&& block->prompt->head->next->type == T_OPEN_PAR \
 	&& block->prompt->tail->prev->type == T_CLOSE_PAR)
 		block->has_arithmatic_parenthesis = 1;
+	//printf("list before removing corner parenthesis, i am command? %d\n", block->is_cmd);
+	//token_list_head_print(block->prompt, print_token_args);
 	if (remove_corner)
 	{
 		token_list_del_head(block->prompt);
 		token_list_del_tail(block->prompt);
 	}
+	//printf("list after removing corner parenthesis\n");
+	//token_list_head_print(block->prompt, print_token_args);
 	return (1);
 }
 
@@ -215,9 +224,11 @@ int split_prompt(t_block *block)
     int             i;
 	int				has_parenthesis;
 
+	//printf("i'm here \n");
 	//token_list_head_print(block->prompt, print_token_args);
     if (!setup_split_prompt_struct(block))
         return (free_split_prompt(block));
+	//token_list_head_print(block->prompt, print_token_args);
     split_children_and_operators(block);
 	//token_list_head_print(block->prompt, print_token_args);
     if (!block->op_count && block->must_subshell)
@@ -225,7 +236,11 @@ int split_prompt(t_block *block)
         if (!split_extract_redirections(block))
 			return (free_split_prompt(block));
 		remove_corner_parenthesis_and_arithmatic(block);
+		token_list_destroy(&block->child_prompts[0]);
+		block->child_prompts[0] = block->prompt;
+		block->prompt = NULL;
     }
+	//printf("i am command %d, [%s]\n", block->is_cmd, block->prompt->head->text);
 	if (block->is_cmd && !cmd_extract_redirections(block))
 		return (0);
     return (1);

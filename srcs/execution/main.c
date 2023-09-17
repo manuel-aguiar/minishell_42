@@ -3,298 +3,329 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/17 01:20:33 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 16:27:41 by mnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int	my_children_addresses(t_block *block)
+{
+	if (block->is_cmd)
+		return (1);
+	int i = 0;
+	printf(" i am %p, my child list is %p, my children are:\n", block, block->child_list);
+	while (block->child_list[i])
+	{
+		printf("%p  ", block->child_list[i++]);
+	}
+	printf("\n\n");
+	return (1);
+}
+
+void	print_block(t_block *block)
+{
+	printf("cmd args are: ");
+	int i = 0;
+	while (block->cmd_args[i])
+		printf("%s ", block->cmd_args[i++]);
+	printf("\n");
+	printf("\n redirections are: ");
+	token_list_head_print(block->io_files, print_token_args);
+	printf("\n");
+}
+
 /*
 
-    waiting_for_my_children
-    blocks waits for all the live children and, after arriving, sets their
-    child_pid to zero to signal that either it is a manager and has no pid
-    or that the child has already arrived because another conditional needed it
-    to arrive before.
+	waiting_for_my_children
+	blocks waits for all the live children and, after arriving, sets their
+	child_pid to zero to signal that either it is a manager and has no pid
+	or that the child has already arrived because another conditional needed it
+	to arrive before.
 
-    Called by a manager block to wait for all its children and to decide
-    on conditionals whether to proceed or not.
+	Called by a manager block to wait for all its children and to decide
+	on conditionals whether to proceed or not.
 
-    t_ms will call its only pid if needed, corresponding to a single command
-    with no manager behind other than t_ms itself.
+	t_ms will call its only pid if needed, corresponding to a single command
+	with no manager behind other than t_ms itself.
 
 */
 
-int print_child_pids(t_block *block)
+int	print_child_pids(t_block *block)
 {
-    //printf("i am [%s], starting status %d, mypid %d, my children are:\n       ", block->prompt, block->my_status, getpid());
-    int i = 0;
-    while (i < block->op_count + 1)
-    {
-        printf("%d  ", block->child_pids[i]);
-        i++;
-    }
-    printf("\n");
-    return (1);
+	int	i;
+
+	i = 0;
+	//printf("i am [%s], starting status %d, mypid %d, my children are:\n       ", block->prompt, block->my_status, getpid());
+	while (i < block->op_count + 1)
+	{
+		printf("%d  ", block->child_pids[i]);
+		i++;
+	}
+	printf("\n");
+	return (1);
 }
 
 
-int waiting_for_my_children(t_block *block, int index)
+int	waiting_for_my_children(t_block *block, int index)
 {
-    int i;
+	int	i;
 
-    check_for_signals(block->ms);
-    i = 0;
-    //printf("block [%s] waiting for %d children \n", block->prompt, block->op_count + 1);
-    //printf("i am [%s], starting status %d, waiting, mypid %d\n", block->prompt, block->my_status, getpid());
-    //print_child_pids(block);
-    while (i < index)
-    {
-        //printf("child [%s], index, %d, has pid? %d\n", block->child_list[i]->prompt, i, block->child_pids[i]);
-        if (block->child_pids[i] != 0)
-        {
-            waitpid(block->child_pids[i], &block->my_status, 0);
-            if (WIFEXITED(block->my_status))
-                block->my_status = WEXITSTATUS(block->my_status);
+	check_for_signals(block->ms);
+	i = 0;
+	//printf("block [%s] waiting for %d children \n", block->prompt, block->op_count + 1);
+	//printf("i am [%s], starting status %d, waiting, mypid %d\n", block->prompt, block->my_status, getpid());
+	//print_child_pids(block);
+	while (i < index)
+	{
+		//printf("child [%s], index, %d, has pid? %d\n", block->child_list[i]->prompt, i, block->child_pids[i]);
+		if (block->child_pids[i] != 0)
+		{
+			waitpid(block->child_pids[i], &block->my_status, 0);
+			if (WIFEXITED(block->my_status))
+				block->my_status = WEXITSTATUS(block->my_status);
 			//printf("        [%s] changed status to %d because pid %d arrived\n", block->prompt, block->my_status, block->child_pids[i]);
-            block->child_pids[i] = 0;
-        }
+			block->child_pids[i] = 0;
+		}
 		else if (block->child_exit_status[i] >= 0)
 		{
 			//printf("        [%s] changed status to %d because of save status from %d which is %d\n", block->prompt, block->my_status, i, block->child_exit_status[i]);
 			block->my_status = block->child_exit_status[i];
 			block->child_exit_status[i] = -1;
 		}
-        i++;
-    }
-    //printf("i am [%s], ending status %d, moving on, mypid %d\n", block->prompt, block->my_status, getpid());
-    if (block->father)
-        block->father->my_status = block->my_status;
-    block->ms->exit_status = block->my_status;
-    return (1);
+		i++;
+	}
+	//printf("i am [%s], ending status %d, moving on, mypid %d\n", block->prompt, block->my_status, getpid());
+	if (block->father)
+		block->father->my_status = block->my_status;
+	block->ms->exit_status = block->my_status;
+	return (1);
 }
 
 /*
 
-    pipes_and_conditionals
-    Sets up the commands based on the big 3 operators: && || and |.
-        -   Saves the read end of the previous pipe, if a pipe was open
-            the next operator may be a pipe as well: pipe will overwrite
-            the previous file descriptors
-        -   Opens a new pipe if the current command will write too a pipe;
-        -   In case of && or ||, waits for the previous commands to arrive
-            in order to determine their exit status and decide wether
-            the following command will execute or not;
+	pipes_and_conditionals
+	Sets up the commands based on the big 3 operators: && || and |.
+		-   Saves the read end of the previous pipe, if a pipe was open
+			the next operator may be a pipe as well: pipe will overwrite
+			the previous file descriptors
+		-   Opens a new pipe if the current command will write too a pipe;
+		-   In case of && or ||, waits for the previous commands to arrive
+			in order to determine their exit status and decide wether
+			the following command will execute or not;
 
 */
 
-int pipes_and_conditionals(t_block *block, int index, int *must_fork)
+int	pipes_and_conditionals(t_block *block, int index, int *must_fork)
 {
-    *must_fork = 0;
-    if (index > 0 && block->op_id[index - 1] == T_OP_PIPE)
-    {
-        block->prev_pipe[0] = block->pipefd[0];
-        block->prev_pipe[1] = block->pipefd[1];
-        *must_fork = 1;
-    }
-    if (index < block->op_count && block->op_id[index] == T_OP_PIPE)
-    {
-        if (pipe(block->pipefd) == -1)
-            return (perror_msg("pipe"));
-        *must_fork = 1;
-    }
-    if (index > 0 && index <= block->op_count \
-    && (block->op_id[index - 1] == T_OP_AND || block->op_id[index - 1] == T_OP_OR))
-    {
-        waiting_for_my_children(block, index);
-        if ((block->op_id[index - 1] == T_OP_AND && block->ms->exit_status != 0) \
-        || (block->op_id[index - 1] == T_OP_OR && block->ms->exit_status  == 0))
-            return (0);
-    }
-    if (block->must_subshell \
-    && !block->has_arithmatic_parenthesis && block->op_count == 0)
-    {
-        //printf("child: [%s] has parenthesis and must be forked\n", block->child_list[index]->prompt);
-        *must_fork = 1;
-    }
-    if (*must_fork)
-    {
-        block->child_pids[index] = fork();
-        if (block->child_pids[index] == -1)
-            return (perror_msg("fork"));
-        if (!block->child_pids[index])
+	*must_fork = 0;
+	if (index > 0 && block->op_id[index - 1] == T_OP_PIPE)
+	{
+		block->prev_pipe[0] = block->pipefd[0];
+		block->prev_pipe[1] = block->pipefd[1];
+		*must_fork = 1;
+	}
+	if (index < block->op_count && block->op_id[index] == T_OP_PIPE)
+	{
+		if (pipe(block->pipefd) == -1)
+			return (perror_msg("pipe"));
+		*must_fork = 1;
+	}
+	if (index > 0 && index <= block->op_count \
+	&& (block->op_id[index - 1] == T_OP_AND || block->op_id[index - 1] == T_OP_OR))
+	{
+		waiting_for_my_children(block, index);
+		if ((block->op_id[index - 1] == T_OP_AND && block->ms->exit_status != 0) \
+		|| (block->op_id[index - 1] == T_OP_OR && block->ms->exit_status == 0))
+			return (0);
+	}
+	if (block->must_subshell \
+	&& !block->has_arithmatic_parenthesis && block->op_count == 0)
+	{
+		//printf("child: [%s] has parenthesis and must be forked\n", block->child_list[index]->prompt);
+		*must_fork = 1;
+	}
+	if (*must_fork)
+	{
+		block->child_pids[index] = fork();
+		if (block->child_pids[index] == -1)
+			return (perror_msg("fork"));
+		if (!block->child_pids[index])
 		{
 			if (index < block->op_count && block->op_id[index] == T_OP_PIPE)
 				close(block->pipefd[0]);
 			//if (index > 0 && block->op_id[index - 1] == T_OP_PIPE)
 			//	close(block->prev_pipe[1]);
 		}
-    }
-    return (1);
+	}
+	return (1);
 }
 
 
 
 /*
-    execute
-    This function prepares the command for execution.
-    If redirections have a problem (ambiguous/non existent), close the remaining file descriptors
-    and exit.
+	execute
+	This function prepares the command for execution.
+	If redirections have a problem (ambiguous/non existent), close the remaining file descriptors
+	and exit.
 
-    If there is no command (the prompt is made of only redirections, totally legal)
-    just close the file descriptors and exit.
+	If there is no command (the prompt is made of only redirections, totally legal)
+	just close the file descriptors and exit.
 
-    Otherwise, call process_execution: responsible for fork and execve.
+	Otherwise, call process_execution: responsible for fork and execve.
 
 */
 
-int execute(t_block *block)
+int	execute(t_block *block)
 {
 	//printf("executing [%s] i'm pid %d\n", block->prompt, block->father->child_pids[0]);
-    if (!manage_cmd_expansions(block))
-        return (0);
-    if (block->cmd)
-        process_execution(block);
-    else
-    {
-        close_in_fds(block);
-        close_out_fds(block);
-    }
-    if (block->i_am_forked)
-        block->father->my_status = block->my_status;
-    return (1);
+	//token_list_head_print(block->prompt, print_token_args);
+	if (!manage_cmd_expansions(block))
+		return (0);
+	//print_block(block);
+	//printf("executing block [%s]\n", block->cmd);
+	if (block->cmd)
+		process_execution(block);
+	else
+	{
+		close_in_fds(block);
+		close_out_fds(block);
+	}
+	if (block->i_am_forked)
+		block->father->my_status = block->my_status;
+	return (1);
 }
 
 /*
 
-    execution_tree
-    function responsible for the whole thing, pretty much.
-    all the t_blocks are set in the stack frame created for the caller: when
-    calling destroy_block it just frees the malloc'ed pointers inside the structure
-    but not the structure itself (it is destroyed when the function exists)
-    When dealing with a father with multiple kids, the previous kid cleans the structure
-    when exiting their function call such that the father can use it again from scratch
-    for the next kid:
-        All Quiet on the Western Front
-    so for instance with: ls | cat | cat | cat | cat
-    only 2 blocks exist at any given time as one child is done, its function call to execution_tree
-    will destroy his own block upon exiting (the child must call destroy_block anyways)
-    Upon execution, all the fds are analysed before the command itself, so if
-    any fd fails to open, the command won't analyse it s own arguments.
+	execution_tree
+	function responsible for the whole thing, pretty much.
+	all the t_blocks are set in the stack frame created for the caller: when
+	calling destroy_block it just frees the malloc'ed pointers inside the structure
+	but not the structure itself (it is destroyed when the function exists)
+	When dealing with a father with multiple kids, the previous kid cleans the structure
+	when exiting their function call such that the father can use it again from scratch
+	for the next kid:
+		All Quiet on the Western Front
+	so for instance with: ls | cat | cat | cat | cat
+	only 2 blocks exist at any given time as one child is done, its function call to execution_tree
+	will destroy his own block upon exiting (the child must call destroy_block anyways)
+	Upon execution, all the fds are analysed before the command itself, so if
+	any fd fails to open, the command won't analyse it s own arguments.
 
 
 
 */
 
-int open_here_docs_at_block(t_block *block)
+int	open_here_docs_at_block(t_block *block)
 {
-    int         	i;
+	int				i;
 	int				has_quotes;
-    t_token_node	*cur;
+	t_token_node	*cur;
 
-    if (!block->io_files)
-        return (1);
-    cur = block->io_files->head;
-    i = 0;
-    //printf("checking here_docs at block [%s]\n", block->prompt);
-    while (cur && save_signal(NULL) != EXIT_SIGINT)
-    {
-        //printf("checking redir [%s] of type %d\n", redir->file, redir->type);
-        if (cur->type == T_INDIR_HD)
-        {
-            if (block->here_doc)
-            {
-                close(block->here_doc_fd);
-                unlink(block->here_doc);
-                ft_free_set_null(&block->here_doc);
-            }
-            if (!remove_unguarded_quotes(&cur->text, &has_quotes)
-            || !here_doc(block, cur->text, has_quotes))
-                return (0);
+	if (!block->io_files)
+		return (1);
+	cur = block->io_files->head;
+	i = 0;
+	//printf("checking here_docs at block [%s]\n", block->prompt);
+	while (cur && save_signal(NULL) != EXIT_SIGINT)
+	{
+		//printf("checking redir [%s] of type %d\n", redir->file, redir->type);
+		if (cur->type == T_INDIR_HD)
+		{
+			if (block->here_doc)
+			{
+				close(block->here_doc_fd);
+				unlink(block->here_doc);
+				ft_free_set_null(&block->here_doc);
+			}
+			if (!remove_unguarded_quotes(&cur->text, &has_quotes)
+				|| !here_doc(block, cur->text, has_quotes))
+				return (0);
 
-
-            //block->here_doc = redir->file;
-            //printf("here doc name [%s]\n", block->here_doc);
-            //redir->file = NULL;
-            block->here_doc_index = i;
-            //printf("here doc: fd %d, i %d, limiter [%s], file name [%s]\n", block->here_doc_fd, i, redir->file, block->here_doc);
-        }
-        cur = cur->next;
-        i++;
-    }
-    return (1);
+			//block->here_doc = redir->file;
+			//printf("here doc name [%s]\n", block->here_doc);
+			//redir->file = NULL;
+			block->here_doc_index = i;
+			//printf("here doc: fd %d, i %d, limiter [%s], file name [%s]\n", block->here_doc_fd, i, redir->file, block->here_doc);
+		}
+		cur = cur->next;
+		i++;
+	}
+	return (1);
 }
 
 
-int get_all_here_docs(t_block *block)
+int	get_all_here_docs(t_block *block)
 {
-    int i;
+	int	i;
 
-    if (!block->is_cmd)
-    {
-        i = 0;
-        while (block->child_list[i] \
-        && !block->has_arithmatic_parenthesis \
-        && save_signal(NULL) != EXIT_SIGINT)
-        {
-            get_all_here_docs(block->child_list[i]);
-            i++;
-        }
-    }
-    open_here_docs_at_block(block);
-    return (1);
+	if (!block->is_cmd)
+	{
+		i = 0;
+		//printf("i am %p, my child list is %p\n", block, block->child_list);
+		//my_children_addresses(block);
+		while (block->child_list[i] \
+		&& !block->has_arithmatic_parenthesis \
+		&& save_signal(NULL) != EXIT_SIGINT)
+		{
+			get_all_here_docs(block->child_list[i]);
+			i++;
+		}
+	}
+	open_here_docs_at_block(block);
+	return (1);
 }
 
-int execution_tree(t_block *block, int i_am_forked)
+int	execution_tree(t_block *block, int i_am_forked)
 {
-    int         i;
-    int         status;
-    int         must_fork;
+	int	i;
+	int	status;
+	int	must_fork;
 
-	printf("executing prompt:");
-	token_list_head_print(block->prompt, print_token_args);
-    if (i_am_forked)
-        block->i_am_forked = 1;
-    if (!manage_io_files(block))
-        return (0);
-    if (block->is_cmd)
-        execute(block);
-    else if (!block->has_arithmatic_parenthesis)
-    {
+	
+	if (i_am_forked)
+		block->i_am_forked = 1;
+	if (!manage_io_files(block))
+		return (0);
+	if (block->is_cmd)
+		execute(block);
+	else if (!block->has_arithmatic_parenthesis)
+	{
 		//printf("anything not cmd?\n");
-        i = 0;
-        while (block->child_list[i])
-        {
+		i = 0;
+		while (block->child_list[i])
+		{
 			//printf("got in loop\n");
-            if (i > 0 && block->op_id[i - 1] == T_OP_PIPE)
-                close(block->pipefd[1]);
-            if (block->op_id && pipes_and_conditionals(block, i, &must_fork))
-            {
-                if (!(must_fork && block->child_pids[i] != 0))
-                    execution_tree(block->child_list[i], must_fork);
-            }
-            if (i > 0 && block->op_id[i - 1] == T_OP_PIPE)
-                close(block->prev_pipe[0]);
-            i++;
-        }
-        waiting_for_my_children(block, block->op_count + 1);
-        close_in_fds(block);
-        close_out_fds(block);
-    }
-    else
-        block->my_status = 1;               //unnecessary parenthesis status
+			if (i > 0 && block->op_id[i - 1] == T_OP_PIPE)
+				close(block->pipefd[1]);
+			if (block->op_id && pipes_and_conditionals(block, i, &must_fork))
+			{
+				if (!(must_fork && block->child_pids[i] != 0))
+					execution_tree(block->child_list[i], must_fork);
+			}
+			if (i > 0 && block->op_id[i - 1] == T_OP_PIPE)
+				close(block->prev_pipe[0]);
+			i++;
+		}
+		waiting_for_my_children(block, block->op_count + 1);
+		close_in_fds(block);
+		close_out_fds(block);
+	}
+	else
+		block->my_status = 1;				//unnecessary parenthesis status
 
-    //printf("block [%s], my status %d, my address %p\n", block->prompt, block->my_status, block);
-    if(i_am_forked)
-    {
-        //printf("block [%s] is forked, my status %d, my pid %d\n", block->prompt, block->my_status, getpid());
-        status = block->my_status;
-        destroy_ms(block->ms);
-        exit(status);
-    }
+	//printf("block [%s], my status %d, my address %p\n", block->prompt, block->my_status, block);
+	if (i_am_forked)
+	{
+		//printf("block [%s] is forked, my status %d, my pid %d\n", block->prompt, block->my_status, getpid());
+		status = block->my_status;
+		destroy_ms(block->ms);
+		exit(status);
+	}
 	else if (block->father && !block->is_cmd)
 	{
 		//printf("[%s] has father [%s] and will give my status %d\n", block->prompt, block->father->prompt, block->my_status);
@@ -302,87 +333,90 @@ int execution_tree(t_block *block, int i_am_forked)
 	}
 	else if (!block->father && !block->is_cmd)
 		block->ms->exit_status = block->my_status;
-    //printf("block [%s], my status %d, my address %p, not forked ready to destroy\n", block->prompt, block->my_status, block);
-    destroy_block(block);
-    return (1);
+	//printf("block [%s], my status %d, my address %p, not forked ready to destroy\n", block->prompt, block->my_status, block);
+	destroy_block(block);
+	return (1);
 }
 
-
-void    print_execution_tree(t_block *block)
+void	print_execution_tree(t_block *block)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    if (!block)
-        return ;
-    //printf("lvl %d, id %d, prompt [%s]\n", block->my_level, block->my_id, block->prompt);
-    if (!block->is_cmd)
-    {
-        i = 0;
-        while (block->child_list[i])
-        {
-            print_execution_tree(block->child_list[i]);
-            i++;
-        }
-    }
-}
-
-
-
-int setup_execution_tree(t_ms *ms, t_block *father, t_token_list *prompt, int my_id)
-{
-    int     i;
-    t_block *block;
-
-    block = init_block(ms, father, prompt, my_id);
-    if (!block)
-        return (0);
-    if (!split_prompt(block))
-        return (0);
-    if (block->is_cmd)
-        return (0);
-    if (!block->is_cmd)
-    {
-        i = 0;
-        while (block->child_prompts[i])
-        {
-            setup_execution_tree(ms, block, block->child_prompts[i], i);
-            i++;
-        }
-        destroy_child_prompts(block);
-    }
-    return (1);
-}
-
-int ms_prompt_loop(t_ms *ms)
-{
-    while (1)
+	i = 0;
+	if (!block)
+		return ;
+	//printf("lvl %d, id %d, prompt [%s]\n", block->my_level, block->my_id, block->prompt);
+	if (!block->is_cmd)
 	{
-    	if (get_prompt(ms))
-    	{
+		i = 0;
+		while (block->child_list[i])
+		{
+			print_execution_tree(block->child_list[i]);
+			i++;
+		}
+	}
+}
+
+
+
+int	setup_execution_tree(t_ms *ms, t_block *father, t_token_list *prompt, int my_id)
+{
+	int		i;
+	t_block	*block;
+
+	block = init_block(ms, father, prompt, my_id);
+	if (!block)
+		return (0);
+	//printf("printing prompt i have received: \n");
+	//token_list_head_print(prompt, print_token_args);
+	//printf("finished printing prompt i have received\n");
+	if (!split_prompt(block))
+		return (0);
+	if (block->is_cmd)
+		return (0);
+	if (!block->is_cmd)
+	{
+		i = 0;
+		while (block->child_prompts[i])
+		{
+			setup_execution_tree(ms, block, block->child_prompts[i], i);
+			i++;
+		}
+		//my_children_addresses(block);
+		destroy_child_prompts(block);
+	}
+	return (1);
+}
+
+int	ms_prompt_loop(t_ms *ms)
+{
+	while (1)
+	{
+		if (get_prompt(ms))
+		{
 			//token_list_head_print(ms->prompt, print_token_args);
-    	    //setup the whole fuckin tree;
-    	    setup_execution_tree(ms, NULL, ms->prompt, 0);
-    	    if (save_signal(NULL) != EXIT_SIGINT)
-    	        get_all_here_docs(ms->first);
-    	    //print_execution_tree(ms->first);
-    	    //printf("starting execution\n");
-    	    if (save_signal(NULL) != EXIT_SIGINT)
-    	        execution_tree(ms->first, 0);
-    	    destroy_block(ms->first);
-        	//execution_tree(ms, NULL, ms->prompt, 0);
+			//setup the whole fuckin tree;
+			setup_execution_tree(ms, NULL, ms->prompt, 0);
+			if (save_signal(NULL) != EXIT_SIGINT)
+				get_all_here_docs(ms->first);
+			//print_execution_tree(ms->first);
+			//printf("starting execution\n");
+			if (save_signal(NULL) != EXIT_SIGINT)
+				execution_tree(ms->first, 0);
+			destroy_block(ms->first);
+			//execution_tree(ms, NULL, ms->prompt, 0);
 
 
-        	if (ms->my_kid != -1)
-        	{
-        	    waitpid(ms->my_kid, &ms->exit_status, 0);
-        	    if (WIFEXITED(ms->exit_status))
-        	        ms->exit_status = WEXITSTATUS(ms->exit_status);
-        	    ms->my_kid = -1;
-        	}
-    	}
-    	//printf("signal is %d\n", save_signal(NULL));
-    	check_for_signals(ms);
+			if (ms->my_kid != -1)
+			{
+				waitpid(ms->my_kid, &ms->exit_status, 0);
+				if (WIFEXITED(ms->exit_status))
+					ms->exit_status = WEXITSTATUS(ms->exit_status);
+				ms->my_kid = -1;
+			}
+		}
+		//printf("signal is %d\n", save_signal(NULL));
+		check_for_signals(ms);
 	}
 	return (1);
 }
@@ -394,14 +428,14 @@ valgrind --track-fds=yes --trace-children=yes --leak-check=full --show-leak-kind
 
 
 
-int main(int ac, char **av, char **env)
+int	main(int ac, char **av, char **env)
 {
 	t_ms	ms;
 
-    (void)ac;
+	(void)ac;
 	if (!init_ms(&ms, &av[0][2], env))
 		return (0);
-    ms_prompt_loop(&ms);
+	ms_prompt_loop(&ms);
 	destroy_ms(&ms);
 	return (0);
 }
@@ -437,22 +471,22 @@ ms_prompt.c     // setup env, shlvl, atenção a NULL env
 signals.c       // adiciona sigint heredoc para exit child process do heredoc.
 
 manage_files: heredoc... preciso do ms para destruir tudo no child process
-    - verificar se com heredoc da memory leak ja que nao tamos a mudar nada da infraestructura
+	- verificar se com heredoc da memory leak ja que nao tamos a mudar nada da infraestructura
 exec: apenas altera child exit para destruir o underlying ms
 
 Atenção para parentesis...........
 
-    (exit), apesar de os parentesis serem irrelevantes, faz um child process na mesma
-    significa que talvez nao possamos retirar unnecessary parenthesis
-    e tenhamos de aceitar muuuuitos forks
-    apenas podemos retirar os parenthesis exteriores....?
+	(exit), apesar de os parentesis serem irrelevantes, faz um child process na mesma
+	significa que talvez nao possamos retirar unnecessary parenthesis
+	e tenhamos de aceitar muuuuitos forks
+	apenas podemos retirar os parenthesis exteriores....?
 
 (((exit))) && ls
-    wtf, does nothing, exit code 1.....
+	wtf, does nothing, exit code 1.....
 
 
 ((ls))
-    same, exit code 1,
+	same, exit code 1,
 
 
 
@@ -462,8 +496,8 @@ hello
 0
 [root@localhost ~]#
 
-        ignores ls because it has excessive parenthesis, exit status 1 immediatelly,
-        ges for echo hello
+		ignores ls because it has excessive parenthesis, exit status 1 immediatelly,
+		ges for echo hello
 
 EXPANSION OF WILDCARDS AND $ TAKES PLACE DURING THE EXECUTION TREE AND NOT BEFORE
 

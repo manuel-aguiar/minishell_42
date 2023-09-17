@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_list3.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 18:29:11 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/16 21:47:21 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 13:54:13 by mnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	token_list_insert_after(t_token_list *list, t_token_node *after, t_token_no
 
 void	token_list_move_top_to_new(t_token_list *to, t_token_list *from, t_token_node *until, int count)
 {
-	t_token_node *save_source;
+	t_token_node	*save_source;
 
 	if (!to || !from || !until || !(from->head))
 		return ;
@@ -70,9 +70,9 @@ void	token_list_move_top_to_new(t_token_list *to, t_token_list *from, t_token_no
 	return ;
 }
 
-t_token_node *move_node_to_list_and_retrive_next(t_token_list *to, t_token_list *from, t_token_node *target)
+t_token_node	*move_node_to_list_and_retrive_next(t_token_list *to, t_token_list *from, t_token_node *target)
 {
-	t_token_node *retrieve;
+	t_token_node	*retrieve;
 
 	retrieve = target->next;
 	if (target->prev)

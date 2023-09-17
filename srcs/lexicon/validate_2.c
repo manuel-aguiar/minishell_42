@@ -3,41 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   validate_2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 18:32:01 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/17 04:03:46 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 14:20:55 by mnascime         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "token_list.h"
-
-char	*ft_strjoin(char *s1, char const *s2)
-{
-	char	*ptr;
-	size_t	i;
-	size_t	f;
-
-	i = 0;
-	f = 0;
-	ptr = malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
-	if (!ptr)
-		return (NULL);
-	while (s1 && s1[i] != '\0')
-	{
-		ptr[i] = s1[i];
-		i++;
-	}
-	while (s2[f] != '\0')
-	{
-		ptr[i++] = s2[f];
-		if (s2[f] == '\n')
-			break ;
-		f++;
-	}
-	ptr[i] = '\0';
-	return (ptr);
-}
 
 int	invalid_elem_msg(t_token_node *elem, char *text)
 {
@@ -48,10 +21,7 @@ int	invalid_elem_msg(t_token_node *elem, char *text)
 	else
 		msg = ft_strjoin(text, &elem->text[0]);
 	if (!msg)
-	{
-		perror_msg_ptr("malloc");
-		return (0);
-	}
+		return (perror_msg_int("malloc", 0));
 	printf("%s\n", msg);
 	free(msg);
 	return (0);
@@ -66,7 +36,7 @@ int	valid_redir_texts(t_token_list *list)
 	cur = list->head;
 	while (cur)
 	{
-		if (cur->type >= T_INDIR_HD && cur->type <= T_OUTDIR_TRUN && !cur->text)
+		if (cur->type >= T_INDIR_HD && cur->type <= T_OUTDIR_TRUNC && !cur->text)
 			return (invalid_elem_msg(cur, \
 		"minishell: syntax error near unexpected token "));
 		cur = cur->next;
@@ -90,7 +60,7 @@ static int	valid_consecutive_elem(t_token_node *cur)
 	(cur->type == T_OPEN_PAR && cur->prev->type == T_CLOSE_PAR) || \
 	(cur->type == T_CLOSE_PAR && cur->prev->type == T_OPEN_PAR) || \
 	(cur->type >= T_OPEN_PAR && cur->type <= T_CLOSE_PAR && \
-	cur->prev->type >= T_INDIR_HD && cur->prev->type <= T_OUTDIR_TRUN) || \
+	cur->prev->type >= T_INDIR_HD && cur->prev->type <= T_OUTDIR_TRUNC) || \
 	(cur->type == T_OPEN_PAR && cur->prev->type >= T_ARG) || \
 	(cur->type == T_ARG && cur->prev->type >= T_CLOSE_PAR)))
 		return (invalid_elem_msg(cur, \
