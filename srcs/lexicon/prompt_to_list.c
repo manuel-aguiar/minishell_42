@@ -21,8 +21,8 @@ void	deals_with_text(t_token_list *list, char **prompt, char **temp)
 	len = 0;
 	dummy_token = 0;
 	rewind = ft_strlen(*prompt);
-	while (**prompt && !ft_isspace(**prompt) && \
-	!ft_isquote(**prompt) && !is_token(prompt, &dummy_token, 0))
+	while (**prompt && !ft_isspace(**prompt) \
+	&& !is_token(prompt, &dummy_token, 0))
 	{
 		dummy_token = 0;
 		len++;
