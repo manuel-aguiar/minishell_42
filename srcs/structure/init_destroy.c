@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 00:11:09 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/17 03:57:45 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 04:03:30 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	destroy_block(void *og_block)
 {
     t_block *block;
 
-	FOPEN_MAX
     block = (t_block *)og_block;
     if (!block)
     return ;

@@ -6,7 +6,7 @@
 /*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:50:30 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/17 03:48:13 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/17 04:00:59 by mmaria-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,5 +105,9 @@ void			print_token_args(t_token_node *token);
 int		ft_isquote(int c);
 char	*ft_strdup_len(char *s, int len);
 
+int				prompt_is_valid(t_token_list *list);
+int				valid_elem_order(t_token_list *list);
+int				valid_redir_texts(t_token_list *list);
+int				invalid_elem_msg(t_token_node *elem, char *text);
 
 #endif
