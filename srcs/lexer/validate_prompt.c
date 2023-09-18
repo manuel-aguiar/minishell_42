@@ -38,7 +38,7 @@ static void	prepare_pars_error(t_token_list *list, int *parenthesis)
 		type = T_CLOSE_PAR;
 	while (cur && cur->type != type)
 		cur = cur->next;
-	invalid_elem_msg(cur, "minishell: syntax error near unexpected token ");
+	invalid_elem_msg(cur, "minishell: syntax error near unexpected token `");
 }
 
 static int	valid_num_of_pars(t_token_list *list)
@@ -79,7 +79,7 @@ static int	valid_quote_num(t_token_list *list)
 			if (cur->text && cur->text[0] != \
 			cur->text[ft_strlen(cur->text) - 1])
 				return (invalid_elem_msg(cur, \
-			"minishell: lack of matching quote for argument "));
+			"minishell: lack of matching quote for argument `"));
 		}
 		cur = cur->next;
 	}
