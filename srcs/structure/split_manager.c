@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_manager.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 20:10:15 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/17 16:24:39 by mnascime         ###   ########.fr       */
+/*   Updated: 2023/09/18 15:55:27 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ int setup_split_prompt_struct(t_block *block)
 		block->child_list = ft_calloc((block->op_count + 2), sizeof(*(block->child_list)));
 		block->child_pids = ft_calloc(block->op_count + 1, sizeof(*(block->child_pids)));
 		block->child_exit_status = ft_calloc(block->op_count + 1, sizeof(*(block->child_exit_status)));
+		ft_memset(block->child_exit_status, -1, (block->op_count + 1) * sizeof(*(block->child_exit_status)));
 		if (!block->op_id || !block->child_prompts || !block->child_pids)
 		{
 			perror_msg("malloc");
