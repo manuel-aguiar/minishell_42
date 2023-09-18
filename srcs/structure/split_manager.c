@@ -131,23 +131,36 @@ int split_children_and_operators(t_block *block)
     int i;
 
     all = 0;
-    i = 0;
-	cur = block->prompt->head;
+	
     while (all < block->op_count)
     {
-		i = 0;
-        while (cur && !token_is_big_operator(cur))
+		cur = block->prompt->head;
+		//printf("my args to split \n");
+		//token_list_head_print(block->prompt, print_token_args);
+		//printf("finished printing my args, list len is %ld\n", block->prompt->len);
+		i = 1;
+        while (cur->next && !token_is_big_operator(cur->next))
 		{
 			cur = cur->next;
 			i++;
 		}
 		if (cur)
 			token_list_move_top_to_new(block->child_prompts[all], \
-			block->prompt, cur->prev, i);
-		block->op_id[all] = cur->type;
+			block->prompt, cur, i);
+		//printf("printing args of child %d\n", all);
+		//token_list_head_print(block->child_prompts[all], print_token_args);
+		//printf("finished printing args of child %d, list len is %ld\n", all, block->child_prompts[all]->len);
+		block->op_id[all] = block->prompt->head->type;
 		token_list_del_head(block->prompt);
 		all++;
     }
+	token_list_destroy(&block->child_prompts[all]);
+	//printf("all is %d\n", all);
+	block->child_prompts[all] = block->prompt;
+	block->prompt = NULL;
+	//printf("printing args of child %d\n", all);
+	//token_list_head_print(block->child_prompts[all], print_token_args);
+	//printf("finished printing args of child %d, list len is %ld\n", all, block->child_prompts[all]->len);
     return (1);
 }
 
@@ -229,7 +242,8 @@ int split_prompt(t_block *block)
     if (!setup_split_prompt_struct(block))
         return (free_split_prompt(block));
 	//token_list_head_print(block->prompt, print_token_args);
-    split_children_and_operators(block);
+	if (!block->is_cmd)
+    	split_children_and_operators(block);
 	//token_list_head_print(block->prompt, print_token_args);
     if (!block->op_count && block->must_subshell)
     {
