@@ -34,7 +34,8 @@ GENERIC			=	generic_utils
 
 ## SOURCE FILES ##
 
-FILES_LEXER	=	create_tokens.c 						\
+FILES_LEXER	=		ms_prompt.c								\
+					create_tokens.c 						\
 					prompt_to_list.c 						\
 					token_list_print.c						\
 					token_list1.c							\
@@ -55,14 +56,13 @@ FILES_FD_MAN	=	manage_files.c			\
 					heredoc_temp.c
 
 
-FILES_STRUCT	=	ms_prompt.c				\
-					init_destroy.c			\
+FILES_STRUCT	=	init_destroy.c			\
 					split_manager.c			\
 					setup_cmd.c				\
 					signals.c
 
 
-FILES_EXPAND	=	wildcard_return.c				\
+FILES_EXPAND	=	wildcard_return.c			\
 					wildcard_search_files.c		\
 					wildcard_fit_candidates.c	\
 					wildcard_expansion.c		\
