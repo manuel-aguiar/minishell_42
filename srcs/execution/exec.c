@@ -248,12 +248,12 @@ int	parent_process(t_block *block, pid_t pid)
 		unlink(block->here_doc);
 		ft_free_set_null(&block->here_doc);
 	}
-	if (block->i_am_forked)
-	{
-		waitpid(pid, &block->my_status, 0);
-		if (WIFEXITED(block->my_status))
-			block->my_status = WEXITSTATUS(block->my_status);
-	}
+	//if (block->i_am_forked)
+	//{
+	//	waitpid(pid, &block->my_status, 0);
+	//	if (WIFEXITED(block->my_status))
+	//		block->my_status = WEXITSTATUS(block->my_status);
+	//}
 	return (1);
 }
 

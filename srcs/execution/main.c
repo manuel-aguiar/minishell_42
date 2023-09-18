@@ -84,22 +84,26 @@ int	waiting_for_my_children(t_block *block, int index)
 		//printf("child [%s], index, %d, has pid? %d\n", block->child_list[i]->prompt, i, block->child_pids[i]);
 		if (block->child_pids[i] != 0)
 		{
+			//printf("my lvl id (%d, %d), waiting for pid %d, my status now is: %d  ", block->my_level, block->my_id, block->child_pids[i], block->my_status);
 			waitpid(block->child_pids[i], &block->my_status, 0);
 			if (WIFEXITED(block->my_status))
 				block->my_status = WEXITSTATUS(block->my_status);
+			//printf("  and changed to %d i received from child (%d, %d)\n", block->my_status, block->my_level +1, i);
 			//printf("        [%s] changed status to %d because pid %d arrived\n", block->prompt, block->my_status, block->child_pids[i]);
 			block->child_pids[i] = 0;
 		}
 		else if (block->child_exit_status[i] >= 0)
 		{
-			//printf("        [%s] changed status to %d because of save status from %d which is %d\n", block->prompt, block->my_status, i, block->child_exit_status[i]);
+			//printf("my lvl id (%d, %d) original status %d will change to %d from child wnumber (%d,%d)\n", block->my_level, block->my_id, block->my_status, block->child_exit_status[i], block->my_level +1, i);
 			block->my_status = block->child_exit_status[i];
 			block->child_exit_status[i] = -1;
 		}
+		//else
+		//	printf("no pid, no manual status\n");
 		i++;
 	}
 	//printf("i am [%s], ending status %d, moving on, mypid %d\n", block->prompt, block->my_status, getpid());
-	if (block->father)
+	if (!block->i_am_forked && block->father)
 		block->father->my_status = block->my_status;
 	block->ms->exit_status = block->my_status;
 	return (1);
@@ -321,14 +325,14 @@ int	execution_tree(t_block *block, int i_am_forked)
 	//printf("block [%s], my status %d, my address %p\n", block->prompt, block->my_status, block);
 	if (i_am_forked)
 	{
-		//printf("block [%s] is forked, my status %d, my pid %d\n", block->prompt, block->my_status, getpid());
+		//printf("my lvl id (%d, %d) i am forked, pid %d, my status %d, will exit and my father picks me up\n", block->my_level, block->my_id, getpid(), block->my_status);
 		status = block->my_status;
 		destroy_ms(block->ms);
 		exit(status);
 	}
 	else if (block->father && !block->is_cmd)
 	{
-		//printf("[%s] has father [%s] and will give my status %d\n", block->prompt, block->father->prompt, block->my_status);
+		//printf("my lvl id (%d, %d) passing status %d to my father\n", block->my_level, block->my_id, block->my_status);
 		block->father->child_exit_status[block->my_id] = block->my_status;
 	}
 	else if (!block->father && !block->is_cmd)

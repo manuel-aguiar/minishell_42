@@ -52,7 +52,13 @@ int setup_prompt(t_ms *ms)
         printf("%s>$ exit\n", ms->name);
         exit(0);
     }
-    add_history(line);
+    else if (!line[0])
+    {
+        ft_free_set_null(&line);
+        return (0);
+    }
+    else
+        add_history(line);
     //if (!line[0] || is_only_spaces(line))
     //{
 	//
@@ -72,6 +78,6 @@ int setup_prompt(t_ms *ms)
 		return (0);
 	}
 
-	free(line);
+	ft_free_set_null(&line);
     return (1);
 }
