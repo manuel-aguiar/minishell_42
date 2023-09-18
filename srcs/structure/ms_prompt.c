@@ -19,7 +19,12 @@ int get_prompt(t_ms *ms)
 
     if(!setup_prompt(ms))
         return (0);
-
+    
+    if (!prompt_is_valid (ms->prompt))
+    {
+        token_list_destroy(&ms->prompt);
+        return (0);
+    }
     //validate_syntax(&pmt);
     //validate_quote_close(&pmt);
     //validate_parenthesis_close(&pmt);
