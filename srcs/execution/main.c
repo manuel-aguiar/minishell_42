@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/18 16:40:54 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/18 17:07:59 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -445,6 +445,9 @@ int	main(int ac, char **av, char **env)
 
 
 /*
+
+$ valgrind --track-fds=yes --trace-children=yes --leak-check=full --show-leak-kinds=all ./minishell 
+
 int	main(void)
 {
 	char			*line;

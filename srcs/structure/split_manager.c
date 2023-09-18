@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 20:10:15 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/18 16:55:50 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/18 17:06:31 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@ void	destroy_child_prompts(t_block *block)
 {
 	int i;
 
+	if (!block->child_prompts)
+		return ;
+	i = 0;
 	while (i < block->op_count + 1)
 	{
 		if (block->child_prompts[i])
@@ -197,7 +200,7 @@ int	cmd_extract_redirections(t_block *block)
 {
 	t_token_node *cur;
 
-	printf("cmd extraction\n");
+	//printf("cmd extraction\n");
 	cur = block->prompt->head;
 	while (cur)
 	{
