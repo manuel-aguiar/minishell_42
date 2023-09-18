@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/17 16:27:41 by mnascime         ###   ########.fr       */
+/*   Updated: 2023/09/18 16:05:26 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ int	waiting_for_my_children(t_block *block, int index)
 			if (WIFEXITED(block->my_status))
 				block->my_status = WEXITSTATUS(block->my_status);
 			//printf("  and changed to %d i received from child (%d, %d)\n", block->my_status, block->my_level +1, i);
-			//printf("        [%s] changed status to %d because pid %d arrived\n", block->prompt, block->my_status, block->child_pids[i]);
 			block->child_pids[i] = 0;
 		}
 		else if (block->child_exit_status[i] >= 0)
