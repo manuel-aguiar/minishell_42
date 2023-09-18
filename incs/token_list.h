@@ -19,14 +19,6 @@
 typedef struct s_token_node	t_token_node;
 typedef struct s_token_list	t_token_list;
 
-typedef struct s_quote
-{
-	int	numtokens;
-	int	dquote;
-	int	squote;
-	int	tstart;
-}	t_quote;
-
 struct s_token_node
 {
 	t_token_node	*next;
@@ -103,10 +95,5 @@ void			print_token_args(t_token_node *token);
 
 int				ft_isquote(int c);
 char			*ft_strdup_len(char *s, int len);
-
-int				prompt_is_valid(t_token_list *list);
-int				valid_elem_order(t_token_list *list);
-int				valid_redir_texts(t_token_list *list);
-int				invalid_elem_msg(t_token_node *elem, char *text);
 
 #endif

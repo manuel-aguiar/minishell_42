@@ -10,45 +10,47 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minishell.h"
 #include "token_list.h"
 
-static void	prepare_pars_error(t_token_list *list, int *parenthesis);
-static int	valid_num_of_pars(t_token_list *list);
-static int	valid_quote_num(t_token_list *list);
-static int	no_amper(t_token_list *list);
+static void	prepare_pars_error(t_ms *ms, int *parenthesis);
+static int	valid_num_of_pars(t_ms *ms);
+static int	valid_quote_num(t_ms *ms);
+static int	no_amper(t_ms *ms);
 
-int	prompt_is_valid(t_token_list *list)
+int	prompt_is_valid(t_ms *ms)
 {
-	if (valid_elem_order(list) && valid_num_of_pars(list) \
-	&& valid_redir_texts(list) && valid_quote_num(list) \
-	&& no_amper(list))
+	if (valid_elem_order(ms) && valid_num_of_pars(ms) \
+	&& valid_redir_texts(ms) && valid_quote_num(ms) \
+	&& no_amper(ms))
 		return (1);
 	return (0);
 }
 
-static void	prepare_pars_error(t_token_list *list, int *parenthesis)
+static void	prepare_pars_error(t_ms *ms, int *parenthesis)
 {
 	t_token_node	*cur;
 	int				type;
 
-	cur = list->head;
+	cur = ms->prompt->head;
 	if ((*parenthesis) > 0)
 		type = T_OPEN_PAR;
 	else
 		type = T_CLOSE_PAR;
 	while (cur && cur->type != type)
 		cur = cur->next;
-	invalid_elem_msg(cur, "minishell: syntax error near unexpected token `");
+	invalid_elem_msg(ms, cur->type, cur->text, \
+	": syntax error near unexpected token `");
 }
 
-static int	valid_num_of_pars(t_token_list *list)
+static int	valid_num_of_pars(t_ms *ms)
 {
 	t_token_node	*cur;
 	int				parenthesis;
 
-	if (!list)
+	if (!ms->prompt)
 		return (1);
-	cur = list->head;
+	cur = ms->prompt->head;
 	parenthesis = 0;
 	while (cur && parenthesis >= 0)
 	{
@@ -60,17 +62,17 @@ static int	valid_num_of_pars(t_token_list *list)
 	}
 	if (parenthesis == 0)
 		return (1);
-	prepare_pars_error(list, &parenthesis);
+	prepare_pars_error(ms, &parenthesis);
 	return (0);
 }
 
-static int	valid_quote_num(t_token_list *list)
+static int	valid_quote_num(t_ms *ms)
 {
 	t_token_node	*cur;
 
-	if (!list)
+	if (!ms->prompt)
 		return (1);
-	cur = list->head;
+	cur = ms->prompt->head;
 	while (cur)
 	{
 		if (cur->type >= T_INDIR_HD && cur->text && \
@@ -78,27 +80,27 @@ static int	valid_quote_num(t_token_list *list)
 		{
 			if (cur->text && cur->text[0] != \
 			cur->text[ft_strlen(cur->text) - 1])
-				return (invalid_elem_msg(cur, \
-			"minishell: lack of matching quote for argument `"));
+				return (invalid_elem_msg(ms, cur->type, \
+				cur->text, ": lack of matching quote for argument `"));
 		}
 		cur = cur->next;
 	}
 	return (1);
 }
 
-static int	no_amper(t_token_list *list)
+static int	no_amper(t_ms *ms)
 {
 	t_token_node	*cur;
 
-	if (!list)
+	if (!ms->prompt)
 		return (1);
-	cur = list->head;
+	cur = ms->prompt->head;
 	while (cur)
 	{
 		if (cur->type == T_OP_AMPER)
 		{
-			return (invalid_elem_msg(cur, \
-			"minishell: unsupported functionality "));
+			return (invalid_elem_msg(ms, cur->type, \
+			cur->text, ": unsupported functionality `"));
 		}
 		cur = cur->next;
 	}

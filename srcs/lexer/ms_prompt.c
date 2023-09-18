@@ -20,7 +20,7 @@ int get_prompt(t_ms *ms)
     if(!setup_prompt(ms))
         return (0);
     
-    if (!prompt_is_valid (ms->prompt))
+    if (!prompt_is_valid (ms))
     {
         token_list_destroy(&ms->prompt);
         return (0);

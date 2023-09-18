@@ -320,4 +320,17 @@ char	*ft_triple_join(char *first, char *second, char *third);
 
 int		perror_msg(char *text);
 
+
+//////////////////////////////////////
+//////////////// Lexer ///////////////
+//////////////////////////////////////
+
+int				ft_isquote(int c);
+char			*ft_strdup_len(char *s, int len);
+
+int				prompt_is_valid(t_ms *ms);
+int				valid_elem_order(t_ms *ms);
+int				valid_redir_texts(t_ms *ms);
+int				invalid_elem_msg(t_ms *ms, int type, char *has_text, char *text);
+
 #endif
