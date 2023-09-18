@@ -214,10 +214,38 @@ int	cmd_extract_redirections(t_block *block)
 	return (1);
 }
 
+int	check_arithmatic_parenthesis(t_block *block)
+{
+	t_token_node *cur;
+	int open_par;
+
+	open_par = 0;
+	cur = block->prompt->head->next;
+	while (cur)
+	{
+		printf("checking [%s]\n", cur->text);
+		if (cur->type == T_OPEN_PAR)
+			open_par++;
+		if (cur->type == T_CLOSE_PAR)
+			open_par--;
+		if (open_par == 0 && cur->next && cur->next->type == T_CLOSE_PAR)
+		{
+			block->has_arithmatic_parenthesis = 1;
+			printf("has arithmatic\n");
+			return (1);
+		}
+		else
+			return (0);
+		cur = cur->next;
+	}
+	return (0);
+}
+
 int remove_corner_parenthesis_and_arithmatic(t_block *block)
 {
 	int	remove_corner;
 
+	t_token_node *cur;
 	remove_corner = 0;
 	if (block->prompt->len >= 2)
 	{
@@ -228,16 +256,12 @@ int remove_corner_parenthesis_and_arithmatic(t_block *block)
 	if (block->prompt->len >= 4 && remove_corner \
 	&& block->prompt->head->next->type == T_OPEN_PAR \
 	&& block->prompt->tail->prev->type == T_CLOSE_PAR)
-		block->has_arithmatic_parenthesis = 1;
-	//printf("list before removing corner parenthesis, i am command? %d\n", block->is_cmd);
-	//token_list_head_print(block->prompt, print_token_args);
+		check_arithmatic_parenthesis(block);
 	if (remove_corner)
 	{
 		token_list_del_head(block->prompt);
 		token_list_del_tail(block->prompt);
 	}
-	//printf("list after removing corner parenthesis\n");
-	//token_list_head_print(block->prompt, print_token_args);
 	return (1);
 }
 
