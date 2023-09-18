@@ -24,7 +24,7 @@ LIB_INC_P	=		incs
 LIBFT		=		libft.a
 
 ## SRC SUB-FOLDERS ##
-LEXICON			=	lexicon
+LEXER			=	lexer
 BUILTINS		=	builtins
 EXEC 			=	execution
 FD_MAN			=	fd_management
@@ -34,7 +34,7 @@ GENERIC			=	generic_utils
 
 ## SOURCE FILES ##
 
-FILES_LEXICON	=	create_tokens.c 						\
+FILES_LEXER	=	create_tokens.c 						\
 					prompt_to_list.c 						\
 					token_list_print.c						\
 					token_list1.c							\
@@ -80,7 +80,7 @@ FILES_GENERIC	=	ft_split_count_replenish.c			\
 ## ALL SOURCE FOLDERS
 
 SRC_DIRS		=	$(BUILTINS)		$(EXEC)	$(FD_MAN)	$(STRUCT) 	\
-					$(EXPAND)		$(GENERIC)  $(LEXICON)
+					$(EXPAND)		$(GENERIC)  $(LEXER)
 
 SRCS		:= 		$(foreach src_dir,$(SRC_DIRS),$(wildcard $(SRC_PATH)/$(src_dir)/*.c))
 
