@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   manage_files.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 13:36:27 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/17 13:39:41 by mnascime         ###   ########.fr       */
+/*   Updated: 2023/09/18 16:54:03 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,80 +49,6 @@ int	redir_has_quotes(char *arg)
 	}
 	return (0);
 }
-/*
-int outfiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i)
-{
-	int     type;
-	int     cur;
-	int     c;
-
-	cur = *i;
-	c = 1;
-	if (!*io_files)
-		*io_files = vdmlist_new();
-	if (!*io_files)
-		return (perror_msg("malloc"));
-	if (cmd_args[cur][c] == '>')
-	{
-		type = T_OUTDIR_APPEND;
-		c++;
-	}
-	else
-		type = T_OUTDIR_TRUNC;
-	if (cmd_args[cur][c])
-	{
-		if (!vdmlist_in_tail(*io_files, init_redir(ft_strdup(&cmd_args[cur][c]), type, redir_has_quotes(&cmd_args[cur][c]))))
-			return (perror_msg("malloc"));
-	}
-	else
-	{
-		if (!vdmlist_in_tail(*io_files, init_redir(cmd_args[cur + 1], type, redir_has_quotes(cmd_args[cur + 1]))))
-			return (perror_msg("malloc"));
-		cmd_args[cur + 1] = NULL;
-		*i += 1;
-	}
-	ft_free_set_null(&cmd_args[cur]);
-	*i += 1;
-	return (1);
-}
-
-int infiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i)
-{
-	int     type;
-	int     cur;
-	int     c;
-
-	cur = *i;
-	c = 1;
-	if (!*io_files)
-		*io_files = vdmlist_new();
-	if (!*io_files)
-		return (perror_msg("malloc"));
-	if (cmd_args[cur][c] == '<')
-	{
-		type = T_INDIR_HD;
-		c++;
-	}
-	else
-		type = T_INDIR_OPEN;
-	if (cmd_args[cur][c])
-	{
-		if (!vdmlist_in_tail(*io_files, init_redir(ft_strdup(&cmd_args[cur][c]), type, redir_has_quotes(&cmd_args[cur][c]))))
-			return (perror_msg("malloc"));
-	}
-	else
-	{
-		if (!vdmlist_in_tail(*io_files, init_redir(cmd_args[cur + 1], type, redir_has_quotes(cmd_args[cur + 1]))))
-			return (perror_msg("malloc"));
-		cmd_args[cur + 1] = NULL;
-		*i += 1;
-	}
-	ft_free_set_null(&cmd_args[cur]);
-	*i += 1;
-	return (1);
-}
-
-*/
 
 /*
 	manage_io_expansion

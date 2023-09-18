@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/18 16:05:26 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/18 16:40:54 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -371,7 +371,7 @@ int	setup_execution_tree(t_ms *ms, t_block *father, t_token_list *prompt, int my
 	if (!block)
 		return (0);
 	//printf("printing prompt i have received: \n");
-	//token_list_head_print(prompt, print_token_args);
+	//token_list_head_print(prompt, print_token);
 	//printf("finished printing prompt i have received\n");
 	if (!split_prompt(block))
 		return (0);

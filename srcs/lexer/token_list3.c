@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_list3.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 18:29:11 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/17 13:54:13 by mnascime         ###   ########.fr       */
+/*   Updated: 2023/09/18 16:55:25 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,14 +87,15 @@ t_token_node	*move_node_to_list_and_retrive_next(t_token_list *to, t_token_list 
 	{
 		to->head = target;
 		to->tail = target;
+		target->prev = NULL;
 	}
 	else
 	{
 		to->tail->next = target;
 		target->prev = to->tail;
-		target->next = NULL;
 		to->tail = target;
 	}
+	target->next = NULL;
 	++(to->len);
 	--(from->len);
 	if (from->len == 0)

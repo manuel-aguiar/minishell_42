@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 20:10:15 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/18 15:55:27 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/18 16:55:50 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,6 +197,7 @@ int	cmd_extract_redirections(t_block *block)
 {
 	t_token_node *cur;
 
+	printf("cmd extraction\n");
 	cur = block->prompt->head;
 	while (cur)
 	{
@@ -211,6 +212,11 @@ int	cmd_extract_redirections(t_block *block)
 		else
 			cur = cur->next;
 	}
+	//printf("printing redirs\n");
+	//token_list_head_print(block->io_files, print_token);
+	//printf("printing cmd args\n");
+	//token_list_head_print(block->prompt, print_token);
+	//printf("\n");
 	return (1);
 }
 
