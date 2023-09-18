@@ -22,10 +22,10 @@ int	invalid_elem_msg(t_token_node *elem, char *text)
 		msg = ft_strjoin(text, &elem->text[0]);
 	if (!msg)
 		return (perror_msg_int("malloc", 0));
-	printf("%s", msg);
+	ft_printf_fd(1, "%s", msg);
 	if (text[ft_strlen(text) - 1] == '`')
-		printf("'");
-	printf("\n");
+		ft_printf_fd(1, "%s", "'");
+	ft_printf_fd(1, "%s", "\n");
 	free(msg);
 	return (0);
 }
