@@ -14,7 +14,7 @@
 
 int	my_children_addresses(t_block *block)
 {
-	if (block->is_cmd)
+	if (block->is_worker)
 		return (1);
 	int i = 0;
 	printf(" i am %p, my child list is %p, my children are:\n", block, block->worker_list);
@@ -266,7 +266,7 @@ int	get_all_here_docs(t_block *block)
 {
 	int	i;
 
-	if (!block->is_cmd)
+	if (!block->is_worker)
 	{
 		i = 0;
 		//printf("i am %p, my child list is %p\n", block, block->worker_list);
@@ -294,7 +294,7 @@ int	execution_tree(t_block *block, int i_am_forked)
 		block->i_am_forked = 1;
 	if (!manage_io_files(block))
 		return (0);
-	if (block->is_cmd)
+	if (block->is_worker)
 		execute(block);
 	else if (!block->has_arithmatic_parenthesis)
 	{
@@ -329,12 +329,12 @@ int	execution_tree(t_block *block, int i_am_forked)
 		destroy_ms(block->ms);
 		exit(status);
 	}
-	else if (block->manager && !block->is_cmd)
+	else if (block->manager && !block->is_worker)
 	{
 		//printf("my lvl id (%d, %d) passing status %d to my manager\n", block->my_level, block->my_id, block->my_status);
 		block->manager->worker_exit_status[block->my_id] = block->my_status;
 	}
-	else if (!block->manager && !block->is_cmd)
+	else if (!block->manager && !block->is_worker)
 		block->ms->exit_status = block->my_status;
 	//printf("block [%s], my status %d, my address %p, not forked ready to destroy\n", block->prompt, block->my_status, block);
 	destroy_block(block);
@@ -349,7 +349,7 @@ void	print_execution_tree(t_block *block)
 	if (!block)
 		return ;
 	//printf("lvl %d, id %d, prompt [%s]\n", block->my_level, block->my_id, block->prompt);
-	if (!block->is_cmd)
+	if (!block->is_worker)
 	{
 		i = 0;
 		while (block->worker_list[i])
@@ -375,9 +375,9 @@ int	setup_execution_tree(t_ms *ms, t_block *manager, t_token_list *prompt, int m
 	//printf("finished printing prompt i have received\n");
 	if (!split_prompt(block))
 		return (0);
-	if (block->is_cmd)
+	if (block->is_worker)
 		return (0);
-	if (!block->is_cmd)
+	if (!block->is_worker)
 	{
 		i = 0;
 		while (block->worker_prompts[i])

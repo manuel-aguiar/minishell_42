@@ -89,7 +89,7 @@ struct s_block
 	int				*worker_exit_status;
 	int				*op_id;
 	int				op_count;
-	int				is_cmd;
+	int				is_worker;
 	int				has_arithmatic_parenthesis;
 	int				must_subshell;
 	int				pipefd[2];

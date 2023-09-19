@@ -84,7 +84,7 @@ t_block *init_block(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id)
 	new->worker_exit_status = NULL;
     new->op_count = 0;
     new->op_id = NULL;
-	new->is_cmd = 0;
+	new->is_worker = 0;
 	new->has_arithmatic_parenthesis = 0;
 	new->must_subshell = 0;
 
