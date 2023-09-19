@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bi_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 18:28:24 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/17 13:12:51 by mnascime         ###   ########.fr       */
+/*   Updated: 2023/09/19 10:33:38 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	exit_execution(t_block *block, char *arg, int is_exiting, int is_error)
 	if (is_exiting)
 	{
 		save_status = block->my_status;
-		destroy_ms(block->ms);
+		ms_destroy(block->ms);
 		exit(save_status);
 	}
 	else if (block->manager)

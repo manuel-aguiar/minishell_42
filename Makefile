@@ -35,7 +35,8 @@ GENERIC			=	generic_utils
 
 ## SOURCE FILES ##
 
-FILES_STRUCTS	=	init_destroy.c							\
+FILES_STRUCTS	=	ms_setup.c								\
+					block_setup.c							\
 					signals.c
 
 FILES_LEXER	=		ms_prompt.c								\
@@ -66,8 +67,6 @@ FILES_PARSER	=	task_distributor.c		\
 					worker_tasks_1.c		\
 					worker_tasks_2.c
 					
-
-
 FILES_EXPAND	=	wildcard_return.c			\
 					wildcard_search_files.c		\
 					wildcard_fit_candidates.c	\

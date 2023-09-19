@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_read.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:21:31 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/17 13:44:16 by mnascime         ###   ########.fr       */
+/*   Updated: 2023/09/19 10:33:38 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	signal_handler_heredoc(int signum)
 	{
 		//printf("\n\n successfully changed the signal handler\n\n\n");
 		rl_replace_line("", 0);
-		destroy_ms(sigint_heredoc_where_ms_is(NULL));
+		ms_destroy(sigint_heredoc_where_ms_is(NULL));
 		//printf("\n");
 		exit(130);
 	}

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/19 10:14:48 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 10:38:43 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -326,7 +326,7 @@ int	execution_tree(t_block *block, int i_am_forked)
 	{
 		//printf("my lvl id (%d, %d) i am forked, pid %d, my status %d, will exit and my manager picks me up\n", block->my_level, block->my_id, getpid(), block->my_status);
 		status = block->my_status;
-		destroy_ms(block->ms);
+		ms_destroy(block->ms);
 		exit(status);
 	}
 	else if (block->manager && !block->is_worker)
@@ -337,7 +337,7 @@ int	execution_tree(t_block *block, int i_am_forked)
 	else if (!block->manager && !block->is_worker)
 		block->ms->exit_status = block->my_status;
 	//printf("block [%s], my status %d, my address %p, not forked ready to destroy\n", block->prompt, block->my_status, block);
-	destroy_block(block);
+	block_destroy(block);
 	return (1);
 }
 
@@ -367,7 +367,7 @@ int	setup_execution_tree(t_ms *ms, t_block *manager, t_token_list *tasks, int my
 	int		i;
 	t_block	*block;
 
-	block = init_block(ms, manager, tasks, my_id);
+	block = block_init(ms, manager, tasks, my_id);
 	if (!block)
 		return (0);
 	//printf("printing prompt i have received: \n");
@@ -406,7 +406,7 @@ int	ms_prompt_loop(t_ms *ms)
 			//printf("starting execution\n");
 			if (save_signal(NULL) != EXIT_SIGINT)
 				execution_tree(ms->first, 0);
-			destroy_block(ms->first);
+			block_destroy(ms->first);
 			//execution_tree(ms, NULL, ms->prompt, 0);
 
 
@@ -436,10 +436,10 @@ int	main(int ac, char **av, char **env)
 	t_ms	ms;
 
 	(void)ac;
-	if (!init_ms(&ms, &av[0][2], env))
+	if (!ms_init(&ms, &av[0][2], env))
 		return (0);
 	ms_prompt_loop(&ms);
-	destroy_ms(&ms);
+	ms_destroy(&ms);
 	return (0);
 }
 

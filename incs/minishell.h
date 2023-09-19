@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/19 10:19:45 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 10:45:08 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,9 @@ struct s_ms
 
 struct s_block
 {
-	t_token_list	*prompt;				//herdado do bloco pai;
-	t_ms			*ms;					//to access and change env and path
-	t_block			*manager;				// to comunicate exit status with the parent
-
-
+	t_token_list	*prompt;				
+	t_ms			*ms;					
+	t_block			*manager;				
 	t_block			**worker_list;
 	t_token_list	**worker_tasks;
 	pid_t			*worker_pids;
@@ -137,18 +135,30 @@ enum e_builtin
 };
 
 //////////////////////////////////////
-//////////// EXPANSIONS //////////////
+////////////// STRUCTS ///////////////
 //////////////////////////////////////
+
+/*ms_setup.c*/
+int		ms_init(t_ms *ms, char *avzero, char **env);
+int		ms_set_path(t_ms *ms);
+int		ms_setup_initial_env(t_ms *ms, char **env);
+int		ms_increase_shell_level(t_ms *ms);
+int		ms_destroy(t_ms *ms);
+
+/*block_setup.c*/
+t_block	*block_init(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id);
+void	block_destroy(void *og_block);
+
 
 int		setup_execution_tree(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id);
 
 
 /* init_destroy */
-int		init_ms(t_ms *ms, char *avzero, char **env);
-int		destroy_ms(t_ms *ms);
+int		ms_init(t_ms *ms, char *avzero, char **env);
+int		ms_destroy(t_ms *ms);
 
-t_block	*init_block(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id);
-void	destroy_block(void *og_block);
+t_block	*block_init(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id);
+void	block_destroy(void *og_block);
 
 
 /* ms_signals.c */
@@ -196,13 +206,6 @@ int 	worker_args_split_add_token(t_block *worker, t_token_node *arg, int *move);
 int		worker_args_rm_quotes_and_split(t_block *worker);
 int		worker_args_expand_dollar_wildcard(t_block *worker);
 int		worker_dump_tasks_to_cmd_args(t_block *worker);
-
-//functions to prepare commands
-
-int		setup_cmd_pre_expansion(t_block *block);
-int		worker_task_expansions(t_block *worker);
-void	print_cmd(t_block *block);
-
 
 //int dump_cmd_to_block(t_block *block, t_block *block);
 
