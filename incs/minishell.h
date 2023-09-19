@@ -84,7 +84,7 @@ struct s_block
 
 
 	t_block			**worker_list;
-	t_token_list	**worker_prompts;
+	t_token_list	**worker_tasks;
 	pid_t			*worker_pids;
 	int				*worker_exit_status;
 	int				*op_id;
@@ -169,14 +169,14 @@ int		setup_prompt(t_ms *ms);
 
 //functions to split prompt into children
 
-int		split_prompt(t_block *block);
-int		free_split_prompt(t_block *block);
+int		distribute_tasks_between_managers_and_workers(t_block *block);
+int		free_task_distributor(t_block *block);
 
 
 //functions to prepare commands
 
 int		setup_cmd_pre_expansion(t_block *block);
-int		manage_cmd_expansions(t_block *block);
+int		worker_task_expansions(t_block *worker);
 void	print_cmd(t_block *block);
 
 
@@ -192,7 +192,7 @@ int		manage_io_files(t_block *block);
 //////////// MANAGE FILES ////////////
 //////////////////////////////////////
 
-void	destroy_worker_prompts(t_block *block);
+void	destroy_worker_tasks(t_block *block);
 
 
 /*heredoc_temp.c*/

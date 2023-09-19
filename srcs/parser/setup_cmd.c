@@ -202,7 +202,7 @@ int	dump_list_to_cmd_args(t_block *block)
 	return (1);
 }
 
-int manage_cmd_expansions(t_block *block)
+int worker_task_expansions(t_block *worker)
 {
     //printf("checking expansions\n");
     //printf("arg head [%s]\n", block->prompt->head->text);

@@ -21,8 +21,8 @@ void	destroy_block(void *og_block)
     return ;
 	if (block->worker_list)
 	    ft_free_sizemat_null(&block->worker_list, block->op_count + 1, destroy_block);
-	if (block->worker_prompts)
-	    ft_free_charmat_null(&block->worker_prompts, free);
+	if (block->worker_tasks)
+	    ft_free_charmat_null(&block->worker_tasks, free);
 	if (block->worker_pids)
 		ft_free_set_null(&block->worker_pids);
 	if (block->worker_exit_status)
@@ -63,7 +63,7 @@ t_block *init_block(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id)
 	new->prompt = prompt;
 	if (manager)
 	{
-		new->manager->worker_prompts[my_id] = NULL;
+		new->manager->worker_tasks[my_id] = NULL;
 		new->manager->worker_list[my_id] = new;
 		new->my_level = new->manager->my_level + 1;
 	}
@@ -75,7 +75,7 @@ t_block *init_block(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id)
 	}
 
 
-	new->worker_prompts = NULL;
+	new->worker_tasks = NULL;
 
 
 

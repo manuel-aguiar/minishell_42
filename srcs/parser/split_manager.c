@@ -12,25 +12,25 @@
 
 #include "minishell.h"
 
-void	destroy_worker_prompts(t_block *manager)
+void	destroy_worker_tasks(t_block *manager)
 {
 	int i;
 
-	if (!manager->worker_prompts)
+	if (!manager->worker_tasks)
 		return ;
 	i = 0;
 	while (i < manager->op_count + 1)
 	{
-		if (manager->worker_prompts[i])
-			token_list_destroy(&manager->worker_prompts[i]);
+		if (manager->worker_tasks[i])
+			token_list_destroy(&manager->worker_tasks[i]);
 		i++;
 	}
-	ft_free_set_null(&manager->worker_prompts);
+	ft_free_set_null(&manager->worker_tasks);
 }
 
-int free_split_prompt(t_block *manager)
+int free_task_distributor(t_block *manager)
 {
-	destroy_worker_prompts(manager);
+	destroy_worker_tasks(manager);
 	if (manager->prompt)
 		token_list_destroy(&manager->prompt);
 	if (manager->worker_list)
@@ -77,7 +77,7 @@ int check_if_cmd_and_count_operators(t_block *block)
 
 
 
-int setup_split_prompt_struct(t_block *block)
+int setup_task_distributor(t_block *block)
 {
 	int	i;
 
@@ -86,23 +86,23 @@ int setup_split_prompt_struct(t_block *block)
 	{
 		//printf("i'm not a cmd, must subshell %d\n", block->must_subshell);
 		block->op_id = malloc(sizeof(*(block->op_id)) * block->op_count);
-		block->worker_prompts = ft_calloc((block->op_count + 2), sizeof(*(block->worker_prompts)));
+		block->worker_tasks = ft_calloc((block->op_count + 2), sizeof(*(block->worker_tasks)));
 		block->worker_list = ft_calloc((block->op_count + 2), sizeof(*(block->worker_list)));
 		block->worker_pids = ft_calloc(block->op_count + 1, sizeof(*(block->worker_pids)));
 		block->worker_exit_status = ft_calloc(block->op_count + 1, sizeof(*(block->worker_exit_status)));
 		ft_memset(block->worker_exit_status, -1, (block->op_count + 1) * sizeof(*(block->worker_exit_status)));
-		if (!block->op_id || !block->worker_prompts || !block->worker_pids)
+		if (!block->op_id || !block->worker_tasks || !block->worker_pids)
 		{
 			perror_msg("malloc");
-			return (free_split_prompt(block));
+			return (free_task_distributor(block));
 		}
 		i = 0;
 		while (i < block->op_count + 1)
 		{
 			block->worker_exit_status[i] = -1;
-			block->worker_prompts[i] = token_list_new();
-			if (!block->worker_prompts[i])
-				return (free_split_prompt(block));
+			block->worker_tasks[i] = token_list_new();
+			if (!block->worker_tasks[i])
+				return (free_task_distributor(block));
 			i++;
 		}
 	}
@@ -131,7 +131,7 @@ int	token_is_redirection(t_token_node *token)
 	return (0);
 }
 
-int manager_gets_workers_and_orders(t_block *manager)
+int manager_gets_workers_and_operators(t_block *manager)
 {
 	t_token_node	*cur;
     int all;
@@ -148,14 +148,14 @@ int manager_gets_workers_and_orders(t_block *manager)
 		open_par -= (cur->type == T_CLOSE_PAR);
 		if (cur && token_is_big_operator(cur) && !open_par)
 		{
-			token_list_move_top_to_new(manager->worker_prompts[all], \
+			token_list_move_top_to_new(manager->worker_tasks[all], \
 			manager->prompt, cur->prev, i);
 			manager->op_id[all] = manager->prompt->head->type;
 			token_list_del_head(manager->prompt);
 			cur = manager->prompt->head;
 			//printf("printing args of child %d\n", all);
-			//token_list_head_print(block->worker_prompts[all], print_token_args);
-			//printf("finished printing args of child %d, list len is %ld\n", all, block->worker_prompts[all]->len);
+			//token_list_head_print(block->worker_tasks[all], print_token_args);
+			//printf("finished printing args of child %d, list len is %ld\n", all, block->worker_tasks[all]->len);
 			i = 0;
 			all++;
 
@@ -166,13 +166,13 @@ int manager_gets_workers_and_orders(t_block *manager)
 			cur = cur->next;
 		}
     }
-	token_list_destroy(&manager->worker_prompts[all]);
+	token_list_destroy(&manager->worker_tasks[all]);
 	//printf("all is %d\n", all);
-	manager->worker_prompts[all] = manager->prompt;
+	manager->worker_tasks[all] = manager->prompt;
 	manager->prompt = NULL;
 	//printf("printing args of child %d\n", all);
-	//token_list_head_print(block->worker_prompts[all], print_token_args);
-	//printf("finished printing args of child %d, list len is %ld\n", all, block->worker_prompts[all]->len);
+	//token_list_head_print(block->worker_tasks[all], print_token_args);
+	//printf("finished printing args of child %d, list len is %ld\n", all, block->worker_tasks[all]->len);
     return (1);
 }
 
@@ -247,7 +247,7 @@ int	check_arithmatic_parenthesis(t_block *block)
 	return (0);
 }
 
-int remove_corner_parenthesis_and_arithmatic(t_block *block)
+int manager_subshell_and_arithmatic(t_block *block)
 {
 	int	remove_corner;
 
@@ -270,27 +270,27 @@ int remove_corner_parenthesis_and_arithmatic(t_block *block)
 	return (1);
 }
 
-int split_prompt(t_block *block)
+int distribute_tasks_between_managers_and_workers(t_block *block)
 {
     int             i;
 	int				has_parenthesis;
 
 	//printf("i'm here \n");
 	//token_list_head_print(block->prompt, print_token_args);
-    if (!setup_split_prompt_struct(block))
-        return (free_split_prompt(block));
+    if (!setup_task_distributor(block))
+        return (free_task_distributor(block));
 	//token_list_head_print(block->prompt, print_token_args);
 	//printf("block op count %d\n", block->op_count);
 	if (!block->is_worker && block->op_count > 0)
-    	manager_gets_workers_and_orders(block);
+    	manager_gets_workers_and_operators(block);
 	//token_list_head_print(block->prompt, print_token_args);
     if (!block->op_count && block->must_subshell)
     {
         if (!manager_extract_redirections(block))
-			return (free_split_prompt(block));
-		remove_corner_parenthesis_and_arithmatic(block);
-		token_list_destroy(&block->worker_prompts[0]);
-		block->worker_prompts[0] = block->prompt;
+			return (free_task_distributor(block));
+		manager_subshell_and_arithmatic(block);
+		token_list_destroy(&block->worker_tasks[0]);
+		block->worker_tasks[0] = block->prompt;
 		block->prompt = NULL;
     }
 	//printf("i am command %d, [%s]\n", block->is_worker, block->prompt->head->text);
