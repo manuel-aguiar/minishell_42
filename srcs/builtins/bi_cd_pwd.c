@@ -16,6 +16,26 @@ static void	aux_cd_paths(t_block *block, char **curpath, char *curr);
 static int	get_curpath(t_block *block, char **curpath);
 static int	relative_paths(t_block *block, char **curpath, char *curr);
 
+int	run_pwd(t_block *block)
+{
+	char	*pwd;
+	int		i;
+
+	i = 0;
+	while (block->ms->env[i] && \
+	!ft_strnstr(block->ms->env[i], "PWD=", 4))
+		i++;
+	if (!block->ms->env[i])
+		return (1);
+	pwd = ft_strdup(&block->ms->env[i][4]);
+	if (!pwd)
+		return (perror_msg("malloc"));
+	ft_putstr_fd(pwd, block->final_out);
+	write(block->final_out, "\n", 1);
+	free(pwd);
+	return (1);
+}
+
 int	run_cd(t_block *block)
 {
 	int		i;

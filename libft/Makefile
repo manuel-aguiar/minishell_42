@@ -114,7 +114,8 @@ FILES_LVDBL		=	vdlist_malloc.c				\
 					vdlist_mpool_utils.c		\
 					vdlist_mpool_print.c
 
-FILES_ISORT		=	cocktailsort.c				\
+FILES_ISORT		=	charmat_quicksort.c			\
+					cocktailsort.c				\
 					mergesort.c					\
 					quicksort.c					\
 					tim_sort.c					\

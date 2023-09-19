@@ -20,6 +20,8 @@
 
 # define TIM_SORT_RUN 32
 
+void	*quicksort_pointers(void *arr, int size, int (*cmp)(void *, void *));
+
 int	*mergesort(int *arr, int len, int (*cmp)(int, int));
 int	*quicksort(int *arr, int size, int (*cmp)(int, int));
 int	tim_sort(int *arr, int n, int (*cmp)(int, int));
