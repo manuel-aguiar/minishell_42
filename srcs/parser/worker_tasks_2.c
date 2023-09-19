@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:18:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/19 14:57:17 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 15:04:27 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ int	worker_args_split_add_token(t_block *worker, t_token_node *arg, int *move)
 	split in spaces due to dollar/wildcard expansion, a split will be made
 	into further individual arguments.
 */
-
 int	worker_args_split_unguarded_quotes(t_block *worker)
 {
 	int				i;

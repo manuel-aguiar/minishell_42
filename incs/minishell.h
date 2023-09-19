@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/19 14:07:59 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 15:04:24 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +191,8 @@ int		worker_extract_redirections(t_block *worker);
 
 /*worker_tasks_2.c*/
 int 	worker_args_split_add_token(t_block *worker, t_token_node *arg, int *move);
-int		worker_args_rm_quotes_and_split(t_block *worker);
+int		worker_args_rm_unguarded_quotes(t_block *worker);
+int		worker_args_split_unguarded_quotes(t_block *worker);
 int		worker_args_expand_dollar_wildcard(t_block *worker);
 int		worker_dump_tasks_to_cmd_args(t_block *worker);
 
