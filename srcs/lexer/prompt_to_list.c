@@ -12,28 +12,45 @@
 
 #include "token_list.h"
 
-void	deals_with_text(t_token_list *list, char **prompt, char **temp)
+static int	get_len_of_text_arg(char **prompt)
 {
 	int		len;
-	int		rewind;
 	int		dummy_token;
+	int		count_squotes;
+	int		count_dquotes;
 
 	len = 0;
 	dummy_token = 0;
-	rewind = ft_strlen(*prompt);
-	while (**prompt && !ft_isspace(**prompt) \
+	count_squotes = 0;
+	count_dquotes = 0;
+	while (**prompt && (!ft_isspace(**prompt) || (ft_isspace(**prompt) && \
+	(count_squotes % 2 != 0 || count_dquotes % 2 != 0))) \
 	&& !is_token(prompt, &dummy_token, 0))
 	{
 		dummy_token = 0;
 		len++;
 		(*prompt)++;
+		update_quote_count(prompt, &count_squotes, &count_dquotes);
 	}
+	return (len);
+}
+
+void	deals_with_text(t_token_list *list, char **prompt, char **temp)
+{
+	int		len;
+	int		rewind;
+
+	len = 0;
+	rewind = ft_strlen(*prompt);
+	len = get_len_of_text_arg(prompt);
 	while (!prompt)
 		(*prompt)--;
 	(*prompt) -= rewind - ft_strlen(*prompt);
 	if (len > 0)
 	{
-		(*temp) = ft_strdup_len(*prompt, len);					//malloc
+		(*temp) = ft_strdup_len(*prompt, len);
+		if (!(*temp))
+			return ;
 		(*prompt) += len;
 		token_list_in_tail(list, T_ARG, (*temp));				//malloc
 	}
@@ -56,7 +73,9 @@ void	deals_with_quotes(char **prompt, char **temp)
 		if (str[len] && str[len] == current)
 			len++;
 	}
-	(*temp) = ft_strdup_len((*prompt), len + 1);					//malloc
+	(*temp) = ft_strdup_len((*prompt), len + 1);
+	if (!(*temp))
+		return ;
 	(*prompt) += len;
 	if (**prompt && **prompt + 1)
 		(*prompt)++;
