@@ -78,7 +78,7 @@ int remove_unguarded_quotes(char **str, int *has_guards)
     return (1);
 }
 
-int cmd_args_split_add_token(t_block *block, t_token_node *arg, int *move)
+int cmd_args_split_add_token(t_block *worker, t_token_node *arg, int *move)
 {
     int     		i;
     char    		**split;
@@ -108,7 +108,7 @@ int cmd_args_split_add_token(t_block *block, t_token_node *arg, int *move)
 			ft_free_charmat_null(&split, free);
 			return (0);
 		}
-		token_list_insert_after(block->prompt, arg, new);
+		token_list_insert_after(worker->prompt, arg, new);
 		arg = arg->next;
 	}
 	ft_free_set_null(&split);
@@ -125,14 +125,14 @@ int cmd_args_split_add_token(t_block *block, t_token_node *arg, int *move)
     into further individual arguments.
 */
 
-int cmd_args_rm_quotes_and_split(t_block *block)
+int cmd_args_rm_quotes_and_split(t_block *worker)
 {
     int				i;
     int				has_guards;
 	int				move;
 	t_token_node	*cur;
 
-	cur = block->prompt->head;
+	cur = worker->prompt->head;
     has_guards = 0;
     i = 0;
     while (cur)
@@ -141,7 +141,7 @@ int cmd_args_rm_quotes_and_split(t_block *block)
             return (0);
         if (!has_guards)
         {
-            if (!cmd_args_split_add_token(block, cur, &move))
+            if (!cmd_args_split_add_token(worker, cur, &move))
                 return (0);
 			while (--move > 0)
 				cur = cur->next;
@@ -149,19 +149,19 @@ int cmd_args_rm_quotes_and_split(t_block *block)
 		cur = cur->next;
     }
     //printf("args list after expansion split: \n");
-    //token_list_head_print(block->prompt, print_token_args);
+    //token_list_head_print(worker->prompt, print_token_args);
     return (1);
 }
 
-int cmd_args_expand_dollar_wildcard(t_block *block)
+int cmd_args_expand_dollar_wildcard(t_block *worker)
 {
     t_token_node	*cur;
 
-    cur = block->prompt->head;
+    cur = worker->prompt->head;
     while (cur)
     {
         //printf("cur arg [%s] \n", cur->text);
-        expand_dollars(&cur->text, block->ms);					// protect
+        expand_dollars(&cur->text, worker->ms);					// protect
         //printf("cur arg after dolar [%s] \n", cur->text);
         expand_wildcards(&cur->text, NULL);						//protect
         //printf("cur arg after wildcard [%s] \n", cur->text);
@@ -170,20 +170,20 @@ int cmd_args_expand_dollar_wildcard(t_block *block)
     return (1);
 }
 
-int	dump_list_to_cmd_args(t_block *block)
+int	dump_list_to_cmd_args(t_block *worker)
 {
 	int				i;
 	int				total_args;
 	t_token_node	*cur;
 	char			**cmd_args;
 
-	total_args = block->prompt->len;
+	total_args = worker->prompt->len;
 	cmd_args = malloc(sizeof(*cmd_args) * (total_args + 1));
 	if (!cmd_args)
 		return (perror_msg_int("malloc", 0));
 	i = 0;
-	cur = block->prompt->head;
-    //token_list_head_print(block->prompt, print_token_args);
+	cur = worker->prompt->head;
+    //token_list_head_print(worker->prompt, print_token_args);
 	while (i < total_args)
 	{
 		cmd_args[i] = cur->text;
@@ -197,28 +197,28 @@ int	dump_list_to_cmd_args(t_block *block)
     //while (cmd_args[i])
     //    printf("[%s] ", cmd_args[i++]);
     //printf("\n");
-	block->cmd_args = cmd_args;
-	token_list_destroy(&block->prompt);
+	worker->cmd_args = cmd_args;
+	token_list_destroy(&worker->prompt);
 	return (1);
 }
 
 int worker_task_expansions(t_block *worker)
 {
     //printf("checking expansions\n");
-    //printf("arg head [%s]\n", block->prompt->head->text);
-	if (!block->prompt->head)
+    //printf("arg head [%s]\n", worker->prompt->head->text);
+	if (!worker->prompt->head)
 	{
-		token_list_destroy(&block->prompt);
+		token_list_destroy(&worker->prompt);
 		return (1);
 	}
-    if (!cmd_args_expand_dollar_wildcard(block))
+    if (!cmd_args_expand_dollar_wildcard(worker))
         return (0);
-    if (!cmd_args_rm_quotes_and_split(block))
+    if (!cmd_args_rm_quotes_and_split(worker))
         return (0);
-	if (!dump_list_to_cmd_args(block))
+	if (!dump_list_to_cmd_args(worker))
 		return (0);
-	block->cmd = ft_strdup(block->cmd_args[0]);
-	if (!block->cmd)
+	worker->cmd = ft_strdup(worker->cmd_args[0]);
+	if (!worker->cmd)
 		return (0);
     
     return (1);
