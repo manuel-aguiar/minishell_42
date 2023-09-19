@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/19 10:33:38 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 11:44:36 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ int	error_msg(char *text)
 
 int	perror_msg_func(t_block *block, char *function, int errcode, int with_ms)
 {
-	if (block->manager)
-		block->manager->my_status = errcode;
+	if (block->my_manager)
+		block->my_manager->my_status = errcode;
 	else
 		block->ms->exit_status = errcode;
 	if (with_ms)
@@ -41,8 +41,8 @@ int	perror_msg_func(t_block *block, char *function, int errcode, int with_ms)
 
 void	error_child_exit(t_block *block, char *function, char *cmd, int errcode, int with_ms)
 {
-	if (block->manager)
-		block->manager->my_status = errcode;
+	if (block->my_manager)
+		block->my_manager->my_status = errcode;
 	else
 		block->ms->exit_status = errcode;
 	//printf("error code sent by child..? %d\n", block->ms->exit_status);
@@ -67,8 +67,8 @@ void	error_child_exit(t_block *block, char *function, char *cmd, int errcode, in
 void	perror_child_exit(t_block *block, \
 char *function, int errcode, int with_ms)
 {
-	if (block->manager)
-		block->manager->my_status = errcode;
+	if (block->my_manager)
+		block->my_manager->my_status = errcode;
 	else
 		block->ms->exit_status = errcode;
 	if (with_ms)
@@ -304,8 +304,8 @@ int	process_execution(t_block *block)
 		pid = fork();
 		if (!block->i_am_forked)
 		{
-			if (block->manager)
-				block->manager->worker_pids[block->my_id] = pid;
+			if (block->my_manager)
+				block->my_manager->worker_pids[block->my_id] = pid;
 			else
 				block->ms->my_kid = pid;
 		}
@@ -320,16 +320,16 @@ int	process_execution(t_block *block)
 		ms_prepare_signal(block->ms, signal_builtin_pipes);
 		if (exec_builtin(block, builtin))
 		{
-			if (block->manager)
-				block->manager->worker_exit_status[block->my_id] = 0;						// success
+			if (block->my_manager)
+				block->my_manager->worker_exit_status[block->my_id] = 0;						// success
 																						// manage for non success
 		}
 		close_in_fds(block);
 		close_out_fds(block);
 		ms_prepare_signal(block->ms, signal_handler);
-		//if (block->manager && block->my_id > 0 && block->manager->op_id[block->my_id - 1] == T_OP_PIPE)
+		//if (block->my_manager && block->my_id > 0 && block->my_manager->op_id[block->my_id - 1] == T_OP_PIPE)
 		//	close(block->prev_pipe[0]);
-		//if (block->manager && block->my_id < block->manager->op_count && block->manager->op_id[block->my_id] == T_OP_PIPE)
+		//if (block->my_manager && block->my_id < block->my_manager->op_count && block->my_manager->op_id[block->my_id] == T_OP_PIPE)
 		//	close(block->pipefd[1]);
 	}
 	return (1);

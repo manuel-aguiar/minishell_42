@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 13:36:27 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/18 16:54:03 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 11:44:16 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,15 @@
 
 void	close_in_fds(t_block *block)
 {
-	if ((block->manager && block->final_in != block->manager->final_in) \
-	|| (!block->manager && block->final_in != block->ms->infd))
+	if ((block->my_manager && block->final_in != block->my_manager->final_in) \
+	|| (!block->my_manager && block->final_in != block->ms->infd))
 		close(block->final_in);
 }
 
 void	close_out_fds(t_block *block)
 {
-	if ((block->manager && block->final_out != block->manager->final_out) \
-	|| (!block->manager && block->final_out != block->ms->outfd))
+	if ((block->my_manager && block->final_out != block->my_manager->final_out) \
+	|| (!block->my_manager && block->final_out != block->ms->outfd))
 		close(block->final_out);
 }
 
@@ -72,8 +72,8 @@ int	redir_has_quotes(char *arg)
 
 int	ambiguous_redirection_err(t_block *block, char **fail_return)
 {
-	if (block->manager)
-		block->manager->my_status = EXIT_AMBIG_REDIR;
+	if (block->my_manager)
+		block->my_manager->my_status = EXIT_AMBIG_REDIR;
 	else
 		block->ms->exit_status = EXIT_AMBIG_REDIR;
 	ft_putstr_fd(block->ms->name, block->ms->errfd);
@@ -230,22 +230,22 @@ int	manage_outfile(t_block *block)
 
 int	manage_inherited_fds(t_block *block)
 {
-	if (!block->manager)
+	if (!block->my_manager)
 	{
 		block->final_out = block->ms->outfd;
 		block->final_in = block->ms->infd;
 		return (1);
 	}
-	block->final_out = block->manager->final_out;
-	block->final_in = block->manager->final_in;
-	if (block->my_id < block->manager->op_count \
-	&& block->manager->op_id \
-	&& block->manager->op_id[block->my_id] == T_OP_PIPE)
-		block->final_out = block->manager->pipefd[1];
+	block->final_out = block->my_manager->final_out;
+	block->final_in = block->my_manager->final_in;
+	if (block->my_id < block->my_manager->op_count \
+	&& block->my_manager->op_id \
+	&& block->my_manager->op_id[block->my_id] == T_OP_PIPE)
+		block->final_out = block->my_manager->pipefd[1];
 	if (block->my_id > 0 \
-	&& block->manager->op_id \
-	&& block->manager->op_id[block->my_id - 1] == T_OP_PIPE)
-		block->final_in = block->manager->prev_pipe[0];
+	&& block->my_manager->op_id \
+	&& block->my_manager->op_id[block->my_id - 1] == T_OP_PIPE)
+		block->final_in = block->my_manager->prev_pipe[0];
 	return (1);
 }
 
