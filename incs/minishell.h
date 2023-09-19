@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/19 16:46:24 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 22:25:42 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,6 @@ int		waiting_for_my_workers(t_block *manager, int index);
 int		worker_execution(t_block *worker);
 
 /* error_message.c */
-int		error_msg(char *text);
 
 int		setup_execution_tree(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id);
 int		exec_command(t_block *block);
@@ -283,7 +282,6 @@ int		here_doc_expand_dollars(char **to_expand, t_ms *ms);
 
 /*rm_unguarded_quotes*/
 int		remove_unguarded_quotes(char **str, int *has_guards);
-
 
 
 //////////////////////////////////////
