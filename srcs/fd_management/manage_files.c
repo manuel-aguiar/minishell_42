@@ -24,15 +24,15 @@
 
 void	close_in_fds(t_block *block)
 {
-	if ((block->father && block->final_in != block->father->final_in) \
-	|| (!block->father && block->final_in != block->ms->infd))
+	if ((block->manager && block->final_in != block->manager->final_in) \
+	|| (!block->manager && block->final_in != block->ms->infd))
 		close(block->final_in);
 }
 
 void	close_out_fds(t_block *block)
 {
-	if ((block->father && block->final_out != block->father->final_out) \
-	|| (!block->father && block->final_out != block->ms->outfd))
+	if ((block->manager && block->final_out != block->manager->final_out) \
+	|| (!block->manager && block->final_out != block->ms->outfd))
 		close(block->final_out);
 }
 
@@ -72,8 +72,8 @@ int	redir_has_quotes(char *arg)
 
 int	ambiguous_redirection_err(t_block *block, char **fail_return)
 {
-	if (block->father)
-		block->father->my_status = EXIT_AMBIG_REDIR;
+	if (block->manager)
+		block->manager->my_status = EXIT_AMBIG_REDIR;
 	else
 		block->ms->exit_status = EXIT_AMBIG_REDIR;
 	ft_putstr_fd(block->ms->name, block->ms->errfd);
@@ -230,22 +230,22 @@ int	manage_outfile(t_block *block)
 
 int	manage_inherited_fds(t_block *block)
 {
-	if (!block->father)
+	if (!block->manager)
 	{
 		block->final_out = block->ms->outfd;
 		block->final_in = block->ms->infd;
 		return (1);
 	}
-	block->final_out = block->father->final_out;
-	block->final_in = block->father->final_in;
-	if (block->my_id < block->father->op_count \
-	&& block->father->op_id \
-	&& block->father->op_id[block->my_id] == T_OP_PIPE)
-		block->final_out = block->father->pipefd[1];
+	block->final_out = block->manager->final_out;
+	block->final_in = block->manager->final_in;
+	if (block->my_id < block->manager->op_count \
+	&& block->manager->op_id \
+	&& block->manager->op_id[block->my_id] == T_OP_PIPE)
+		block->final_out = block->manager->pipefd[1];
 	if (block->my_id > 0 \
-	&& block->father->op_id \
-	&& block->father->op_id[block->my_id - 1] == T_OP_PIPE)
-		block->final_in = block->father->prev_pipe[0];
+	&& block->manager->op_id \
+	&& block->manager->op_id[block->my_id - 1] == T_OP_PIPE)
+		block->final_in = block->manager->prev_pipe[0];
 	return (1);
 }
 

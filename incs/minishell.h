@@ -76,50 +76,34 @@ struct s_ms
 	struct sigaction	sigact;
 };
 
-typedef struct s_prompt
-{
-	char	*prompt;
-	char	*copy;
-	int		parenthesis;
-	int		first_error_index;
-	int		exit_status;
-	char	*err_token;
-	int		errfd;
-}	t_prompt;
-
-
 struct s_block
 {
 	t_token_list	*prompt;				//herdado do bloco pai;
 	t_ms			*ms;					//to access and change env and path
-	t_block			*father;				// to comunicate exit status with the parent
+	t_block			*manager;				// to comunicate exit status with the parent
 
 
-	t_block			**child_list;
-	t_token_list	**child_prompts;
-	pid_t			*child_pids;
-	int				*child_exit_status;
+	t_block			**worker_list;
+	t_token_list	**worker_prompts;
+	pid_t			*worker_pids;
+	int				*worker_exit_status;
 	int				*op_id;
 	int				op_count;
-	int				is_cmd;
+	int				is_worker;
 	int				has_arithmatic_parenthesis;
 	int				must_subshell;
-
 	int				pipefd[2];
-	int				prev_pipe[2];				//posso precisar para unir os blocos filhos
-	int				my_status;					// recebido dos filhos para informar o avô;
+	int				prev_pipe[2];				
+	int				my_status;				
 	int				i_am_forked;
-
-	char			*cmd;						//decomposição do prompt
-	char			**cmd_args;					//decomposição do prompt
-	t_token_list	*io_files;					//decomposição do prompt, farão override ao infd do block, deixa de heredar do bloco anterior  void *list, com struct t_redir;
-	char			*here_doc;					//here_doc, just in case, analisado um a um;
+	char			*cmd;					
+	char			**cmd_args;					
+	t_token_list	*io_files;					
+	char			*here_doc;
 	int				here_doc_fd;
 	int				here_doc_index;
 	int				final_in;
 	int				final_out;
-
-	//char			**help_cmd;
 	int				my_level;
 	int				my_id;
 };
@@ -156,14 +140,14 @@ enum e_builtin
 //////////// EXPANSIONS //////////////
 //////////////////////////////////////
 
-int		setup_execution_tree(t_ms *ms, t_block *father, t_token_list *prompt, int my_id);
+int		setup_execution_tree(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id);
 
 
 /* init_destroy */
 int		init_ms(t_ms *ms, char *avzero, char **env);
 int		destroy_ms(t_ms *ms);
 
-t_block	*init_block(t_ms *ms, t_block *father, t_token_list *prompt, int my_id);
+t_block	*init_block(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id);
 void	destroy_block(void *og_block);
 
 
@@ -208,7 +192,7 @@ int		manage_io_files(t_block *block);
 //////////// MANAGE FILES ////////////
 //////////////////////////////////////
 
-void	destroy_child_prompts(t_block *block);
+void	destroy_worker_prompts(t_block *block);
 
 
 /*heredoc_temp.c*/

@@ -16,7 +16,7 @@ int	exit_execution(t_block *block, char *arg, int is_exiting, int is_error)
 {
 	int	save_status;
 
-	if (!block->i_am_forked || (block->father && !block->father->must_subshell))				//só escreve stdou se for o main process a chamar
+	if (!block->i_am_forked || (block->manager && !block->manager->must_subshell))				//só escreve stdou se for o main process a chamar
 		ft_putstr_fd("exit\n", block->ms->outfd);
 	if (is_error)
 	{
@@ -36,8 +36,8 @@ int	exit_execution(t_block *block, char *arg, int is_exiting, int is_error)
 		destroy_ms(block->ms);
 		exit(save_status);
 	}
-	else if (block->father)
-		block->father->my_status = block->my_status;
+	else if (block->manager)
+		block->manager->my_status = block->my_status;
 	else
 		block->ms->exit_status = block->my_status;
 	return (1);

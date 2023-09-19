@@ -28,7 +28,7 @@ LEXER			=	lexer
 BUILTINS		=	builtins
 EXEC 			=	execution
 FD_MAN			=	fd_management
-STRUCT			=	structure
+PARSER			=	parser
 EXPAND			=	expansions
 GENERIC			=	generic_utils
 
@@ -56,7 +56,7 @@ FILES_FD_MAN	=	manage_files.c			\
 					heredoc_temp.c
 
 
-FILES_STRUCT	=	init_destroy.c			\
+FILES_PARSER	=	init_destroy.c			\
 					split_manager.c			\
 					setup_cmd.c				\
 					signals.c
@@ -79,7 +79,7 @@ FILES_GENERIC	=	ft_split_count_replenish.c			\
 
 ## ALL SOURCE FOLDERS
 
-SRC_DIRS		=	$(BUILTINS)		$(EXEC)	$(FD_MAN)	$(STRUCT) 	\
+SRC_DIRS		=	$(BUILTINS)		$(EXEC)	$(FD_MAN)	$(PARSER) 	\
 					$(EXPAND)		$(GENERIC)  $(LEXER)
 
 SRCS		:= 		$(foreach src_dir,$(SRC_DIRS),$(wildcard $(SRC_PATH)/$(src_dir)/*.c))
