@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/19 11:46:35 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 12:55:48 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,25 +140,18 @@ void	print_execution_tree(t_block *block)
 
 
 
-int	ms_prompt_loop(t_ms *ms)
+int	minishell_main_loop(t_ms *ms)
 {
 	while (1)
 	{
 		if (get_prompt(ms))
 		{
-			//token_list_head_print(ms->prompt, print_token_args);
-			//setup the whole fuckin tree;
 			setup_execution_tree(ms, NULL, ms->prompt, 0);
 			if (save_signal(NULL) != EXIT_SIGINT)
 				get_all_here_docs(ms->first);
-			//print_execution_tree(ms->first);
-			//printf("starting execution\n");
 			if (save_signal(NULL) != EXIT_SIGINT)
-				execution_tree_exec_all(ms->first, FALSE);
+				execution_tree_exec_all(ms->first);
 			block_destroy(ms->first);
-			//execution_tree(ms, NULL, ms->prompt, 0);
-
-
 			if (ms->my_kid != -1)
 			{
 				waitpid(ms->my_kid, &ms->exit_status, 0);
@@ -167,7 +160,6 @@ int	ms_prompt_loop(t_ms *ms)
 				ms->my_kid = -1;
 			}
 		}
-		//printf("signal is %d\n", save_signal(NULL));
 		check_for_signals(ms);
 	}
 	return (1);
@@ -187,7 +179,7 @@ int	main(int ac, char **av, char **env)
 	(void)ac;
 	if (!ms_init(&ms, &av[0][2], env))
 		return (0);
-	ms_prompt_loop(&ms);
+	minishell_main_loop(&ms);
 	ms_destroy(&ms);
 	return (0);
 }

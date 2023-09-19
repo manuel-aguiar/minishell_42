@@ -6,13 +6,13 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:37:25 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/19 11:46:17 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 12:53:34 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	execute(t_block *worker)
+int	worker_execution(t_block *worker)
 {
 	//printf("executing [%s] i'm pid %d\n", block->prompt, block->my_manager->worker_pids[0]);
 	//token_list_head_print(block->prompt, print_token_args);

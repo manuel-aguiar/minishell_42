@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:37:28 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/19 11:44:16 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 12:44:22 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,20 +28,19 @@
 
 */
 
-int	pipes_forks_and_conditionals(t_block *manager, int index, int *must_fork)
+int	pipes_forks_and_conditionals(t_block *manager, int index)
 {
-	*must_fork = 0;
 	if (index > 0 && manager->op_id[index - 1] == T_OP_PIPE)
 	{
 		manager->prev_pipe[0] = manager->pipefd[0];
 		manager->prev_pipe[1] = manager->pipefd[1];
-		*must_fork = 1;
+		manager->worker_list[index]->i_am_forked = 1;
 	}
 	if (index < manager->op_count && manager->op_id[index] == T_OP_PIPE)
 	{
 		if (pipe(manager->pipefd) == -1)
 			return (perror_msg("pipe"));
-		*must_fork = 1;
+		manager->worker_list[index]->i_am_forked = 1;
 	}
 	if (index > 0 && index <= manager->op_count \
 	&& (manager->op_id[index - 1] == T_OP_AND || manager->op_id[index - 1] == T_OP_OR))
@@ -55,9 +54,9 @@ int	pipes_forks_and_conditionals(t_block *manager, int index, int *must_fork)
 	&& !manager->has_arithmatic_parenthesis && manager->op_count == 0)
 	{
 		//printf("child: [%s] has parenthesis and must be forked\n", manager->worker_list[index]->prompt);
-		*must_fork = 1;
+		manager->worker_list[index]->i_am_forked = 1;
 	}
-	if (*must_fork)
+	if (manager->worker_list[index]->i_am_forked)
 	{
 		manager->worker_pids[index] = fork();
 		if (manager->worker_pids[index] == -1)

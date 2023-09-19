@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 13:36:27 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/19 11:44:16 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 13:05:10 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,7 +256,7 @@ int	manage_io_files(t_block *block)
 	int	success;
 
 	manage_inherited_fds(block);
-	if (!block->io_files)
+	if (!block->io_files || block->has_arithmatic_parenthesis)
 	{
 		//printf("block [%s], final in %d, final out %d\n", block->prompt, block->final_in, block->final_out);
 		return (1);

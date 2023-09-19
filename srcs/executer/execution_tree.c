@@ -6,39 +6,32 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:26:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/19 11:45:41 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 13:02:54 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	execution_tree_exec_all(t_block *block, int i_am_forked)
+int	block_exit_status_destroy(t_block *block);
+
+int	execution_tree_exec_all(t_block *block)
 {
 	int	i;
-	int	status;
-	int	must_fork;
 
-	
-	if (i_am_forked)
-		block->i_am_forked = 1;
 	if (!manage_io_files(block))
 		return (0);
 	if (block->is_worker)
-		execute(block);
+		worker_execution(block);
 	else if (!block->has_arithmatic_parenthesis)
 	{
-		//printf("anything not cmd?\n");
 		i = 0;
 		while (block->worker_list[i])
 		{
-			//printf("got in loop\n");
 			if (i > 0 && block->op_id[i - 1] == T_OP_PIPE)
 				close(block->pipefd[1]);
-			if (block->op_id && pipes_forks_and_conditionals(block, i, &must_fork))
-			{
-				if (!(must_fork && block->worker_pids[i] != 0))
-					execution_tree_exec_all(block->worker_list[i], must_fork);
-			}
+			if (block->op_id && pipes_forks_and_conditionals(block, i) \
+			&& !(block->worker_list[i]->i_am_forked && block->worker_pids[i] != 0))
+				execution_tree_exec_all(block->worker_list[i]);
 			if (i > 0 && block->op_id[i - 1] == T_OP_PIPE)
 				close(block->prev_pipe[0]);
 			i++;
@@ -48,24 +41,27 @@ int	execution_tree_exec_all(t_block *block, int i_am_forked)
 		close_out_fds(block);
 	}
 	else
-		block->my_status = 1;				//unnecessary parenthesis status
+		block->my_status = 1;
+	block_exit_status_destroy(block);
+	return (1);
+}
 
-	//printf("block [%s], my status %d, my address %p\n", block->prompt, block->my_status, block);
-	if (i_am_forked)
+int	block_exit_status_destroy(t_block *block)
+{
+	int	status;
+
+	if (block->i_am_forked)
 	{
-		//printf("my lvl id (%d, %d) i am forked, pid %d, my status %d, will exit and my manager picks me up\n", block->my_level, block->my_id, getpid(), block->my_status);
 		status = block->my_status;
 		ms_destroy(block->ms);
 		exit(status);
 	}
 	else if (block->my_manager && !block->is_worker)
 	{
-		//printf("my lvl id (%d, %d) passing status %d to my manager\n", block->my_level, block->my_id, block->my_status);
 		block->my_manager->worker_exit_status[block->my_id] = block->my_status;
 	}
 	else if (!block->my_manager && !block->is_worker)
 		block->ms->exit_status = block->my_status;
-	//printf("block [%s], my status %d, my address %p, not forked ready to destroy\n", block->prompt, block->my_status, block);
 	block_destroy(block);
 	return (1);
 }
