@@ -12,12 +12,15 @@
 
 #include "token_list.h"
 
-void	update_quote_count(char **prompt, int *squotes, int *dquotes)
+int	update_quote_count(char **prompt, int *squotes, int *dquotes)
 {
 	if (ft_isquote(**prompt) && **prompt == '\'')
 		(*squotes)++;
-	if (ft_isquote(**prompt) && **prompt == '\"')
+	else if (ft_isquote(**prompt) && **prompt == '\"')
 		(*dquotes)++;
+	else
+		return (0);
+	return (1);
 }
 
 void	is_divisor_token(char **str, int *place_token)
