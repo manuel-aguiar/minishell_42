@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/19 15:04:24 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 16:46:24 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ int		save_signal(int *num);
 int		check_for_signals(t_ms *ms);
 void	signal_handler(int signum);
 int		ms_prepare_signal(t_ms *ms, void (*handler)(int));
-t_ms	*sigint_heredoc_where_ms_is(t_ms *ms);									// not in use atm
+t_ms	*sigint_heredoc_where_ms_is(t_ms *ms);
 void	signal_handler_heredoc(int signum);
 
 
