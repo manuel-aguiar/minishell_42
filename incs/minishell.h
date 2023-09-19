@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/19 10:45:08 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 10:48:30 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,15 +150,6 @@ t_block	*block_init(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id)
 void	block_destroy(void *og_block);
 
 
-int		setup_execution_tree(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id);
-
-
-/* init_destroy */
-int		ms_init(t_ms *ms, char *avzero, char **env);
-int		ms_destroy(t_ms *ms);
-
-t_block	*block_init(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id);
-void	block_destroy(void *og_block);
 
 
 /* ms_signals.c */
@@ -242,7 +233,7 @@ int	exec_command(t_pipex *pipex, char *cmd);
 /* error_message.c */
 int		error_msg(char *text);
 
-
+int		setup_execution_tree(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id);
 int		exec_command(t_block *block);
 int		process_execution(t_block *block);
 
