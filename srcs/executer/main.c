@@ -6,13 +6,13 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/18 17:07:59 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 10:38:43 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	my_children_addresses(t_block *block)
+int	my_workers_addresses(t_block *block)
 {
 	if (block->is_worker)
 		return (1);
@@ -40,7 +40,7 @@ void	print_block(t_block *block)
 
 /*
 
-	waiting_for_my_children
+	waiting_for_my_workers
 	blocks waits for all the live children and, after arriving, sets their
 	child_pid to zero to signal that either it is a manager and has no pid
 	or that the child has already arrived because another conditional needed it
@@ -70,7 +70,7 @@ int	print_worker_pids(t_block *block)
 }
 
 
-int	waiting_for_my_children(t_block *block, int index)
+int	waiting_for_my_workers(t_block *block, int index)
 {
 	int	i;
 
@@ -140,7 +140,7 @@ int	pipes_and_conditionals(t_block *block, int index, int *must_fork)
 	if (index > 0 && index <= block->op_count \
 	&& (block->op_id[index - 1] == T_OP_AND || block->op_id[index - 1] == T_OP_OR))
 	{
-		waiting_for_my_children(block, index);
+		waiting_for_my_workers(block, index);
 		if ((block->op_id[index - 1] == T_OP_AND && block->ms->exit_status != 0) \
 		|| (block->op_id[index - 1] == T_OP_OR && block->ms->exit_status == 0))
 			return (0);
@@ -186,7 +186,7 @@ int	execute(t_block *block)
 {
 	//printf("executing [%s] i'm pid %d\n", block->prompt, block->manager->worker_pids[0]);
 	//token_list_head_print(block->prompt, print_token_args);
-	if (!manage_cmd_expansions(block))
+	if (!worker_task_preparation(block))
 		return (0);
 	//print_block(block);
 	//printf("executing block [%s]\n", block->cmd);
@@ -314,7 +314,7 @@ int	execution_tree(t_block *block, int i_am_forked)
 				close(block->prev_pipe[0]);
 			i++;
 		}
-		waiting_for_my_children(block, block->op_count + 1);
+		waiting_for_my_workers(block, block->op_count + 1);
 		close_in_fds(block);
 		close_out_fds(block);
 	}
@@ -326,7 +326,7 @@ int	execution_tree(t_block *block, int i_am_forked)
 	{
 		//printf("my lvl id (%d, %d) i am forked, pid %d, my status %d, will exit and my manager picks me up\n", block->my_level, block->my_id, getpid(), block->my_status);
 		status = block->my_status;
-		destroy_ms(block->ms);
+		ms_destroy(block->ms);
 		exit(status);
 	}
 	else if (block->manager && !block->is_worker)
@@ -337,7 +337,7 @@ int	execution_tree(t_block *block, int i_am_forked)
 	else if (!block->manager && !block->is_worker)
 		block->ms->exit_status = block->my_status;
 	//printf("block [%s], my status %d, my address %p, not forked ready to destroy\n", block->prompt, block->my_status, block);
-	destroy_block(block);
+	block_destroy(block);
 	return (1);
 }
 
@@ -362,31 +362,31 @@ void	print_execution_tree(t_block *block)
 
 
 
-int	setup_execution_tree(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id)
+int	setup_execution_tree(t_ms *ms, t_block *manager, t_token_list *tasks, int my_id)
 {
 	int		i;
 	t_block	*block;
 
-	block = init_block(ms, manager, prompt, my_id);
+	block = block_init(ms, manager, tasks, my_id);
 	if (!block)
 		return (0);
 	//printf("printing prompt i have received: \n");
 	//token_list_head_print(prompt, print_token);
 	//printf("finished printing prompt i have received\n");
-	if (!split_prompt(block))
+	if (!distribute_tasks_between_managers_and_workers(block))
 		return (0);
 	if (block->is_worker)
 		return (0);
 	if (!block->is_worker)
 	{
 		i = 0;
-		while (block->worker_prompts[i])
+		while (block->worker_tasks[i])
 		{
-			setup_execution_tree(ms, block, block->worker_prompts[i], i);
+			setup_execution_tree(ms, block, block->worker_tasks[i], i);
 			i++;
 		}
 		//my_children_addresses(block);
-		destroy_worker_prompts(block);
+		manager_destroy_worker_tasks(block);
 	}
 	return (1);
 }
@@ -406,7 +406,7 @@ int	ms_prompt_loop(t_ms *ms)
 			//printf("starting execution\n");
 			if (save_signal(NULL) != EXIT_SIGINT)
 				execution_tree(ms->first, 0);
-			destroy_block(ms->first);
+			block_destroy(ms->first);
 			//execution_tree(ms, NULL, ms->prompt, 0);
 
 
@@ -436,10 +436,10 @@ int	main(int ac, char **av, char **env)
 	t_ms	ms;
 
 	(void)ac;
-	if (!init_ms(&ms, &av[0][2], env))
+	if (!ms_init(&ms, &av[0][2], env))
 		return (0);
 	ms_prompt_loop(&ms);
-	destroy_ms(&ms);
+	ms_destroy(&ms);
 	return (0);
 }
 

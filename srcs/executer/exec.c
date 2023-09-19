@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/18 16:03:54 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 10:33:38 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	error_child_exit(t_block *block, char *function, char *cmd, int errcode, in
 	close(block->ms->infd);
 	close(block->ms->outfd);
 
-	destroy_ms(block->ms);
+	ms_destroy(block->ms);
 	exit(errcode);
 }
 
@@ -82,7 +82,7 @@ char *function, int errcode, int with_ms)
 	close(block->ms->infd);
 	close(block->ms->outfd);
 
-	destroy_ms(block->ms);
+	ms_destroy(block->ms);
 	exit(errcode);
 }
 
@@ -288,7 +288,7 @@ void	signal_builtin_pipes(int signum)
 	}
 	if (signum == SIGPIPE)
 	{
-		destroy_ms(sigint_heredoc_where_ms_is(NULL));
+		ms_destroy(sigint_heredoc_where_ms_is(NULL));
 		exit(13);
 	}
 }

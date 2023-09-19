@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 00:13:38 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/18 15:54:24 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 10:33:38 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	setup_prompt(t_ms *ms)
 	line = readline("minishell>$ ");
 	if (!line)
 	{
-		destroy_ms(ms);
+		ms_destroy(ms);
 		printf("%s>$ exit\n", ms->name);
 		exit(0);
 	}

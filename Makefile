@@ -24,15 +24,20 @@ LIB_INC_P	=		incs
 LIBFT		=		libft.a
 
 ## SRC SUB-FOLDERS ##
+STRUCTS			=	structs
 LEXER			=	lexer
-BUILTINS		=	builtins
-EXEC 			=	execution
-FD_MAN			=	fd_management
 PARSER			=	parser
+BUILTINS		=	builtins
+EXECUTER		=	executer
+FD_MAN			=	fd_management
 EXPAND			=	expansions
 GENERIC			=	generic_utils
 
 ## SOURCE FILES ##
+
+FILES_STRUCTS	=	ms_setup.c								\
+					block_setup.c							\
+					signals.c
 
 FILES_LEXER	=		ms_prompt.c								\
 					create_tokens.c 						\
@@ -40,7 +45,8 @@ FILES_LEXER	=		ms_prompt.c								\
 					token_list_print.c						\
 					token_list1.c							\
 					token_list2.c							\
-					token_list3.c
+					token_list3.c							\
+					token_identification.c
 
 FILES_BUILTINS	=	bi_exit.c 								\
 					bi_cd.c 								\
@@ -48,7 +54,7 @@ FILES_BUILTINS	=	bi_exit.c 								\
 					bi_pwd_echo_unset_export.c				\
 					bi_env.c
 
-FILES_EXEC		=	exec.c					\
+FILES_EXECUTER	=	exec.c					\
 					main.c
 
 FILES_FD_MAN	=	manage_files.c			\
@@ -56,12 +62,11 @@ FILES_FD_MAN	=	manage_files.c			\
 					heredoc_temp.c
 
 
-FILES_PARSER	=	init_destroy.c			\
-					split_manager.c			\
-					setup_cmd.c				\
-					signals.c
-
-
+FILES_PARSER	=	task_distributor.c		\
+					manager_tasks.c			\
+					worker_tasks_1.c		\
+					worker_tasks_2.c
+					
 FILES_EXPAND	=	wildcard_return.c			\
 					wildcard_search_files.c		\
 					wildcard_fit_candidates.c	\
@@ -79,8 +84,8 @@ FILES_GENERIC	=	ft_split_count_replenish.c			\
 
 ## ALL SOURCE FOLDERS
 
-SRC_DIRS		=	$(BUILTINS)		$(EXEC)	$(FD_MAN)	$(PARSER) 	\
-					$(EXPAND)		$(GENERIC)  $(LEXER)
+SRC_DIRS		=	$(BUILTINS)		$(EXECUTER)	$(FD_MAN)	$(PARSER) 	\
+					$(EXPAND)		$(GENERIC)  $(LEXER) 	$(STRUCTS)
 
 SRCS		:= 		$(foreach src_dir,$(SRC_DIRS),$(wildcard $(SRC_PATH)/$(src_dir)/*.c))
 
