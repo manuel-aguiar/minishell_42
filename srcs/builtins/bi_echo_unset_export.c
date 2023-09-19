@@ -60,22 +60,22 @@ int	run_unset(t_block *block)
 	return (1);
 }
 
-static void	write_export_list(char *exp_item)
+static void	write_export_list(char *exp_item, int fd)
 {
 	int		f;
 
 	f = -1;
-	ft_printf_fd(block->final_out, "declare -x ");
+	ft_printf_fd(fd, "declare -x ");
 	while (exp_item[++f] && exp_item[f] != '=')
-		ft_printf_fd(block->final_out, "%c", exp_item[f]);
+		ft_printf_fd(fd, "%c", exp_item[f]);
 	if (exp_item[f] && exp_item[f] == '=')
-		ft_printf_fd(block->final_out, "%c%c", exp_item[f++], '\"');
+		ft_printf_fd(fd, "%c%c", exp_item[f++], '\"');
 	if (exp_item[f])
-		ft_printf_fd(block->final_out, "%s", &exp_item[f]);
+		ft_printf_fd(fd, "%s", &exp_item[f]);
 	if ((exp_item[f] && exp_item[f] == '=') \
 	|| (exp_item[f - 1] && exp_item[f - 1] == '='))
-		ft_printf_fd(block->final_out, "\"");
-	ft_printf_fd(block->final_out, "\n");
+		ft_printf_fd(fd, "\"");
+	ft_printf_fd(fd, "\n");
 }
 
 static int	run_exp_list(t_block *block)
@@ -92,7 +92,7 @@ static int	run_exp_list(t_block *block)
 		return (0);
 	quicksort_pointers(exp_list, ft_matrixlen(exp_list), &env_strcmp);
 	while (exp_list[++i])
-		write_export_list(char exp_list[i]);
+		write_export_list(exp_list[i], block->final_out);
 	i = -1;
 	while (exp_list[++i])
 		free((exp_list[i]));
