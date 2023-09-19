@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 18:28:24 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/19 10:33:38 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 11:44:16 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	exit_execution(t_block *block, char *arg, int is_exiting, int is_error)
 {
 	int	save_status;
 
-	if (!block->i_am_forked || (block->manager && !block->manager->must_subshell))				//só escreve stdou se for o main process a chamar
+	if (!block->i_am_forked || (block->my_manager && !block->my_manager->must_subshell))				//só escreve stdou se for o main process a chamar
 		ft_putstr_fd("exit\n", block->ms->outfd);
 	if (is_error)
 	{
@@ -36,8 +36,8 @@ int	exit_execution(t_block *block, char *arg, int is_exiting, int is_error)
 		ms_destroy(block->ms);
 		exit(save_status);
 	}
-	else if (block->manager)
-		block->manager->my_status = block->my_status;
+	else if (block->my_manager)
+		block->my_manager->my_status = block->my_status;
 	else
 		block->ms->exit_status = block->my_status;
 	return (1);

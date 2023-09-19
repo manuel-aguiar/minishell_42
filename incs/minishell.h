@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/19 10:48:30 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 11:46:32 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ struct s_block
 {
 	t_token_list	*prompt;				
 	t_ms			*ms;					
-	t_block			*manager;				
+	t_block			*my_manager;				
 	t_block			**worker_list;
 	t_token_list	**worker_tasks;
 	pid_t			*worker_pids;
@@ -149,9 +149,6 @@ int		ms_destroy(t_ms *ms);
 t_block	*block_init(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id);
 void	block_destroy(void *og_block);
 
-
-
-
 /* ms_signals.c */
 
 int		save_signal(int *num);
@@ -198,7 +195,28 @@ int		worker_args_rm_quotes_and_split(t_block *worker);
 int		worker_args_expand_dollar_wildcard(t_block *worker);
 int		worker_dump_tasks_to_cmd_args(t_block *worker);
 
-//int dump_cmd_to_block(t_block *block, t_block *block);
+
+//////////////////////////////////////
+////////////// EXECUTER ////////////////
+//////////////////////////////////////
+
+/*execution_tree.c*/
+int		execution_tree_exec_all(t_block *block, int i_am_forked);
+int		setup_execution_tree(t_ms *ms, t_block *manager, \
+							t_token_list *tasks, int my_id);
+int		get_all_here_docs(t_block *block);
+
+/*manager_execution.c*/
+int		pipes_forks_and_conditionals(t_block *manager, int index, int *must_fork);
+int		waiting_for_my_workers(t_block *manager, int index);
+
+/*worker_execution.c*/
+int		execute(t_block *worker);
+
+
+//////////////////////////////////////
+//////////// MANAGE FILES ////////////
+//////////////////////////////////////
 
 void	close_in_fds(t_block *block);
 void	close_out_fds(t_block *block);
@@ -206,11 +224,6 @@ int		infiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i);
 int		outfiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i);
 int		manage_io_files(t_block *block);
 
-//////////////////////////////////////
-//////////// MANAGE FILES ////////////
-//////////////////////////////////////
-
-void	destroy_worker_tasks(t_block *block);
 
 
 /*heredoc_temp.c*/
@@ -219,6 +232,10 @@ int		heredoc_temp_name(t_block *block);
 
 int		here_doc(t_block *block, char *eof, int has_quote_guard);
 int		remove_unguarded_quotes(char **str, int *has_guards);
+
+
+/*heredoc_open.c*/
+int		open_here_docs_at_block(t_block *block);
 
 
 /* exec.c */

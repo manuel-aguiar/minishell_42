@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 00:11:09 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/19 10:45:55 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 11:44:16 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,14 @@ t_block	*block_init(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id)
 	if (!new)
 		return (perror_msg_ptr("malloc", NULL));
 	new->ms = ms;
-	new->manager = manager;
+	new->my_manager = manager;
 	new->i_am_forked = 0;
 	new->prompt = prompt;
 	if (manager)
 	{
-		new->manager->worker_tasks[my_id] = NULL;
-		new->manager->worker_list[my_id] = new;
-		new->my_level = new->manager->my_level + 1;
+		new->my_manager->worker_tasks[my_id] = NULL;
+		new->my_manager->worker_list[my_id] = new;
+		new->my_level = new->my_manager->my_level + 1;
 	}
 	else
 	{
@@ -87,8 +87,8 @@ void	block_destroy(void *og_block)
 		ft_free_set_null(&block->worker_exit_status);
 	if (block->op_id)
 		ft_free_set_null(&block->op_id);
-	if (block->manager)
-		block->manager->worker_list[block->my_id] = NULL;
+	if (block->my_manager)
+		block->my_manager->worker_list[block->my_id] = NULL;
 	else
 		block->ms->first = NULL;
 	block_destroy_continued(block);

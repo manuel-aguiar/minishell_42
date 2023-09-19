@@ -54,10 +54,14 @@ FILES_BUILTINS	=	bi_exit.c 								\
 					bi_pwd_echo_unset_export.c				\
 					bi_env.c
 
-FILES_EXECUTER	=	exec.c					\
+FILES_EXECUTER	=	execution_tree.c					\
+					manager_execution.c					\
+					worker_execution.c					\
+					exec.c					\
 					main.c
 
 FILES_FD_MAN	=	manage_files.c			\
+					heredoc_open.c			\
 					heredoc_read.c			\
 					heredoc_temp.c
 
