@@ -6,19 +6,59 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:18:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/19 13:39:54 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 14:57:17 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void    set_in_between_to(char *pmt, char start, char end, char newchar)
+{
+    int i;
+    int open;
+
+    open = 0;
+    i = 0;
+    while (pmt[i])
+    {
+        while (pmt[i] && pmt[i] != start)
+            i++;
+        if (pmt[i])
+        {
+            open = 1;
+            i++;
+            while (pmt[i] && open)
+            {
+                if (pmt[i] == start)
+                    open++;
+                if (pmt[i] == end)
+                {
+                    open--;
+                    if (end == start)
+                        open--;
+                }
+                if (open)
+                    pmt[i] = newchar;
+                i++;
+            }
+        }
+    }
+}
 
 int	worker_args_split_add_token(t_block *worker, t_token_node *arg, int *move)
 {
 	int				i;
 	char			**split;
 	t_token_node	*new;
+	char			*copy;
 
-	split = ft_split_count(arg->text, "\t\v\n\r ", move);
+	copy = ft_strdup(arg->text);
+	if (!copy)
+		return (perror_msg("malloc"));
+	set_in_between_to(copy, '"', '"', -1);
+	set_in_between_to(copy, '\'', '\'', -1);
+	split = ft_split_count_replenish(copy, arg->text, "\t\v\n\r ", move);
+	free(copy);
 	if (!split)
 		return (perror_msg("malloc"));
 	if (*move == 1)
@@ -52,7 +92,7 @@ int	worker_args_split_add_token(t_block *worker, t_token_node *arg, int *move)
 	into further individual arguments.
 */
 
-int	worker_args_rm_quotes_and_split(t_block *worker)
+int	worker_args_split_unguarded_quotes(t_block *worker)
 {
 	int				i;
 	int				has_guards;
@@ -64,15 +104,28 @@ int	worker_args_rm_quotes_and_split(t_block *worker)
 	i = 0;
 	while (cur)
 	{
-		if (!remove_unguarded_quotes(&cur->text, &has_guards))
+		if (!worker_args_split_add_token(worker, cur, &move))
 			return (0);
-		if (!has_guards)
-		{
-			if (!worker_args_split_add_token(worker, cur, &move))
-				return (0);
-			while (--move > 0)
-				cur = cur->next;
-		}
+		while (move-- > 0)
+			cur = cur->next;
+	}
+	return (1);
+}
+
+int	worker_args_rm_unguarded_quotes(t_block *worker)
+{
+	int				i;
+	int				has_guards;
+	int				move;
+	t_token_node	*cur;
+
+	cur = worker->prompt->head;
+	has_guards = 0;
+	i = 0;
+	while (cur)
+	{
+		if (!remove_unguarded_quotes(&cur->text, NULL))
+			return (0);
 		cur = cur->next;
 	}
 	return (1);
