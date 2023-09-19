@@ -24,15 +24,19 @@ LIB_INC_P	=		incs
 LIBFT		=		libft.a
 
 ## SRC SUB-FOLDERS ##
+STRUCTS			=	structs
 LEXER			=	lexer
-BUILTINS		=	builtins
-EXEC 			=	execution
-FD_MAN			=	fd_management
 PARSER			=	parser
+BUILTINS		=	builtins
+EXECUTER		=	executor
+FD_MAN			=	fd_management
 EXPAND			=	expansions
 GENERIC			=	generic_utils
 
 ## SOURCE FILES ##
+
+FILES_STRUCTS	=	init_destroy.c							\
+					signals.c
 
 FILES_LEXER	=		ms_prompt.c								\
 					create_tokens.c 						\
@@ -49,7 +53,7 @@ FILES_BUILTINS	=	bi_exit.c 								\
 					bi_pwd_echo_unset_export.c				\
 					bi_env.c
 
-FILES_EXEC		=	exec.c					\
+FILES_EXECUTER	=	exec.c					\
 					main.c
 
 FILES_FD_MAN	=	manage_files.c			\
@@ -59,10 +63,9 @@ FILES_FD_MAN	=	manage_files.c			\
 
 FILES_PARSER	=	task_distributor.c		\
 					manager_tasks.c			\
-					worker_tasks.c			\
-					init_destroy.c			\
-					setup_cmd.c				\
-					signals.c
+					worker_tasks_1.c		\
+					worker_tasks_2.c
+					
 
 
 FILES_EXPAND	=	wildcard_return.c			\
@@ -82,8 +85,8 @@ FILES_GENERIC	=	ft_split_count_replenish.c			\
 
 ## ALL SOURCE FOLDERS
 
-SRC_DIRS		=	$(BUILTINS)		$(EXEC)	$(FD_MAN)	$(PARSER) 	\
-					$(EXPAND)		$(GENERIC)  $(LEXER)
+SRC_DIRS		=	$(BUILTINS)		$(EXECUTER)	$(FD_MAN)	$(PARSER) 	\
+					$(EXPAND)		$(GENERIC)  $(LEXER) 	$(STRUCTS)
 
 SRCS		:= 		$(foreach src_dir,$(SRC_DIRS),$(wildcard $(SRC_PATH)/$(src_dir)/*.c))
 

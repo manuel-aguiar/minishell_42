@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/19 10:08:36 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 10:14:48 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,7 @@ int	execute(t_block *block)
 {
 	//printf("executing [%s] i'm pid %d\n", block->prompt, block->manager->worker_pids[0]);
 	//token_list_head_print(block->prompt, print_token_args);
-	if (!worker_task_expansions(block))
+	if (!worker_task_preparation(block))
 		return (0);
 	//print_block(block);
 	//printf("executing block [%s]\n", block->cmd);

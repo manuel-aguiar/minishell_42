@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/19 10:11:54 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 10:19:45 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,8 +186,16 @@ int		manager_subshell_and_arithmatic(t_block *manager);
 int		manager_check_arithmatic_parenthesis(t_block *manager);
 void	manager_destroy_worker_tasks(t_block *manager);
 
-/*worker_tasks.c*/
+/*worker_tasks_1.c*/
+int		worker_task_preparation(t_block *worker);
 int		worker_extract_redirections(t_block *worker);
+
+
+/*worker_tasks_2.c*/
+int 	worker_args_split_add_token(t_block *worker, t_token_node *arg, int *move);
+int		worker_args_rm_quotes_and_split(t_block *worker);
+int		worker_args_expand_dollar_wildcard(t_block *worker);
+int		worker_dump_tasks_to_cmd_args(t_block *worker);
 
 //functions to prepare commands
 
