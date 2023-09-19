@@ -29,7 +29,7 @@ LEXER			=	lexer
 PARSER			=	parser
 BUILTINS		=	builtins
 EXECUTER		=	executer
-FD_MAN			=	fd_management
+FD_MAN			=	redirections
 EXPAND			=	expansions
 GENERIC			=	generic_utils
 
@@ -60,7 +60,8 @@ FILES_EXECUTER	=	execution_tree.c					\
 					exec.c					\
 					main.c
 
-FILES_FD_MAN	=	manage_files.c			\
+FILES_FD_MAN	=	prepare_redirections.c	\
+					close_in_out.c			\
 					heredoc_open.c			\
 					heredoc_read.c			\
 					heredoc_temp.c
@@ -76,7 +77,8 @@ FILES_EXPAND	=	wildcard_return.c			\
 					wildcard_fit_candidates.c	\
 					wildcard_expansion.c		\
 					dollar_expansion.c			\
-					dolar_heredoc.c
+					dolar_heredoc.c				\
+					rm_unguarded_quotes.c
 
 FILES_GENERIC	=	ft_split_count_replenish.c			\
 					ft_isquote.c						\

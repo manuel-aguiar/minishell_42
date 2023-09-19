@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/19 11:46:32 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 14:07:59 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,51 +201,17 @@ int		worker_dump_tasks_to_cmd_args(t_block *worker);
 //////////////////////////////////////
 
 /*execution_tree.c*/
-int		execution_tree_exec_all(t_block *block, int i_am_forked);
+int		execution_tree_exec_all(t_block *block);
 int		setup_execution_tree(t_ms *ms, t_block *manager, \
 							t_token_list *tasks, int my_id);
 int		get_all_here_docs(t_block *block);
 
 /*manager_execution.c*/
-int		pipes_forks_and_conditionals(t_block *manager, int index, int *must_fork);
+int		pipes_forks_and_conditionals(t_block *manager, int index);
 int		waiting_for_my_workers(t_block *manager, int index);
 
 /*worker_execution.c*/
-int		execute(t_block *worker);
-
-
-//////////////////////////////////////
-//////////// MANAGE FILES ////////////
-//////////////////////////////////////
-
-void	close_in_fds(t_block *block);
-void	close_out_fds(t_block *block);
-int		infiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i);
-int		outfiles_from_args_to_list(t_vdmlist **io_files, char **cmd_args, int *i);
-int		manage_io_files(t_block *block);
-
-
-
-/*heredoc_temp.c*/
-
-int		heredoc_temp_name(t_block *block);
-
-int		here_doc(t_block *block, char *eof, int has_quote_guard);
-int		remove_unguarded_quotes(char **str, int *has_guards);
-
-
-/*heredoc_open.c*/
-int		open_here_docs_at_block(t_block *block);
-
-
-/* exec.c */
-/*
-int	join_path_bin(char **full_path, char *path, char *bin);
-int	exec_cmd_with_path(t_pipex *pipex, char ***args);
-int	exec_cmd_search_path(t_pipex *pipex, char ***args);
-int	exec_command(t_pipex *pipex, char *cmd);
-*/
-
+int		worker_execution(t_block *worker);
 
 /* error_message.c */
 int		error_msg(char *text);
@@ -259,6 +225,35 @@ int		process_execution(t_block *block);
 void	error_child_exit(t_block *block, char *function, char *cmd, int errcode, int with_ms);
 int		perror_msg_func(t_block *block, char *function, int errcode, int with_ms);
 void	perror_child_exit(t_block *block, char *function, int errcode, int with_ms);
+
+
+//////////////////////////////////////
+//////////// REDIRECTIONS ////////////
+//////////////////////////////////////
+
+/*prepare_redirections.c*/
+int		prepare_redirections(t_block *block);
+
+/*expand_redir_args.c*/
+int		manage_io_expansion(t_block *block);
+
+/*close_in_out.c*/
+void	close_in_fds(t_block *block);
+void	close_out_fds(t_block *block);
+
+
+/*heredoc_open*/
+int		open_here_docs_at_block(t_block *block);
+
+/*heredoc_temp.c*/
+int		heredoc_temp_name(t_block *block);
+
+/*heredoc_read.c*/
+int		here_doc(t_block *block, char *eof, int has_quote_guard);
+
+/*heredoc_open.c*/
+int		open_here_docs_at_block(t_block *block);
+
 
 //////////////////////////////////////
 //////////// EXPANSIONS //////////////
@@ -285,9 +280,8 @@ int		expand_dollars(char **to_expand, t_ms *ms);
 /* dollar_heredoc*/
 int		here_doc_expand_dollars(char **to_expand, t_ms *ms);
 
-
-int		ms_prompt_loop(t_ms *ms);
-
+/*rm_unguarded_quotes*/
+int		remove_unguarded_quotes(char **str, int *has_guards);
 
 
 
@@ -321,6 +315,21 @@ int		ft_isalpha(int c);
 
 int		env_remove(t_block *block, int index);
 
+
+
+
+//////////////////////////////////////
+//////////////// LEXER ///////////////
+//////////////////////////////////////
+
+int				ft_isquote(int c);
+char			*ft_strdup_len(char *s, int len);
+
+int				prompt_is_valid(t_ms *ms);
+int				valid_elem_order(t_ms *ms);
+int				valid_redir_texts(t_ms *ms);
+int				invalid_elem_msg(t_ms *ms, int type, char *has_text, char *text);
+
 //////////////////////////////////////
 //////////// GENERIC UTILS ///////////
 //////////////////////////////////////
@@ -335,21 +344,6 @@ char	**ft_split_count_replenish(t_cchar *s, t_cchar *og, \
 char *sepset, int *place_count);
 char	*ft_split_join(char **split, char *sep);
 char	*ft_triple_join(char *first, char *second, char *third);
-
-
 int		perror_msg(char *text);
-
-
-//////////////////////////////////////
-//////////////// Lexer ///////////////
-//////////////////////////////////////
-
-int				ft_isquote(int c);
-char			*ft_strdup_len(char *s, int len);
-
-int				prompt_is_valid(t_ms *ms);
-int				valid_elem_order(t_ms *ms);
-int				valid_redir_texts(t_ms *ms);
-int				invalid_elem_msg(t_ms *ms, int type, char *has_text, char *text);
 
 #endif
