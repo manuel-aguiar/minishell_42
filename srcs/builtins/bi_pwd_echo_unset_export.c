@@ -35,17 +35,19 @@ int	run_pwd(t_block *block)
 int	run_echo(t_block *block)
 {
 	int		i;
+	int		j;
 	int		jump;
 
 	i = 0;
+	j = 0;
 	jump = 0;
-	if (block->cmd_args[1] && ft_strncmp(block->cmd_args[1], "-n", 2) == 0)
+	while (block->cmd_args[++j] && ft_strncmp(block->cmd_args[j], "-n", 2) == 0)
 	{
-		i++;
-		while (block->cmd_args[1][i] && block->cmd_args[1][i] == 'n')
+		i = 1;
+		while (block->cmd_args[j][i] && block->cmd_args[j][i] == 'n')
 			i++;
-		if (!block->cmd_args[1][i])
-			jump = 1;
+		if (!block->cmd_args[j][i])
+			jump++;
 		i = jump;
 	}
 	while (block->cmd_args[++i])
