@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/17 15:52:30 by mnascime         ###   ########.fr       */
+/*   Updated: 2023/09/19 10:11:54 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,9 +169,25 @@ int		setup_prompt(t_ms *ms);
 
 //functions to split prompt into children
 
-int		distribute_tasks_between_managers_and_workers(t_block *block);
-int		free_task_distributor(t_block *block);
+//////////////////////////////////////
+////////////// PARSER ////////////////
+//////////////////////////////////////
 
+/* task_distributor.c*/
+int		distribute_tasks_between_managers_and_workers(t_block *block);
+int		setup_task_distributor(t_block *block);
+int		free_task_distributor(t_block *block);
+int		check_if_worker_and_count_operators(t_block *block);
+
+/*manager_tasks.c*/
+int		manager_gets_workers_and_operators(t_block *manager);
+int		manager_extract_redirections(t_block *manager);
+int		manager_subshell_and_arithmatic(t_block *manager);
+int		manager_check_arithmatic_parenthesis(t_block *manager);
+void	manager_destroy_worker_tasks(t_block *manager);
+
+/*worker_tasks.c*/
+int		worker_extract_redirections(t_block *worker);
 
 //functions to prepare commands
 

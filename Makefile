@@ -40,7 +40,8 @@ FILES_LEXER	=		ms_prompt.c								\
 					token_list_print.c						\
 					token_list1.c							\
 					token_list2.c							\
-					token_list3.c
+					token_list3.c							\
+					token_identification.c
 
 FILES_BUILTINS	=	bi_exit.c 								\
 					bi_cd.c 								\
@@ -56,8 +57,10 @@ FILES_FD_MAN	=	manage_files.c			\
 					heredoc_temp.c
 
 
-FILES_PARSER	=	init_destroy.c			\
-					split_manager.c			\
+FILES_PARSER	=	task_distributor.c		\
+					manager_tasks.c			\
+					worker_tasks.c			\
+					init_destroy.c			\
 					setup_cmd.c				\
 					signals.c
 

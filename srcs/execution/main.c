@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/18 17:07:59 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 10:08:36 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -386,7 +386,7 @@ int	setup_execution_tree(t_ms *ms, t_block *manager, t_token_list *tasks, int my
 			i++;
 		}
 		//my_children_addresses(block);
-		destroy_worker_tasks(block);
+		manager_destroy_worker_tasks(block);
 	}
 	return (1);
 }

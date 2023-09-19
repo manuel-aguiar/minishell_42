@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_list.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:50:30 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/17 12:57:49 by mnascime         ###   ########.fr       */
+/*   Updated: 2023/09/19 10:02:22 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,10 @@ void			print_token_args(t_token_node *token);
 
 int				ft_isquote(int c);
 char			*ft_strdup_len(char *s, int len);
+
+
+/*token_identification.c*/
+int		token_is_big_operator(t_token_node *token);
+int		token_is_redirection(t_token_node *token);
 
 #endif
