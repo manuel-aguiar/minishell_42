@@ -28,7 +28,7 @@ avoiding multiple calls to malloc and null
 # include <stdlib.h>
 # include <stddef.h>
 
-#include "error_handling.h"
+# include "error_handling.h"
 
 # define UPSIZE 2
 

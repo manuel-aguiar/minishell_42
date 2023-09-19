@@ -50,11 +50,12 @@ static int	partition(void *arr, int low, int high, int (*cmp)(void *, void *))
 	}
 }
 
-static void	qs_recursion(void *arr, int low, int high, int (*cmp)(void *, void *))
+static void	qs_recursion(void *arr, int low, int high, \
+						int (*cmp)(void *, void *))
 {
-	int		randpivot;
-	int		part;
-	t_uchar	 **myarr;
+	int			randpivot;
+	int			part;
+	t_uchar		**myarr;
 
 	myarr = (t_uchar **)arr;
 	if (low < high)
@@ -75,7 +76,7 @@ void	*quicksort_pointers(void *arr, int size, int (*cmp)(void *, void *))
 
 int	env_strcmp(void *s1, void *s2)
 {
-	int 	i;
+	int		i;
 	char	*str1;
 	char	*str2;
 

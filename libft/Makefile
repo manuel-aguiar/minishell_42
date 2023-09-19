@@ -127,7 +127,8 @@ FILES_MATH		=	bin_srch.c					\
 FILES_MPOOL		=	memory_pool.c				\
 					memory_pool_utils.c
 
-FILES_ERROR		=	error_perror_msg.c
+FILES_ERROR		=	error_msg.c					\
+					perror_msg.c
 
 ## ALL SOURCE FOLDERS
 
