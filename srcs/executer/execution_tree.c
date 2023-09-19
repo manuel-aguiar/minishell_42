@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:26:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/19 13:02:54 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 13:59:35 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	execution_tree_exec_all(t_block *block)
 {
 	int	i;
 
-	if (!manage_io_files(block))
+	if (!prepare_redirections(block))
 		return (0);
 	if (block->is_worker)
 		worker_execution(block);

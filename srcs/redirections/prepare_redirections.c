@@ -1,54 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   manage_files.c                                     :+:      :+:    :+:   */
+/*   prepare_redirections.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 13:36:27 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/19 13:05:10 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 14:08:01 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*
-	close_in/close_out_fds
-	These two functions check wether the current file descriptor was
-	inherited or not. If not, they can close it. The only file descriptors
-	that blocks are allowed to close that were not opened by them are
-	pipe ends. All others that are inherited, are the responsibility of their
-	block parent to check if it is theirs and close it.
-
-*/
-
-void	close_in_fds(t_block *block)
-{
-	if ((block->my_manager && block->final_in != block->my_manager->final_in) \
-	|| (!block->my_manager && block->final_in != block->ms->infd))
-		close(block->final_in);
-}
-
-void	close_out_fds(t_block *block)
-{
-	if ((block->my_manager && block->final_out != block->my_manager->final_out) \
-	|| (!block->my_manager && block->final_out != block->ms->outfd))
-		close(block->final_out);
-}
-
-int	redir_has_quotes(char *arg)
-{
-	int	i;
-
-	i = 0;
-	while (arg[i])
-	{
-		if (arg[i] == '\'' || arg[i] == '"')
-			return (1);
-		i++;
-	}
-	return (0);
-}
 
 /*
 	manage_io_expansion
@@ -70,50 +32,7 @@ int	redir_has_quotes(char *arg)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////  FT_PRINTF_FD
 
-int	ambiguous_redirection_err(t_block *block, char **fail_return)
-{
-	if (block->my_manager)
-		block->my_manager->my_status = EXIT_AMBIG_REDIR;
-	else
-		block->ms->exit_status = EXIT_AMBIG_REDIR;
-	ft_putstr_fd(block->ms->name, block->ms->errfd);
-	ft_putstr_fd(": ", block->ms->errfd);
-	ft_putstr_fd(*fail_return, block->ms->errfd);
-	ft_putstr_fd(" ambiguous redirect\n", block->ms->errfd);
-	free(*fail_return);
-	return (0);
-}
 
-int	manage_io_expansion(t_block *block)
-{
-	char	*temp;
-	char	*redir_copy;
-	char	*fail_return;
-
-	fail_return = NULL;
-	redir_copy = block->io_files->head->text;
-	if (redir_copy[0] != '\'')
-		if (!expand_dollars(&redir_copy, block->ms))
-			return (0);
-	if (redir_copy[0] != '\'' \
-	&& redir_copy[0] != '"')
-		if (!expand_wildcards(&redir_copy, &fail_return))
-			return (0);
-	if (fail_return)
-		return (ambiguous_redirection_err(block, &fail_return));
-	if (redir_copy[0] == '\'' \
-	|| redir_copy[0] == '"')
-	{
-		redir_copy[ft_strlen(redir_copy) - 1] = '\0';
-		temp = ft_strdup(&redir_copy[1]);
-		if (!temp)
-			return (perror_msg("malloc"));
-		free(redir_copy);
-		redir_copy = temp;
-	}
-	block->io_files->head->text = redir_copy;
-	return (1);
-}
 
 /*
 	here_doc functions
@@ -127,7 +46,7 @@ int	manage_io_expansion(t_block *block)
 	and allow the command that uses it as input to be able to read it from the beginning.
 
 	here_doc will simply print error messages in case there is a problem while opening and closing
-	the file and leading execution to fail (here_doc -> manage_infiles -> manage_io_files -> execute return 0)
+	the file and leading execution to fail (here_doc -> manage_infiles -> prepare_redirections -> execute return 0)
 
 */
 
@@ -149,8 +68,8 @@ int	manage_io_expansion(t_block *block)
 
 	manage_infile/manage_outfile
 
-	These functions are called from manage_io_files
-	manage_io_files checks all redirections from the t_vdmlist *files,
+	These functions are called from prepare_redirections
+	prepare_redirections checks all redirections from the t_vdmlist *files,
 	checks if they are in or out, and of which type, then forwarding to manage_infile/manage_outfile
 	to manage their particular file descroptors.
 	Both of these functions start by closing the previously open file descriptor for their respective
@@ -161,32 +80,26 @@ int	manage_io_expansion(t_block *block)
 (cat && cat << eof ) < main.c
 */
 
-int	manage_infile(t_block *block, int index)
+static int	manage_infile(t_block *block, int index)
 {
 	t_token_node	*redir;
 
 	redir = block->io_files->head;
 	close_in_fds(block);
-	//printf("redirection [%s] at [%s]\n", redir->file, block->prompt);
 	if (redir->type == T_INDIR_HD)
 	{
-		//printf("index   %d, here doc index %d\n", index, block->here_doc_index);
 		if (index == block->here_doc_index)
 			block->final_in = block->here_doc_fd;
-		//printf("here doc, final in is %d\n", block->final_in);
 	}
 	else
 	{
-		//printf("at [%s] block->here doc? [%s]\n", redir->file, block->here_doc);
 		if (block->here_doc && index > block->here_doc_index)
 		{
-			//printf("no way...?\n");
 			close(block->here_doc_fd);
 			unlink(block->here_doc);
 			ft_free_set_null(&block->here_doc);
 		}
 		block->final_in = open(redir->text, O_RDWR);
-		//printf("prompt [%s] final in is %d\n", block->prompt, block->final_in);
 		if (block->final_in == -1)
 			return (perror_msg_func(block, redir->text, CODE_OPEN, 1));
 	}
@@ -194,16 +107,18 @@ int	manage_infile(t_block *block, int index)
 	return (1);
 }
 
-int	manage_outfile(t_block *block)
+static int	manage_outfile(t_block *block)
 {
 	t_token_node	*redir;
 
 	redir = block->io_files->head;
 	close_out_fds(block);
 	if (redir->type == T_OUTDIR_TRUNC)
-		block->final_out = open(redir->text, O_CREAT | O_RDWR | O_TRUNC, 0644);
+		block->final_out = open(redir->text, O_CREAT \
+						| O_RDWR | O_TRUNC, 0644);
 	else
-		block->final_out = open(redir->text, O_CREAT | O_RDWR | O_APPEND, 0644);
+		block->final_out = open(redir->text, O_CREAT \
+						| O_RDWR | O_APPEND, 0644);
 	if (block->final_out == -1)
 		return (perror_msg_func(block, redir->text, CODE_OPEN, 1));
 	token_list_del_head(block->io_files);
@@ -211,7 +126,7 @@ int	manage_outfile(t_block *block)
 }
 
 /*
-	manage_io_files
+	prepare_redirections
 	manages all the file descriptors that were obtained from "split_redirections" and "setup_cmd"
 	first it gives the inherited fds from the parent to its own command
 	next, it checks wether there are pipes open, as these will override the previously inherited fds
@@ -228,7 +143,7 @@ int	manage_outfile(t_block *block)
 
 */
 
-int	manage_inherited_fds(t_block *block)
+static int	take_inherited_fds(t_block *block)
 {
 	if (!block->my_manager)
 	{
@@ -249,18 +164,15 @@ int	manage_inherited_fds(t_block *block)
 	return (1);
 }
 
-int	manage_io_files(t_block *block)
+int	prepare_redirections(t_block *block)
 {
 	int	i;
 	int	type;
 	int	success;
 
-	manage_inherited_fds(block);
+	take_inherited_fds(block);
 	if (!block->io_files || block->has_arithmatic_parenthesis)
-	{
-		//printf("block [%s], final in %d, final out %d\n", block->prompt, block->final_in, block->final_out);
 		return (1);
-	}
 	success = 1;
 	i = 0;
 	while (block->io_files->head && success)
@@ -275,7 +187,6 @@ int	manage_io_files(t_block *block)
 			success = manage_infile(block, i);
 		i++;
 	}
-	//printf("block [%s], final in %d, final out %d\n", block->prompt, block->final_in, block->final_out);
 	token_list_destroy(&block->io_files);
 	return (success);
 }

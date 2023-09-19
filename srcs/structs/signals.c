@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 15:53:50 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/18 15:53:56 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 13:33:09 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,6 @@ void	signal_handler(int signum)
 	{
 		code = 131;
 		save_signal(&code);
-		// rl_on_new_line();
-		// rl_redisplay();
 	}
 }
 
