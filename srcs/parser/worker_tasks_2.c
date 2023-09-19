@@ -6,43 +6,33 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:18:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/19 15:04:27 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/19 22:31:52 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void    set_in_between_to(char *pmt, char start, char end, char newchar)
+int	empty_quotes(char *str)
 {
-    int i;
-    int open;
+	int	i;
+	int	open;
 
-    open = 0;
-    i = 0;
-    while (pmt[i])
-    {
-        while (pmt[i] && pmt[i] != start)
-            i++;
-        if (pmt[i])
-        {
-            open = 1;
-            i++;
-            while (pmt[i] && open)
-            {
-                if (pmt[i] == start)
-                    open++;
-                if (pmt[i] == end)
-                {
-                    open--;
-                    if (end == start)
-                        open--;
-                }
-                if (open)
-                    pmt[i] = newchar;
-                i++;
-            }
-        }
-    }
+	open = 0;
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '"' || str[i] == '\'')
+		{
+			if (!open)
+				open = str[i];
+			else if (open && str[i] == open)
+				open = 0;
+		}
+		else if (open)
+			str[i] = -1;
+		i++;
+	}
+	return (1);
 }
 
 int	worker_args_split_add_token(t_block *worker, t_token_node *arg, int *move)
@@ -55,8 +45,8 @@ int	worker_args_split_add_token(t_block *worker, t_token_node *arg, int *move)
 	copy = ft_strdup(arg->text);
 	if (!copy)
 		return (perror_msg("malloc"));
-	set_in_between_to(copy, '"', '"', -1);
-	set_in_between_to(copy, '\'', '\'', -1);
+	empty_quotes(copy);
+	//printf("arg [%s], copy unguard [%s]\n", arg->text, copy);
 	split = ft_split_count_replenish(copy, arg->text, "\t\v\n\r ", move);
 	free(copy);
 	if (!split)
