@@ -192,8 +192,8 @@ int free_split_prompt(t_split_prompt *split)
 		ft_free_charmat_null(&split->children, free);
 	if (split->op_id)
 		ft_free_set_null(&split->op_id);
-	if (split->child_pids)
-		ft_free_set_null(&split->child_pids);
+	if (split->worker_pids)
+		ft_free_set_null(&split->worker_pids);
 	if (split->get_redir)
 		ft_free_charmat_null(&split->children, free);
 	if (split->io_files)
@@ -206,7 +206,7 @@ int setup_split_prompt_struct(t_split_prompt *split, t_block *block)
 	split->prompt = block->prompt;
 	split->op_id = NULL;
 	split->children = NULL;
-	split->child_pids = NULL;
+	split->worker_pids = NULL;
 	split->get_redir = NULL;
 	split->io_files = NULL;
 	split->parenthesis_fork = 0;
@@ -214,8 +214,8 @@ int setup_split_prompt_struct(t_split_prompt *split, t_block *block)
 	split->op_count = split_count_operators(split);
 	split->op_id = malloc(sizeof(*(split->op_id)) * split->op_count);
 	split->children = ft_calloc((split->op_count + 2), sizeof(*(split->children)));
-	split->child_pids = ft_calloc(split->op_count + 1, sizeof(*(split->child_pids)));
-	if (!split->op_id || !split->children || !split->child_pids)
+	split->worker_pids = ft_calloc(split->op_count + 1, sizeof(*(split->worker_pids)));
+	if (!split->op_id || !split->children || !split->worker_pids)
 	{
 		perror_msg("malloc");
 		return (free_split_prompt(split));
@@ -226,8 +226,8 @@ int setup_split_prompt_struct(t_split_prompt *split, t_block *block)
 
 int dump_split_to_block(t_block *block, t_split_prompt *split)
 {
-	block->child_prompts = split->children;
-	block->child_pids = split->child_pids;
+	block->worker_prompts = split->children;
+	block->worker_pids = split->worker_pids;
 	block->op_id = split->op_id;
 	block->op_count = split->op_count;
 	block->io_files = split->io_files;
@@ -236,14 +236,14 @@ int dump_split_to_block(t_block *block, t_split_prompt *split)
 	free(split->prompt_copy);
 	if (!block->is_cmd)
 	{
-		block->child_list = malloc(sizeof(*block->child_list) * (block->op_count + 2));
-		block->child_exit_status = malloc(sizeof(*block->child_list) * (block->op_count + 1));
-		if (!block->child_list || !block->child_exit_status)
+		block->worker_list = malloc(sizeof(*block->worker_list) * (block->op_count + 2));
+		block->worker_exit_status = malloc(sizeof(*block->worker_list) * (block->op_count + 1));
+		if (!block->worker_list || !block->worker_exit_status)
 		{
 			destroy_block(block);
 			return (perror_msg("malloc"));
 		}
-		ft_memset(block->child_exit_status, -1, sizeof(int) * (block->op_count + 1));
+		ft_memset(block->worker_exit_status, -1, sizeof(int) * (block->op_count + 1));
 	}
 	return (1);
 }

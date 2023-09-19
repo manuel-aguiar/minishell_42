@@ -12,33 +12,33 @@
 
 #include "minishell.h"
 
-void	destroy_child_prompts(t_block *block)
+void	destroy_worker_prompts(t_block *block)
 {
 	int i;
 
-	if (!block->child_prompts)
+	if (!block->worker_prompts)
 		return ;
 	i = 0;
 	while (i < block->op_count + 1)
 	{
-		if (block->child_prompts[i])
-			token_list_destroy(&block->child_prompts[i]);
+		if (block->worker_prompts[i])
+			token_list_destroy(&block->worker_prompts[i]);
 		i++;
 	}
-	ft_free_set_null(&block->child_prompts);
+	ft_free_set_null(&block->worker_prompts);
 }
 
 int free_split_prompt(t_block *block)
 {
-	destroy_child_prompts(block);
-	if (block->child_list)
-		ft_free_set_null(&block->child_list);
+	destroy_worker_prompts(block);
+	if (block->worker_list)
+		ft_free_set_null(&block->worker_list);
     if (block->op_id)
         ft_free_set_null(&block->op_id);
-    if (block->child_pids)
-        ft_free_set_null(&block->child_pids);
-    if (block->child_exit_status)
-        ft_free_set_null(&block->child_exit_status);
+    if (block->worker_pids)
+        ft_free_set_null(&block->worker_pids);
+    if (block->worker_exit_status)
+        ft_free_set_null(&block->worker_exit_status);
     if (block->io_files)
         token_list_destroy(&block->io_files);
     return (0);
@@ -84,12 +84,12 @@ int setup_split_prompt_struct(t_block *block)
 	{
 		//printf("i'm not a cmd, must subshell %d\n", block->must_subshell);
 		block->op_id = malloc(sizeof(*(block->op_id)) * block->op_count);
-		block->child_prompts = ft_calloc((block->op_count + 2), sizeof(*(block->child_prompts)));
-		block->child_list = ft_calloc((block->op_count + 2), sizeof(*(block->child_list)));
-		block->child_pids = ft_calloc(block->op_count + 1, sizeof(*(block->child_pids)));
-		block->child_exit_status = ft_calloc(block->op_count + 1, sizeof(*(block->child_exit_status)));
-		ft_memset(block->child_exit_status, -1, (block->op_count + 1) * sizeof(*(block->child_exit_status)));
-		if (!block->op_id || !block->child_prompts || !block->child_pids)
+		block->worker_prompts = ft_calloc((block->op_count + 2), sizeof(*(block->worker_prompts)));
+		block->worker_list = ft_calloc((block->op_count + 2), sizeof(*(block->worker_list)));
+		block->worker_pids = ft_calloc(block->op_count + 1, sizeof(*(block->worker_pids)));
+		block->worker_exit_status = ft_calloc(block->op_count + 1, sizeof(*(block->worker_exit_status)));
+		ft_memset(block->worker_exit_status, -1, (block->op_count + 1) * sizeof(*(block->worker_exit_status)));
+		if (!block->op_id || !block->worker_prompts || !block->worker_pids)
 		{
 			perror_msg("malloc");
 			return (free_split_prompt(block));
@@ -97,9 +97,9 @@ int setup_split_prompt_struct(t_block *block)
 		i = 0;
 		while (i < block->op_count + 1)
 		{
-			block->child_exit_status[i] = -1;
-			block->child_prompts[i] = token_list_new();
-			if (!block->child_prompts[i])
+			block->worker_exit_status[i] = -1;
+			block->worker_prompts[i] = token_list_new();
+			if (!block->worker_prompts[i])
 				return (free_split_prompt(block));
 			i++;
 		}
@@ -146,14 +146,14 @@ int split_children_and_operators(t_block *block)
 		open_par -= (cur->type == T_CLOSE_PAR);
 		if (cur && token_is_big_operator(cur) && !open_par)
 		{
-			token_list_move_top_to_new(block->child_prompts[all], \
+			token_list_move_top_to_new(block->worker_prompts[all], \
 			block->prompt, cur->prev, i);
 			block->op_id[all] = block->prompt->head->type;
 			token_list_del_head(block->prompt);
 			cur = block->prompt->head;
 			//printf("printing args of child %d\n", all);
-			//token_list_head_print(block->child_prompts[all], print_token_args);
-			//printf("finished printing args of child %d, list len is %ld\n", all, block->child_prompts[all]->len);
+			//token_list_head_print(block->worker_prompts[all], print_token_args);
+			//printf("finished printing args of child %d, list len is %ld\n", all, block->worker_prompts[all]->len);
 			i = 0;
 			all++;
 
@@ -164,13 +164,13 @@ int split_children_and_operators(t_block *block)
 			cur = cur->next;
 		}
     }
-	token_list_destroy(&block->child_prompts[all]);
+	token_list_destroy(&block->worker_prompts[all]);
 	//printf("all is %d\n", all);
-	block->child_prompts[all] = block->prompt;
+	block->worker_prompts[all] = block->prompt;
 	block->prompt = NULL;
 	//printf("printing args of child %d\n", all);
-	//token_list_head_print(block->child_prompts[all], print_token_args);
-	//printf("finished printing args of child %d, list len is %ld\n", all, block->child_prompts[all]->len);
+	//token_list_head_print(block->worker_prompts[all], print_token_args);
+	//printf("finished printing args of child %d, list len is %ld\n", all, block->worker_prompts[all]->len);
     return (1);
 }
 
@@ -287,8 +287,8 @@ int split_prompt(t_block *block)
         if (!split_extract_redirections(block))
 			return (free_split_prompt(block));
 		remove_corner_parenthesis_and_arithmatic(block);
-		token_list_destroy(&block->child_prompts[0]);
-		block->child_prompts[0] = block->prompt;
+		token_list_destroy(&block->worker_prompts[0]);
+		block->worker_prompts[0] = block->prompt;
 		block->prompt = NULL;
     }
 	//printf("i am command %d, [%s]\n", block->is_cmd, block->prompt->head->text);

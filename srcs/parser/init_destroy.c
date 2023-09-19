@@ -19,18 +19,18 @@ void	destroy_block(void *og_block)
     block = (t_block *)og_block;
     if (!block)
     return ;
-	if (block->child_list)
-	    ft_free_sizemat_null(&block->child_list, block->op_count + 1, destroy_block);
-	if (block->child_prompts)
-	    ft_free_charmat_null(&block->child_prompts, free);
-	if (block->child_pids)
-		ft_free_set_null(&block->child_pids);
-	if (block->child_exit_status)
-		ft_free_set_null(&block->child_exit_status);
+	if (block->worker_list)
+	    ft_free_sizemat_null(&block->worker_list, block->op_count + 1, destroy_block);
+	if (block->worker_prompts)
+	    ft_free_charmat_null(&block->worker_prompts, free);
+	if (block->worker_pids)
+		ft_free_set_null(&block->worker_pids);
+	if (block->worker_exit_status)
+		ft_free_set_null(&block->worker_exit_status);
 	if (block->op_id)
 		ft_free_set_null(&block->op_id);
-    if (block->father)
-        block->father->child_list[block->my_id] = NULL;
+    if (block->manager)
+        block->manager->worker_list[block->my_id] = NULL;
     else
         block->ms->first = NULL;
     if (block->prompt)
@@ -50,7 +50,7 @@ void	destroy_block(void *og_block)
 	free(block);
 }
 
-t_block *init_block(t_ms *ms, t_block *father, t_token_list *prompt, int my_id)
+t_block *init_block(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id)
 {
     t_block *new;
 
@@ -58,14 +58,14 @@ t_block *init_block(t_ms *ms, t_block *father, t_token_list *prompt, int my_id)
     if (!new)
 		return (perror_msg_ptr("malloc", NULL));
     new->ms = ms;
-	new->father = father;
+	new->manager = manager;
 	new->i_am_forked = 0;
 	new->prompt = prompt;
-	if (father)
+	if (manager)
 	{
-		new->father->child_prompts[my_id] = NULL;
-		new->father->child_list[my_id] = new;
-		new->my_level = new->father->my_level + 1;
+		new->manager->worker_prompts[my_id] = NULL;
+		new->manager->worker_list[my_id] = new;
+		new->my_level = new->manager->my_level + 1;
 	}
 	else
 	{
@@ -75,13 +75,13 @@ t_block *init_block(t_ms *ms, t_block *father, t_token_list *prompt, int my_id)
 	}
 
 
-	new->child_prompts = NULL;
+	new->worker_prompts = NULL;
 
 
 
-	new->child_list = NULL;
-	new->child_pids = NULL;
-	new->child_exit_status = NULL;
+	new->worker_list = NULL;
+	new->worker_pids = NULL;
+	new->worker_exit_status = NULL;
     new->op_count = 0;
     new->op_id = NULL;
 	new->is_cmd = 0;

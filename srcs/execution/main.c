@@ -17,10 +17,10 @@ int	my_children_addresses(t_block *block)
 	if (block->is_cmd)
 		return (1);
 	int i = 0;
-	printf(" i am %p, my child list is %p, my children are:\n", block, block->child_list);
-	while (block->child_list[i])
+	printf(" i am %p, my child list is %p, my children are:\n", block, block->worker_list);
+	while (block->worker_list[i])
 	{
-		printf("%p  ", block->child_list[i++]);
+		printf("%p  ", block->worker_list[i++]);
 	}
 	printf("\n\n");
 	return (1);
@@ -54,7 +54,7 @@ void	print_block(t_block *block)
 
 */
 
-int	print_child_pids(t_block *block)
+int	print_worker_pids(t_block *block)
 {
 	int	i;
 
@@ -62,7 +62,7 @@ int	print_child_pids(t_block *block)
 	//printf("i am [%s], starting status %d, mypid %d, my children are:\n       ", block->prompt, block->my_status, getpid());
 	while (i < block->op_count + 1)
 	{
-		printf("%d  ", block->child_pids[i]);
+		printf("%d  ", block->worker_pids[i]);
 		i++;
 	}
 	printf("\n");
@@ -78,32 +78,32 @@ int	waiting_for_my_children(t_block *block, int index)
 	i = 0;
 	//printf("block [%s] waiting for %d children \n", block->prompt, block->op_count + 1);
 	//printf("i am [%s], starting status %d, waiting, mypid %d\n", block->prompt, block->my_status, getpid());
-	//print_child_pids(block);
+	//print_worker_pids(block);
 	while (i < index)
 	{
-		//printf("child [%s], index, %d, has pid? %d\n", block->child_list[i]->prompt, i, block->child_pids[i]);
-		if (block->child_pids[i] != 0)
+		//printf("child [%s], index, %d, has pid? %d\n", block->worker_list[i]->prompt, i, block->worker_pids[i]);
+		if (block->worker_pids[i] != 0)
 		{
-			//printf("my lvl id (%d, %d), waiting for pid %d, my status now is: %d  ", block->my_level, block->my_id, block->child_pids[i], block->my_status);
-			waitpid(block->child_pids[i], &block->my_status, 0);
+			//printf("my lvl id (%d, %d), waiting for pid %d, my status now is: %d  ", block->my_level, block->my_id, block->worker_pids[i], block->my_status);
+			waitpid(block->worker_pids[i], &block->my_status, 0);
 			if (WIFEXITED(block->my_status))
 				block->my_status = WEXITSTATUS(block->my_status);
 			//printf("  and changed to %d i received from child (%d, %d)\n", block->my_status, block->my_level +1, i);
-			block->child_pids[i] = 0;
+			block->worker_pids[i] = 0;
 		}
-		else if (block->child_exit_status[i] >= 0)
+		else if (block->worker_exit_status[i] >= 0)
 		{
-			//printf("my lvl id (%d, %d) original status %d will change to %d from child wnumber (%d,%d)\n", block->my_level, block->my_id, block->my_status, block->child_exit_status[i], block->my_level +1, i);
-			block->my_status = block->child_exit_status[i];
-			block->child_exit_status[i] = -1;
+			//printf("my lvl id (%d, %d) original status %d will change to %d from child wnumber (%d,%d)\n", block->my_level, block->my_id, block->my_status, block->worker_exit_status[i], block->my_level +1, i);
+			block->my_status = block->worker_exit_status[i];
+			block->worker_exit_status[i] = -1;
 		}
 		//else
 		//	printf("no pid, no manual status\n");
 		i++;
 	}
 	//printf("i am [%s], ending status %d, moving on, mypid %d\n", block->prompt, block->my_status, getpid());
-	if (!block->i_am_forked && block->father)
-		block->father->my_status = block->my_status;
+	if (!block->i_am_forked && block->manager)
+		block->manager->my_status = block->my_status;
 	block->ms->exit_status = block->my_status;
 	return (1);
 }
@@ -148,15 +148,15 @@ int	pipes_and_conditionals(t_block *block, int index, int *must_fork)
 	if (block->must_subshell \
 	&& !block->has_arithmatic_parenthesis && block->op_count == 0)
 	{
-		//printf("child: [%s] has parenthesis and must be forked\n", block->child_list[index]->prompt);
+		//printf("child: [%s] has parenthesis and must be forked\n", block->worker_list[index]->prompt);
 		*must_fork = 1;
 	}
 	if (*must_fork)
 	{
-		block->child_pids[index] = fork();
-		if (block->child_pids[index] == -1)
+		block->worker_pids[index] = fork();
+		if (block->worker_pids[index] == -1)
 			return (perror_msg("fork"));
-		if (!block->child_pids[index])
+		if (!block->worker_pids[index])
 		{
 			if (index < block->op_count && block->op_id[index] == T_OP_PIPE)
 				close(block->pipefd[0]);
@@ -184,7 +184,7 @@ int	pipes_and_conditionals(t_block *block, int index, int *must_fork)
 
 int	execute(t_block *block)
 {
-	//printf("executing [%s] i'm pid %d\n", block->prompt, block->father->child_pids[0]);
+	//printf("executing [%s] i'm pid %d\n", block->prompt, block->manager->worker_pids[0]);
 	//token_list_head_print(block->prompt, print_token_args);
 	if (!manage_cmd_expansions(block))
 		return (0);
@@ -198,7 +198,7 @@ int	execute(t_block *block)
 		close_out_fds(block);
 	}
 	if (block->i_am_forked)
-		block->father->my_status = block->my_status;
+		block->manager->my_status = block->my_status;
 	return (1);
 }
 
@@ -209,8 +209,8 @@ int	execute(t_block *block)
 	all the t_blocks are set in the stack frame created for the caller: when
 	calling destroy_block it just frees the malloc'ed pointers inside the structure
 	but not the structure itself (it is destroyed when the function exists)
-	When dealing with a father with multiple kids, the previous kid cleans the structure
-	when exiting their function call such that the father can use it again from scratch
+	When dealing with a manager with multiple kids, the previous kid cleans the structure
+	when exiting their function call such that the manager can use it again from scratch
 	for the next kid:
 		All Quiet on the Western Front
 	so for instance with: ls | cat | cat | cat | cat
@@ -269,13 +269,13 @@ int	get_all_here_docs(t_block *block)
 	if (!block->is_cmd)
 	{
 		i = 0;
-		//printf("i am %p, my child list is %p\n", block, block->child_list);
+		//printf("i am %p, my child list is %p\n", block, block->worker_list);
 		//my_children_addresses(block);
-		while (block->child_list[i] \
+		while (block->worker_list[i] \
 		&& !block->has_arithmatic_parenthesis \
 		&& save_signal(NULL) != EXIT_SIGINT)
 		{
-			get_all_here_docs(block->child_list[i]);
+			get_all_here_docs(block->worker_list[i]);
 			i++;
 		}
 	}
@@ -300,15 +300,15 @@ int	execution_tree(t_block *block, int i_am_forked)
 	{
 		//printf("anything not cmd?\n");
 		i = 0;
-		while (block->child_list[i])
+		while (block->worker_list[i])
 		{
 			//printf("got in loop\n");
 			if (i > 0 && block->op_id[i - 1] == T_OP_PIPE)
 				close(block->pipefd[1]);
 			if (block->op_id && pipes_and_conditionals(block, i, &must_fork))
 			{
-				if (!(must_fork && block->child_pids[i] != 0))
-					execution_tree(block->child_list[i], must_fork);
+				if (!(must_fork && block->worker_pids[i] != 0))
+					execution_tree(block->worker_list[i], must_fork);
 			}
 			if (i > 0 && block->op_id[i - 1] == T_OP_PIPE)
 				close(block->prev_pipe[0]);
@@ -324,17 +324,17 @@ int	execution_tree(t_block *block, int i_am_forked)
 	//printf("block [%s], my status %d, my address %p\n", block->prompt, block->my_status, block);
 	if (i_am_forked)
 	{
-		//printf("my lvl id (%d, %d) i am forked, pid %d, my status %d, will exit and my father picks me up\n", block->my_level, block->my_id, getpid(), block->my_status);
+		//printf("my lvl id (%d, %d) i am forked, pid %d, my status %d, will exit and my manager picks me up\n", block->my_level, block->my_id, getpid(), block->my_status);
 		status = block->my_status;
 		destroy_ms(block->ms);
 		exit(status);
 	}
-	else if (block->father && !block->is_cmd)
+	else if (block->manager && !block->is_cmd)
 	{
-		//printf("my lvl id (%d, %d) passing status %d to my father\n", block->my_level, block->my_id, block->my_status);
-		block->father->child_exit_status[block->my_id] = block->my_status;
+		//printf("my lvl id (%d, %d) passing status %d to my manager\n", block->my_level, block->my_id, block->my_status);
+		block->manager->worker_exit_status[block->my_id] = block->my_status;
 	}
-	else if (!block->father && !block->is_cmd)
+	else if (!block->manager && !block->is_cmd)
 		block->ms->exit_status = block->my_status;
 	//printf("block [%s], my status %d, my address %p, not forked ready to destroy\n", block->prompt, block->my_status, block);
 	destroy_block(block);
@@ -352,9 +352,9 @@ void	print_execution_tree(t_block *block)
 	if (!block->is_cmd)
 	{
 		i = 0;
-		while (block->child_list[i])
+		while (block->worker_list[i])
 		{
-			print_execution_tree(block->child_list[i]);
+			print_execution_tree(block->worker_list[i]);
 			i++;
 		}
 	}
@@ -362,12 +362,12 @@ void	print_execution_tree(t_block *block)
 
 
 
-int	setup_execution_tree(t_ms *ms, t_block *father, t_token_list *prompt, int my_id)
+int	setup_execution_tree(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id)
 {
 	int		i;
 	t_block	*block;
 
-	block = init_block(ms, father, prompt, my_id);
+	block = init_block(ms, manager, prompt, my_id);
 	if (!block)
 		return (0);
 	//printf("printing prompt i have received: \n");
@@ -380,13 +380,13 @@ int	setup_execution_tree(t_ms *ms, t_block *father, t_token_list *prompt, int my
 	if (!block->is_cmd)
 	{
 		i = 0;
-		while (block->child_prompts[i])
+		while (block->worker_prompts[i])
 		{
-			setup_execution_tree(ms, block, block->child_prompts[i], i);
+			setup_execution_tree(ms, block, block->worker_prompts[i], i);
 			i++;
 		}
 		//my_children_addresses(block);
-		destroy_child_prompts(block);
+		destroy_worker_prompts(block);
 	}
 	return (1);
 }
