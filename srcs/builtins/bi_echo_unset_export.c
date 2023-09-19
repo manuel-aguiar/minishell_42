@@ -12,26 +12,6 @@
 
 #include "minishell.h"
 
-int	run_pwd(t_block *block)
-{
-	char	*pwd;
-	int		i;
-
-	i = 0;
-	while (block->ms->env[i] && \
-	!ft_strnstr(block->ms->env[i], "PWD=", 4))
-		i++;
-	if (!block->ms->env[i])
-		return (1);
-	pwd = ft_strdup(&block->ms->env[i][4]);
-	if (!pwd)
-		return (perror_msg("malloc"));
-	ft_putstr_fd(pwd, block->final_out);
-	write(block->final_out, "\n", 1);
-	free(pwd);
-	return (1);
-}
-
 int	run_echo(t_block *block)
 {
 	int		i;
@@ -80,32 +60,43 @@ int	run_unset(t_block *block)
 	return (1);
 }
 
+static void	write_export_list(char *exp_item)
+{
+	int		f;
+
+	f = -1;
+	ft_printf_fd(block->final_out, "declare -x ");
+	while (exp_item[++f] && exp_item[f] != '=')
+		ft_printf_fd(block->final_out, "%c", exp_item[f]);
+	if (exp_item[f] && exp_item[f] == '=')
+		ft_printf_fd(block->final_out, "%c%c", exp_item[f++], '\"');
+	if (exp_item[f])
+		ft_printf_fd(block->final_out, "%s", &exp_item[f]);
+	if ((exp_item[f] && exp_item[f] == '=') \
+	|| (exp_item[f - 1] && exp_item[f - 1] == '='))
+		ft_printf_fd(block->final_out, "\"");
+	ft_printf_fd(block->final_out, "\n");
+}
+
 static int	run_exp_list(t_block *block)
 {
-	int	i;
-	int	f;
+	int		i;
+	int		len;
+	char	**exp_list;
 
 	i = -1;
 	if (!block->ms->env)
 		return (1);
-	while (block->ms->env[++i])
-	{
-		f = -1;
-		ft_putstr_fd("declare -x ", block->final_out);
-		while (block->ms->env[i][++f] && block->ms->env[i][f] != '=')
-			write(block->final_out, &block->ms->env[i][f], 1);
-		if (block->ms->env[i][f] && block->ms->env[i][f] == '=')
-		{
-			write(block->final_out, &block->ms->env[i][f++], 1);
-			ft_putstr_fd("\"", block->final_out);
-		}
-		if (block->ms->env[i][f])
-			ft_putstr_fd(&block->ms->env[i][f], block->final_out);
-		if ((block->ms->env[i][f] && block->ms->env[i][f] == '=') \
-		|| (block->ms->env[i][f - 1] && block->ms->env[i][f - 1] == '='))
-			ft_putstr_fd("\"", block->final_out);
-		ft_putstr_fd("\n", block->final_out);
-	}
+	ft_charmatdup(&exp_list, block->ms->env);
+	if (!exp_list)
+		return (0);
+	quicksort_pointers(exp_list, ft_matrixlen(exp_list), &env_strcmp);
+	while (exp_list[++i])
+		write_export_list(char exp_list[i]);
+	i = -1;
+	while (exp_list[++i])
+		free((exp_list[i]));
+	free(exp_list);
 	return (1);
 }
 
