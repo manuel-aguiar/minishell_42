@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/20 14:57:57 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/20 15:30:36 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -321,6 +321,10 @@ int		env_remove(t_block *block, int index);
 //////////////////////////////////////
 //////////////// LEXER ///////////////
 //////////////////////////////////////
+
+int				get_prompt(t_ms *ms);
+int				prompt_token_setup(t_ms *ms, char *line);
+char			*prompt_readline(t_ms *ms);
 
 int				ft_isquote(int c);
 char			*ft_strdup_len(char *s, int len);
