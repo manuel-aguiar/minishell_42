@@ -86,7 +86,7 @@ FILES_GNL		=	get_next_line.c				\
 					get_next_line_utils.c
 
 FILES_HASHINT	=	hashtable.c						\
-					hashtable_print.c				\
+					hashtable_utils.c				\
 					ht_linkedlist1.c				\
 					ht_linkedlist2.c				\
 					ht_linkedlist3.c

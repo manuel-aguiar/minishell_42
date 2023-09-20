@@ -6,11 +6,11 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 20:02:41 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/20 10:49:32 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/20 11:23:07 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "hashtable_linkedlists.h"
+#include "ht_linkedlists.h"
 
 void	htlist_head_print(t_htlist *list, void (*pnt)(void *))
 {

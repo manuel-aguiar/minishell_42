@@ -6,11 +6,11 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 18:45:01 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/20 11:15:03 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/20 11:23:01 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "hashtable_linkedlists.h"
+#include "ht_linkedlists.h"
 
 static void	htnode_free(t_htnode *node, void (*del_key)(void *),
 		void (*del_value)(void *))
