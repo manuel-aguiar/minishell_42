@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/20 11:26:39 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/20 13:37:54 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -286,11 +286,11 @@ void	signal_builtin_pipes(int signum)
 		//rl_on_new_line();
 		//rl_redisplay();
 	}
-	if (signum == SIGPIPE)
-	{
-		ms_destroy(sigint_heredoc_where_ms_is(NULL));
-		exit(13);
-	}
+	//if (signum == SIGPIPE)
+	//{
+	//	ms_destroy(sigint_heredoc_where_ms_is(NULL));
+	//	exit(13);
+	//}
 }
 
 int	process_execution(t_block *block)

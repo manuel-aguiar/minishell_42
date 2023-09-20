@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:33:20 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/19 11:34:21 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/20 13:24:24 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int	open_here_docs_at_block(t_block *block)
 		//printf("checking redir [%s] of type %d\n", redir->file, redir->type);
 		if (cur->type == T_INDIR_HD)
 		{
+			
 			if (block->here_doc)
 			{
 				close(block->here_doc_fd);

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:21:31 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/19 10:33:38 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/20 13:26:26 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,10 @@ void	signal_handler_heredoc(int signum)
 
 	if (signum == SIGINT)
 	{
-		//printf("\n\n successfully changed the signal handler\n\n\n");
-		rl_replace_line("", 0);
-		ms_destroy(sigint_heredoc_where_ms_is(NULL));
-		//printf("\n");
-		exit(130);
+		close(STDIN_FILENO);
+		printf("\n");
+		code = 130;
+		save_signal(&code);
 	}
 	if (signum == SIGQUIT)
 	{
@@ -58,11 +57,13 @@ static int	here_doc_fill(t_block *block, char *eof, int has_quote_guard)
 			}
 			ft_free_set_null(&line);
 		}
-		else
+		else if (save_signal(NULL) != EXIT_SIGINT)
 		{
-			printf("minishell: warning: here-document at line %d delimited by end-of-file (wanted `%s')\n", count, eof);            //dprintf ft_putstr_fd(block->ms->errfd);
+			ft_printf_fd(block->ms->errfd, "%s: warning: here-document at line %d delimited by end-of-file (wanted `%s')\n", block->ms->name, count, eof); 
 			break ;
 		}
+		else
+			break ;
 	}
 	return (1);
 }
@@ -70,8 +71,11 @@ static int	here_doc_fill(t_block *block, char *eof, int has_quote_guard)
 int	here_doc(t_block *block, char *eof, int has_quote_guard)
 {
 	int	pid;
-	int	hc_status;
+	int	dup_stdin;
 
+	dup_stdin = dup(block->ms->infd);
+	if (!dup_stdin)
+		return (perror_msg_int("dup", 0));
 	if (!heredoc_temp_name(block))
 		return (0);
 	//printf("trying to open file [%s]\n", block->here_doc);
@@ -80,27 +84,20 @@ int	here_doc(t_block *block, char *eof, int has_quote_guard)
 	if (block->here_doc_fd == -1)
 		return (perror_msg_func(block, block->here_doc, CODE_OPEN, 1));                 //open failed, perror(open) guarda exit status
 	ms_prepare_signal(block->ms, signal_handler_heredoc);
-	pid = fork();
-	if (pid == -1)
-		return (perror_msg("fork"));
-	if (!pid)
-	{
-		here_doc_fill(block, eof, has_quote_guard);
-		exit(0);
-	}
+	here_doc_fill(block, eof, has_quote_guard);
+	
 	ms_prepare_signal(block->ms, signal_handler);
-	waitpid(pid, &hc_status, 0);
-	//printf("exit status of child wifexited %d, status %d\n", WIFSIGNALED(hc_status), WTERMSIG(hc_status));
-	if (WIFEXITED(hc_status) && WEXITSTATUS(hc_status))
+	
+	if (save_signal(NULL) == EXIT_SIGINT)
 	{
-		//printf("here doc failed\n");
-		unlink(block->here_doc);
+		block->ms->kill_stdin = 1;
+		dup2(dup_stdin, block->ms->infd);
 		close(block->here_doc_fd);
-		hc_status = 130;
-		save_signal(&hc_status);
-		rl_redisplay();
+		unlink(block->here_doc);
+		close(dup_stdin);
 		return (0);
 	}
+	close(dup_stdin);
 	close(block->here_doc_fd);
 	block->here_doc_fd = open(block->here_doc, O_RDONLY);
 	if (block->here_doc_fd == -1)
