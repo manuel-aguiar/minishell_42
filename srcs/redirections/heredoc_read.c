@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:21:31 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/20 14:57:29 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/20 17:45:18 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,11 @@ int	here_doc_setup(t_block *block, char *eof, int has_quote_guard)
 	dup_stdin = dup(block->ms->infd);
 	if (!dup_stdin)
 		return (perror_msg_int("dup", 0));
-	ms_prepare_signal(block->ms, signal_handler_heredoc);
+	if (tcsetattr(dup_stdin, TCSANOW, &block->ms->modified) == -1)
+		perror_msg_int("tcsetattr", 0);
 	here_doc_fill(block, eof, has_quote_guard);
-	ms_prepare_signal(block->ms, signal_handler);
+	if (tcsetattr(dup_stdin, TCSANOW, &block->ms->original) == -1)
+		perror_msg_int("tcsetattr", 0);
 	if (save_signal(NULL) == EXIT_SIGINT)
 	{
 		block->ms->kill_stdin = 1;

@@ -6,11 +6,21 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:30:56 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/20 14:58:07 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/20 17:39:41 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	ms_disable_sigquit(t_ms *ms)
+{
+	if (tcgetattr(ms->infd, &ms->original) == -1)
+		return (perror_msg_int("tcgetattr", 0));
+	ms->modified = ms->original;
+	ms->modified.c_lflag &= ~(ISIG);
+	ms->modified.c_cc[VQUIT] = _POSIX_VDISABLE;
+	return (1);
+}
 
 int	ms_init(t_ms *ms, char *avzero, char **env)
 {
@@ -31,6 +41,8 @@ int	ms_init(t_ms *ms, char *avzero, char **env)
 	ms->my_kid = -1;
 	ms->exit_status = 0;
 	ms->kill_stdin = 0;
+	if (!ms_disable_sigquit(ms))
+		return (ms_destroy(ms));
 	sigint_heredoc_where_ms_is(ms);
 	if (!ms_prepare_signal(ms, signal_handler))
 		return (ms_destroy(ms));
@@ -110,6 +122,8 @@ int	ms_destroy(t_ms *ms)
 		ft_free_set_null(&ms->prompt);
 	if (ms->first)
 		block_destroy(ms->first);
+	if (tcsetattr(ms->infd, TCSANOW, &ms->original) == -1)
+		return (0);
 	if (ms->kill_stdin)
 		close(ms->infd);
 	return (1);

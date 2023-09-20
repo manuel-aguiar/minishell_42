@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/20 14:03:39 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/20 16:01:44 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -286,11 +286,6 @@ void	signal_builtin_pipes(int signum)
 		//rl_on_new_line();
 		//rl_redisplay();
 	}
-	//if (signum == SIGPIPE)
-	//{
-	//	ms_destroy(sigint_heredoc_where_ms_is(NULL));
-	//	exit(13);
-	//}
 }
 
 int	process_execution(t_block *block)
@@ -317,7 +312,6 @@ int	process_execution(t_block *block)
 	}
 	else
 	{
-		ms_prepare_signal(block->ms, signal_builtin_pipes);
 		if (exec_builtin(block, builtin))
 		{
 			if (block->my_manager)
@@ -326,11 +320,6 @@ int	process_execution(t_block *block)
 		}
 		close_in_fds(block);
 		close_out_fds(block);
-		ms_prepare_signal(block->ms, signal_handler);
-		//if (block->my_manager && block->my_id > 0 && block->my_manager->op_id[block->my_id - 1] == T_OP_PIPE)
-		//	close(block->prev_pipe[0]);
-		//if (block->my_manager && block->my_id < block->my_manager->op_count && block->my_manager->op_id[block->my_id] == T_OP_PIPE)
-		//	close(block->pipefd[1]);
 	}
 	return (1);
 }

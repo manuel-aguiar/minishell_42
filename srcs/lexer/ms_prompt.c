@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 00:13:38 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/20 15:31:54 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/20 17:45:26 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,23 @@ int	get_prompt(t_ms *ms)
 char	*prompt_readline(t_ms *ms)
 {
 	char	*line;
-	int		set_zero;
+	int		dup_stdin;
 
+	dup_stdin = dup(ms->infd);
+	if (!dup_stdin)
+		return (perror_msg_ptr("dup", NULL));
+	if (tcsetattr(dup_stdin, TCSANOW, &ms->modified) == -1)
+		return (perror_msg_ptr("tcsetattr", NULL));
 	line = readline("minishell>$ ");
-	if (save_signal(NULL))
+	if (tcsetattr(dup_stdin, TCSANOW, &ms->original) == -1)
+		return (perror_msg_ptr("tcsetattr", NULL));
+	if (save_signal(NULL) == EXIT_SIGINT)	
 	{
-		set_zero = 0;
-		ms->exit_status = save_signal(NULL);
-		save_signal(&set_zero);
+		ms->kill_stdin = 1;
+		if (dup2(dup_stdin, ms->infd) == -1)
+			perror_msg_ptr("dup2", NULL);
+		close(dup_stdin);
+		return (NULL);
 	}
 	if (!line)
 	{
@@ -49,13 +58,11 @@ char	*prompt_readline(t_ms *ms)
 		printf("exit\n");
 		exit(0);
 	}
-	else if (!line[0] || save_signal(NULL) == EXIT_SIGINT)
-	{
+	else if (!line[0])
 		ft_free_set_null(&line);
-		return (NULL);
-	}
 	else
 		add_history(line);
+	close(dup_stdin);
 	return (line);
 }
 

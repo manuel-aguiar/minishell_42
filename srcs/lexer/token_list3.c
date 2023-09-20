@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 18:29:11 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/18 16:55:25 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/20 15:35:04 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ void	token_list_del_node(t_token_list *list, t_token_node *node)
 	--(list->len);
 }
 
-void	token_list_insert_after(t_token_list *list, t_token_node *after, t_token_node *node)
+void	token_list_insert_after(t_token_list *list, \
+		t_token_node *after, t_token_node *node)
 {
 	t_token_node	*cur;
 
@@ -48,7 +49,8 @@ void	token_list_insert_after(t_token_list *list, t_token_node *after, t_token_no
 	++(list->len);
 }
 
-void	token_list_move_top_to_new(t_token_list *to, t_token_list *from, t_token_node *until, int count)
+void	token_list_move_top_to_new(t_token_list *to, t_token_list *from, \
+		t_token_node *until, int count)
 {
 	t_token_node	*save_source;
 
@@ -70,7 +72,8 @@ void	token_list_move_top_to_new(t_token_list *to, t_token_list *from, t_token_no
 	return ;
 }
 
-t_token_node	*move_node_to_list_and_retrive_next(t_token_list *to, t_token_list *from, t_token_node *target)
+t_token_node	*move_node_to_list_and_retrive_next(t_token_list *to, \
+				t_token_list *from, t_token_node *target)
 {
 	t_token_node	*retrieve;
 
