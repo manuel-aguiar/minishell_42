@@ -7,7 +7,7 @@ NAME 		=		minishell
 
 CC 			= 		cc -g
 ## -Wall Wextra Werror
-FLAGS 		= 		-Wall -Werror -Wextra
+FLAGS 		= 		-Wall -Werror -Wextra -fsanitize=address
 ADD_LIB 	= 		-L./$(LIB_PATH) -lft -lreadline
 RM 			=		rm
 MAKE		=		make

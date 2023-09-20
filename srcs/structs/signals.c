@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 15:53:50 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/20 13:30:46 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/20 15:21:26 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,24 @@ t_ms	*sigint_heredoc_where_ms_is(t_ms *ms)
 	if (ms)
 		save = ms;
 	return (save);
+}
+
+void	signal_handler_heredoc(int signum)
+{
+	int	code;
+
+	if (signum == SIGINT)
+	{
+		close(STDIN_FILENO);
+		printf("\n");
+		code = 130;
+		save_signal(&code);
+	}
+	if (signum == SIGQUIT)
+	{
+		code = 131;
+		save_signal(&code);
+	}
 }
 
 int	save_signal(int *num)

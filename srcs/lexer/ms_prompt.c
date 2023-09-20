@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 00:13:38 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/19 10:33:38 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/20 15:21:59 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,21 +41,30 @@ int	get_prompt(t_ms *ms)
 int	setup_prompt(t_ms *ms)
 {
 	char	*line;
+	int		set_zero;
 
+	//printf("active signal %d\n", save_signal(NULL));
 	line = readline("minishell>$ ");
+	if (save_signal(NULL))
+	{
+		set_zero = 0;
+		ms->exit_status = save_signal(NULL);
+		save_signal(&set_zero);
+	}
 	if (!line)
 	{
 		ms_destroy(ms);
-		printf("%s>$ exit\n", ms->name);
+		printf("exit\n");
 		exit(0);
 	}
-	else if (!line[0])
+	else if (!line[0] || save_signal(NULL) == EXIT_SIGINT)
 	{
 		ft_free_set_null(&line);
 		return (0);
 	}
 	else
 		add_history(line);
+	//printf("command is [%s]\n", line);
 	// if (!line[0] || is_only_spaces(line))
 	//{
 	//
