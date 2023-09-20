@@ -21,6 +21,7 @@ PRINTF			=	ft_printf
 STRING			=	ft_string
 GNL				=	get_next_line
 HASHINT			=	hashset_int
+HASHTABLE		=	hashtable
 LICIRC			=	int_circular_list
 LIDBL			=	int_doubly_list
 LISNGL			=	int_single_list
@@ -84,9 +85,14 @@ FILES_STRING	=	ft_isalnum.c				\
 FILES_GNL		=	get_next_line.c				\
 					get_next_line_utils.c
 
-FILES_HASHINT	=	hashset_int.c				\
-					hashset_int_utils.c
+FILES_HASHINT	=	hashtable.c						\
+					hashtable_utils.c				\
+					ht_linkedlist1.c				\
+					ht_linkedlist2.c				\
+					ht_linkedlist3.c
 
+FILES_HASHTABLE	=	hashset_int.c				\
+					hashset_int_utils.c
 
 FILES_LICIRC	=	icd_list_mpool.c			\
 					icd_list_mpool_utils.c
@@ -135,7 +141,8 @@ FILES_ERROR		=	error_msg.c					\
 SRC_DIRS		=	$(ATOI)		$(MEMFUNC)	$(OUTPUT)	$(PRINTF) 	\
 					$(STRING)	$(GNL)		$(HASHINT)	$(LICIRC)	\
 					$(LIDBL)	$(LISNGL)	$(LIXOR)	$(LVDBL)	\
-					$(ISORT)	$(MATH)		$(MPOOL)	$(ERROR)
+					$(ISORT)	$(MATH)		$(MPOOL)	$(ERROR)	\
+					$(HASHTABLE)
 
 SRCS		:= 		$(foreach src_dir,$(SRC_DIRS),$(wildcard $(SRC_PATH)/$(src_dir)/*.c))
 

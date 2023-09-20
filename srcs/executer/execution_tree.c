@@ -6,11 +6,13 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:26:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/19 13:59:35 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/20 14:18:26 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+
 
 int	block_exit_status_destroy(t_block *block);
 
@@ -97,7 +99,7 @@ int	get_all_here_docs(t_block *block)
 	int	i;
 
 	if (!block->is_worker)
-	{
+	{	
 		i = 0;
 		while (block->worker_list[i] \
 		&& !block->has_arithmatic_parenthesis \

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/19 22:25:42 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/20 17:51:26 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # include <readline/history.h>
 # include <dirent.h>
 # include <signal.h>
-# include <sys/ioctl.h>
+# include <termios.h>
 
 
 # include "libft.h"
@@ -73,7 +73,10 @@ struct s_ms
 	int					exit_status;
 	t_block				*first;
 	pid_t				my_kid;
+	int					kill_stdin;
 	struct sigaction	sigact;
+	struct termios		original;
+	struct termios		modified;
 };
 
 struct s_block
@@ -320,6 +323,10 @@ int		env_remove(t_block *block, int index);
 //////////////////////////////////////
 //////////////// LEXER ///////////////
 //////////////////////////////////////
+
+int				get_prompt(t_ms *ms);
+int				prompt_token_setup(t_ms *ms, char *line);
+char			*prompt_readline(t_ms *ms);
 
 int				ft_isquote(int c);
 char			*ft_strdup_len(char *s, int len);

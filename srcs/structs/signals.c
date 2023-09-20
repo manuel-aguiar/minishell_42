@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 15:53:50 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/19 13:33:09 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/20 16:17:55 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,30 @@ t_ms	*sigint_heredoc_where_ms_is(t_ms *ms)
 	if (ms)
 		save = ms;
 	return (save);
+}
+
+void	signal_handler(int signum)
+{
+	int	code;
+
+	if (signum == SIGINT)
+	{
+		close(STDIN_FILENO);
+		printf("\n");
+		code = 130;
+		save_signal(&code);
+	}
+	if (signum == SIGQUIT)
+	{
+		rl_redisplay();
+		code = 131;
+		save_signal(&code);
+	}
+	if (signum == SIGPIPE)
+	{
+		ms_destroy(sigint_heredoc_where_ms_is(NULL));
+		exit(13);
+	}
 }
 
 int	save_signal(int *num)
@@ -41,26 +65,6 @@ int	check_for_signals(t_ms *ms)
 		save_signal(&code);
 	}
 	return (1);
-}
-
-void	signal_handler(int signum)
-{
-	int	code;
-
-	if (signum == SIGINT)
-	{
-		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-		code = 130;
-		save_signal(&code);
-	}
-	if (signum == SIGQUIT)
-	{
-		code = 131;
-		save_signal(&code);
-	}
 }
 
 int	ms_prepare_signal(t_ms *ms, void (*handler)(int))

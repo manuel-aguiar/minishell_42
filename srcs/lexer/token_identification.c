@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:00:55 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/19 10:02:28 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/20 15:34:13 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	token_is_redirection(t_token_node *token)
 		return (0);
 	if (token->type == T_INDIR_HD \
 	|| token->type == T_INDIR_OPEN \
-	|| token->type == T_OUTDIR_APPEND
+	|| token->type == T_OUTDIR_APPEND \
 	|| token->type == T_OUTDIR_TRUNC)
 		return (1);
 	return (0);

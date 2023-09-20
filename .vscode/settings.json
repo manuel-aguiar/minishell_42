@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "hashtable_linkedlists.h": "c",
+        "void_dl_list.h": "c",
+        "array": "c",
+        "string": "c",
+        "string_view": "c",
+        "minishell.h": "c",
+        "random": "c"
+    }
+}
