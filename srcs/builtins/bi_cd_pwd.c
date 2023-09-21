@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bi_cd.c                                            :+:      :+:    :+:   */
+/*   bi_cd_pwd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:26:37 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/17 13:14:07 by mnascime         ###   ########.fr       */
+/*   Updated: 2023/09/21 12:11:00 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	aux_cd_paths(t_block *block, char **curpath, char *curr);
-static int	get_curpath(t_block *block, char **curpath);
-static int	relative_paths(t_block *block, char **curpath, char *curr);
+//static void	aux_cd_paths(t_block *block, char **curpath, char *curr);
+//static int	get_curpath(t_block *block, char **curpath);
+//static int	relative_paths(t_block *block, char **curpath, char *curr);
 
 int	run_pwd(t_block *block)
 {
@@ -96,6 +96,12 @@ static int	cd_error(t_block *block, int arg)
 	return (0);
 }
 
+/*
+  109 |  else if ((!block->cmd_args[1] || block->cmd_args[1] \
+      |                                   ~~~~~~~~~~~~~~~~~~~~
+  110 |  && block->cmd_args[1][0] == '~') && block->ms->env[i])
+*/
+
 int	cd_exists(t_block *block)
 {
 	int		i;
@@ -106,8 +112,8 @@ int	cd_exists(t_block *block)
 		i++;
 	if (!block->cmd_args[1] && !block->ms->env[i])
 		return (1);
-	else if ((!block->cmd_args[1] || block->cmd_args[1] \
-	&& block->cmd_args[1][0] == '~') && block->ms->env[i])
+	else if ((!block->cmd_args[1] || (block->cmd_args[1] \
+	&& block->cmd_args[1][0] == '~')) && block->ms->env[i])
 	{
 		if (chdir(&block->ms->env[i][5]) != 0)
 			return (cd_error(block, 0));

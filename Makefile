@@ -107,7 +107,7 @@ $(NAME): message $(LIBFT) $(OBJS)
 
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
 	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) $(INCS) -c $< -o $@
+	@$(CC) $(FLAGS) $(INCS) -c $< -o $@
 
 $(LIBFT):
 	@echo Preparing Libft....

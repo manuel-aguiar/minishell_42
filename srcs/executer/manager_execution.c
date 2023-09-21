@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:37:28 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/19 12:44:22 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 11:17:34 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	waiting_for_my_workers(t_block *manager, int index)
 {
 	int	i;
 
-	check_for_signals(manager->ms);
+	//check_for_signals(manager->ms);
 	i = 0;
 	//printf("manager [%s] waiting for %d children \n", manager->prompt, manager->op_count + 1);
 	//printf("i am [%s], starting status %d, waiting, mypid %d\n", manager->prompt, manager->my_status, getpid());

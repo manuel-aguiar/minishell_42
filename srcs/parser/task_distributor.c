@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 09:57:09 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/19 13:39:04 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 12:13:52 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 int	distribute_tasks_between_managers_and_workers(t_block *block)
 {
-	int	i;
-	int	has_parenthesis;
-
 	if (!setup_task_distributor(block))
 		return (free_task_distributor(block));
 	if (!block->is_worker && block->op_count > 0)

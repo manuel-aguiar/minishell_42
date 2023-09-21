@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/19 12:55:48 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 11:45:30 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,15 +142,32 @@ void	print_execution_tree(t_block *block)
 
 int	minishell_main_loop(t_ms *ms)
 {
+	int dup_stdin;
+
 	while (1)
 	{
 		if (get_prompt(ms))
 		{
 			setup_execution_tree(ms, NULL, ms->prompt, 0);
 			if (save_signal(NULL) != EXIT_SIGINT)
-				get_all_here_docs(ms->first);
+				get_all_here_docs(ms);
+			dup_stdin = dup(ms->infd);
+			if (dup_stdin == -1)
+				perror_msg_ptr("dup", NULL);
+			if (tcsetattr(dup_stdin, TCSANOW, &ms->modified) == -1)
+				perror_msg_ptr("tcsetattr", NULL);
 			if (save_signal(NULL) != EXIT_SIGINT)
 				execution_tree_exec_all(ms->first);
+			if (tcsetattr(dup_stdin, TCSANOW, &ms->original) == -1)
+				perror_msg_ptr("tcsetattr", NULL);
+			if (save_signal(NULL) == EXIT_SIGINT)
+			{
+				ms->kill_stdin = 1;
+				if (dup2(dup_stdin, ms->infd) == -1)
+					perror_msg_ptr("dup2", NULL);
+				close(dup_stdin);
+				printf("\n");
+			}
 			block_destroy(ms->first);
 			if (ms->my_kid != -1)
 			{
@@ -159,6 +176,7 @@ int	minishell_main_loop(t_ms *ms)
 					ms->exit_status = WEXITSTATUS(ms->exit_status);
 				ms->my_kid = -1;
 			}
+			close(dup_stdin);
 		}
 		check_for_signals(ms);
 	}

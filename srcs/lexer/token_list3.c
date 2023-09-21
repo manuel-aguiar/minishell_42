@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 18:29:11 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/20 15:35:04 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 12:15:40 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 void	token_list_del_node(t_token_list *list, t_token_node *node)
 {
-	t_token_node	*cur;
-
 	if (!list || !(list->head) || !node)
 		return ;
 	if (node->prev)
@@ -35,8 +33,6 @@ void	token_list_del_node(t_token_list *list, t_token_node *node)
 void	token_list_insert_after(t_token_list *list, \
 		t_token_node *after, t_token_node *node)
 {
-	t_token_node	*cur;
-
 	if (!list || !(list->head) || !after || !node)
 		return ;
 	node->next = after->next;
@@ -52,8 +48,6 @@ void	token_list_insert_after(t_token_list *list, \
 void	token_list_move_top_to_new(t_token_list *to, t_token_list *from, \
 		t_token_node *until, int count)
 {
-	t_token_node	*save_source;
-
 	if (!to || !from || !until || !(from->head))
 		return ;
 	to->head = from->head;

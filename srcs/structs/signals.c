@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 15:53:50 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/20 16:17:55 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 12:05:50 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,14 @@ void	signal_handler(int signum)
 	if (signum == SIGINT)
 	{
 		close(STDIN_FILENO);
-		printf("\n");
 		code = 130;
 		save_signal(&code);
 	}
-	if (signum == SIGQUIT)
-	{
-		rl_redisplay();
-		code = 131;
-		save_signal(&code);
-	}
+	//if (signum == SIGQUIT)
+	//{
+	//	code = 131;
+	//	save_signal(&code);
+	//}
 	if (signum == SIGPIPE)
 	{
 		ms_destroy(sigint_heredoc_where_ms_is(NULL));

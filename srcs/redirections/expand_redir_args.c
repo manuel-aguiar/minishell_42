@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 14:02:09 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/19 14:08:00 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 12:13:24 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ static int	ambiguous_redirection_err(t_block *block, char **fail_return)
 
 int	manage_io_expansion(t_block *block)
 {
-	char	*temp;
 	char	*redir_copy;
 	char	*fail_return;
 

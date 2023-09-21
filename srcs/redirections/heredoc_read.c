@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:21:31 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/20 17:45:18 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 11:25:20 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,34 +66,6 @@ static int	here_doc_fill(t_block *block, char *eof, int has_quote_guard)
 	return (1);
 }
 
-int	here_doc_setup(t_block *block, char *eof, int has_quote_guard)
-{
-	int	dup_stdin;
-	int	success;
-
-	dup_stdin = dup(block->ms->infd);
-	if (!dup_stdin)
-		return (perror_msg_int("dup", 0));
-	if (tcsetattr(dup_stdin, TCSANOW, &block->ms->modified) == -1)
-		perror_msg_int("tcsetattr", 0);
-	here_doc_fill(block, eof, has_quote_guard);
-	if (tcsetattr(dup_stdin, TCSANOW, &block->ms->original) == -1)
-		perror_msg_int("tcsetattr", 0);
-	if (save_signal(NULL) == EXIT_SIGINT)
-	{
-		block->ms->kill_stdin = 1;
-		close(block->here_doc_fd);
-		unlink(block->here_doc);
-		if (dup2(dup_stdin, block->ms->infd) == -1)
-			perror_msg_int("dup2", 0);
-		close(dup_stdin);
-		return (0);
-	}
-	close(block->here_doc_fd);
-	close(dup_stdin);
-	return (1);
-}
-
 int	here_doc(t_block *block, char *eof, int has_quote_guard)
 {
 	if (!heredoc_temp_name(block))
@@ -102,8 +74,15 @@ int	here_doc(t_block *block, char *eof, int has_quote_guard)
 						| O_TRUNC | O_RDWR, 0644);
 	if (block->here_doc_fd == -1)
 		return (perror_msg_func(block, block->here_doc, CODE_OPEN, 1));
-	if (!here_doc_setup(block, eof, has_quote_guard))
+	here_doc_fill(block, eof, has_quote_guard);
+	if (save_signal(NULL) == EXIT_SIGINT)
+	{
+		close(block->here_doc_fd);
+		unlink(block->here_doc);
+		//printf("\n");
 		return (0);
+	}
+	close(block->here_doc_fd);
 	block->here_doc_fd = open(block->here_doc, O_RDONLY);
 	if (block->here_doc_fd == -1)
 		return (perror_msg_func(block, block->here_doc, CODE_OPEN, 1));

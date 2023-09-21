@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:04:12 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/19 22:34:43 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 10:21:23 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,27 +54,32 @@ int	manager_extract_redirections(t_block *manager)
 	int				i;
 	t_token_node	*last;
 
-	if (!manager->prompt)
-		return (1);
-	last = manager->prompt->tail;
-	while (last && !token_is_redirection(last))
-		last = last->prev;
-	if (!token_is_redirection(last))
+	if (!manager->prompt || !manager->prompt->tail \
+	|| !token_is_redirection(manager->prompt->tail))
 		return (1);
 	manager->io_files = token_list_new();
 	if (!manager->io_files)
 		return (0);
-	manager->io_files->head = last->next;
-	last->next->prev = NULL;
-	last->next = NULL;
-	manager->prompt->tail = last;
+	last = manager->prompt->tail;
+	manager->io_files->tail = last;
+	i = 1;
+	while (last && token_is_redirection(last->prev) && ++i)
+		last = last->prev;
+	manager->io_files->head = last;
+	manager->prompt->tail = last->prev;
+	if (last->prev)
+		last->prev->next = NULL;
+	else
+		manager->prompt->head = NULL;
+	last->prev = NULL;
+	manager->io_files->len += i;
+	manager->prompt->len -= i;
 	return (1);
 }
 
 int	manager_subshell_and_arithmatic(t_block *manager)
 {
 	int				remove_corner;
-	t_token_node	*cur;
 
 	remove_corner = 0;
 	if (manager->prompt->len >= 2)

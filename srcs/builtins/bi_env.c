@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bi_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 19:21:09 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/16 16:49:58 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/21 12:12:07 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,18 @@ static int	env_error(t_block *block, int is_exporting, char *arg)
 	return (-2);
 }
 
+/*
+	while (arg[j] && (ft_isalpha(arg[j])) \
+	|| ft_isdigit(arg[j]) \
+	|| (arg[j] == '=' && is_exporting))
+*/
+
+/*
+	if (j > 0 && (arg[0] == '=' && is_exporting) \
+	|| (ft_strrchr(arg, '=') && !is_exporting))
+
+*/
+
 int	get_corr_env(t_block *block, char *arg, int is_exporting)
 {
 	int		i;
@@ -80,9 +92,9 @@ int	get_corr_env(t_block *block, char *arg, int is_exporting)
 
 	i = -1;
 	j = 0;
-	while (arg[j] && (ft_isalpha(arg[j])) \
+	while (arg[j] && (ft_isalpha(arg[j]) \
 	|| ft_isdigit(arg[j]) \
-	|| (arg[j] == '=' && is_exporting))
+	|| (arg[j] == '=' && is_exporting)))
 		j++;
 	if ((j != ft_strlen(arg) && !ft_strrchr(arg, '_')) || \
 	(arg[0] == '=' && is_exporting) || (ft_strrchr(arg, '=') && !is_exporting))

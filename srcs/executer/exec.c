@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/20 16:01:44 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 11:33:45 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,28 +265,6 @@ int	parent_process(t_block *block, pid_t pid)
 	children to wait for) and, based on the return of pid, does both the child process and the parent process.
 
 */
-
-void	signal_builtin_pipes(int signum)
-{
-	int	code;
-
-	if (signum == SIGINT)
-	{
-		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-		code = 130;
-		save_signal(&code);
-	}
-	if (signum == SIGQUIT)
-	{
-		code = 131;
-		save_signal(&code);
-		//rl_on_new_line();
-		//rl_redisplay();
-	}
-}
 
 int	process_execution(t_block *block)
 {

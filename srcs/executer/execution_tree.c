@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:26:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/20 14:18:26 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 11:09:27 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int	execution_tree_exec_all(t_block *block)
 {
 	int	i;
 
+	if (save_signal(NULL) == EXIT_SIGINT)
+		return (0);
 	if (!prepare_redirections(block))
 		return (0);
 	if (block->is_worker)
@@ -94,7 +96,7 @@ int	setup_execution_tree(t_ms *ms, t_block *manager, \
 	return (1);
 }
 
-int	get_all_here_docs(t_block *block)
+int	here_doc_loop(t_block *block)
 {
 	int	i;
 
@@ -105,10 +107,34 @@ int	get_all_here_docs(t_block *block)
 		&& !block->has_arithmatic_parenthesis \
 		&& save_signal(NULL) != EXIT_SIGINT)
 		{
-			get_all_here_docs(block->worker_list[i]);
+			here_doc_loop(block->worker_list[i]);
 			i++;
 		}
 	}
 	open_here_docs_at_block(block);
+	return (1);
+}
+
+int	get_all_here_docs(t_ms *ms)
+{
+	int	dup_stdin;
+
+	dup_stdin = dup(ms->infd);
+	if (!dup_stdin)
+		return (perror_msg_int("dup", 0));
+	if (tcsetattr(dup_stdin, TCSANOW, &ms->modified) == -1)
+		perror_msg_int("tcsetattr", 0);
+	here_doc_loop(ms->first);
+	if (tcsetattr(dup_stdin, TCSANOW, &ms->original) == -1)
+		perror_msg_int("tcsetattr", 0);
+	if (save_signal(NULL) == EXIT_SIGINT)
+	{
+		ms->kill_stdin = 1;
+		if (dup2(dup_stdin, ms->infd) == -1)
+			perror_msg_int("dup2", 0);
+		close(dup_stdin);
+		return (0);
+	}
+	close(dup_stdin);
 	return (1);
 }
