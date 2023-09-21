@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:26:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/21 08:58:31 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 11:09:27 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int	execution_tree_exec_all(t_block *block)
 {
 	int	i;
 
+	if (save_signal(NULL) == EXIT_SIGINT)
+		return (0);
 	if (!prepare_redirections(block))
 		return (0);
 	if (block->is_worker)

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins.c                                         :+:      :+:    :+:   */
+/*   bi_echo_unset_export.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 17:09:22 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/16 16:51:38 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/21 12:12:19 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ static void	write_export_list(char *exp_item, int fd)
 static int	run_exp_list(t_block *block)
 {
 	int		i;
-	int		len;
 	char	**exp_list;
 
 	i = -1;

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:18:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/19 22:31:52 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 12:15:09 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,14 +83,10 @@ int	worker_args_split_add_token(t_block *worker, t_token_node *arg, int *move)
 */
 int	worker_args_split_unguarded_quotes(t_block *worker)
 {
-	int				i;
-	int				has_guards;
 	int				move;
 	t_token_node	*cur;
 
 	cur = worker->prompt->head;
-	has_guards = 0;
-	i = 0;
 	while (cur)
 	{
 		if (!worker_args_split_add_token(worker, cur, &move))
@@ -103,14 +99,9 @@ int	worker_args_split_unguarded_quotes(t_block *worker)
 
 int	worker_args_rm_unguarded_quotes(t_block *worker)
 {
-	int				i;
-	int				has_guards;
-	int				move;
 	t_token_node	*cur;
 
 	cur = worker->prompt->head;
-	has_guards = 0;
-	i = 0;
 	while (cur)
 	{
 		if (!remove_unguarded_quotes(&cur->text, NULL))

@@ -3,7 +3,7 @@
 
 NAME = libft.a
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror
 LIB = ar rcs
 RM = rm
 
@@ -157,7 +157,7 @@ $(NAME):  message $(OBJS)
 
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
 	@mkdir -p $(dir $@)
-	@$(CC) -g $(CFLAGS) -I$(INC_PATH) -c $< -o $@
+	@$(CC) -g $(FLAGS) -I$(INC_PATH) -c $< -o $@
 
 message:
 	@echo Creating object files for Libft...

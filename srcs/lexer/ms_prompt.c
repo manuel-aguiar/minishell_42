@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 00:13:38 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/20 17:45:26 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 12:01:17 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ char	*prompt_readline(t_ms *ms)
 		if (dup2(dup_stdin, ms->infd) == -1)
 			perror_msg_ptr("dup2", NULL);
 		close(dup_stdin);
+		printf("\n");
 		return (NULL);
 	}
 	if (!line)
