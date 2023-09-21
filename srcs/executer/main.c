@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/21 13:18:55 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 15:36:54 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,24 +148,9 @@ int	minishell_main_loop(t_ms *ms)
 		{
 			setup_execution_tree(ms, NULL, ms->prompt, 0);
 			if (save_signal(NULL) != EXIT_SIGINT)
-				get_all_here_docs(ms);
-			ms->dup_stdin = dup(ms->infd);
-			if (ms->dup_stdin == -1)
-				perror_msg_ptr("dup", NULL);
-			if (tcsetattr(ms->dup_stdin, TCSANOW, &ms->modified) == -1)
-				perror_msg_ptr("tcsetattr", NULL);
+				get_all_here_docs(ms->first);
 			if (save_signal(NULL) != EXIT_SIGINT)
 				execution_tree_exec_all(ms->first);
-			if (tcsetattr(ms->dup_stdin, TCSANOW, &ms->original) == -1)
-				perror_msg_ptr("tcsetattr", NULL);
-			if (save_signal(NULL) == EXIT_SIGINT)
-			{
-				ms->kill_stdin = 1;
-				if (dup2(ms->dup_stdin, ms->infd) == -1)
-					perror_msg_ptr("dup2", NULL);
-				close(ms->dup_stdin);
-				printf("\n");
-			}
 			block_destroy(ms->first);
 			if (ms->my_kid != -1)
 			{
@@ -174,7 +159,19 @@ int	minishell_main_loop(t_ms *ms)
 					ms->exit_status = WEXITSTATUS(ms->exit_status);
 				ms->my_kid = -1;
 			}
+		}
+		if (save_signal(NULL) == EXIT_SIGINT)
+		{
+			ms->kill_stdin = 1;
+			if (dup2(ms->dup_stdin, ms->infd) == -1)
+				perror_msg_ptr("dup2", NULL);
 			close(ms->dup_stdin);
+			ms->dup_stdin = dup(ms->infd);
+			if (ms->dup_stdin == -1)
+				perror_msg_ptr("dup", NULL);
+			if (tcsetattr(ms->dup_stdin, TCSANOW, &ms->modified) == -1)
+				perror_msg_ptr("tcsetattr", NULL);
+			printf("\n");
 		}
 		check_for_signals(ms);
 	}
