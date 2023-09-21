@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/21 08:53:02 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 13:18:42 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ struct s_ms
 	int					exit_status;
 	t_block				*first;
 	pid_t				my_kid;
+	int					dup_stdin;
 	int					kill_stdin;
 	struct sigaction	sigact;
 	struct termios		original;

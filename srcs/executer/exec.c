@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/21 11:33:45 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 13:22:24 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,6 +227,8 @@ int	child_process(t_block *block)
 	if (dup2(block->final_out, block->ms->outfd) == -1)
 		perror_child_exit(block, block->cmd_args[0], CODE_DUP2, 1);
 	close_out_fds(block);
+	if (block->ms->dup_stdin != -1)
+		close(block->ms->dup_stdin);
 	if (!exec_command(block))
 		return (0);
 	return (0);
