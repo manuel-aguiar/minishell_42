@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 00:13:38 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/21 12:01:17 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 13:15:46 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,25 +34,25 @@ int	get_prompt(t_ms *ms)
 char	*prompt_readline(t_ms *ms)
 {
 	char	*line;
-	int		dup_stdin;
 
-	dup_stdin = dup(ms->infd);
-	if (!dup_stdin)
+	ms->dup_stdin = dup(ms->infd);
+	if (!ms->dup_stdin)
 		return (perror_msg_ptr("dup", NULL));
-	if (tcsetattr(dup_stdin, TCSANOW, &ms->modified) == -1)
+	if (tcsetattr(ms->dup_stdin, TCSANOW, &ms->modified) == -1)
 		return (perror_msg_ptr("tcsetattr", NULL));
 	line = readline("minishell>$ ");
-	if (tcsetattr(dup_stdin, TCSANOW, &ms->original) == -1)
+	if (tcsetattr(ms->dup_stdin, TCSANOW, &ms->original) == -1)
 		return (perror_msg_ptr("tcsetattr", NULL));
 	if (save_signal(NULL) == EXIT_SIGINT)	
 	{
 		ms->kill_stdin = 1;
-		if (dup2(dup_stdin, ms->infd) == -1)
+		if (dup2(ms->dup_stdin, ms->infd) == -1)
 			perror_msg_ptr("dup2", NULL);
-		close(dup_stdin);
+		close(ms->dup_stdin);
 		printf("\n");
 		return (NULL);
 	}
+	close(ms->dup_stdin);
 	if (!line)
 	{
 		ms_destroy(ms);
@@ -63,7 +63,6 @@ char	*prompt_readline(t_ms *ms)
 		ft_free_set_null(&line);
 	else
 		add_history(line);
-	close(dup_stdin);
 	return (line);
 }
 

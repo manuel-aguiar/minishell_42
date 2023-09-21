@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:30:56 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/20 17:39:41 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 13:15:21 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int	ms_init(t_ms *ms, char *avzero, char **env)
 	ms->first = NULL;
 	ms->my_kid = -1;
 	ms->exit_status = 0;
+	ms->dup_stdin = -1;
 	ms->kill_stdin = 0;
 	if (!ms_disable_sigquit(ms))
 		return (ms_destroy(ms));
