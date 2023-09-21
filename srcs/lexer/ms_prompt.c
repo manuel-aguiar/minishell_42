@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 00:13:38 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/21 13:15:46 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 15:38:22 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,24 +35,9 @@ char	*prompt_readline(t_ms *ms)
 {
 	char	*line;
 
-	ms->dup_stdin = dup(ms->infd);
-	if (!ms->dup_stdin)
-		return (perror_msg_ptr("dup", NULL));
-	if (tcsetattr(ms->dup_stdin, TCSANOW, &ms->modified) == -1)
-		return (perror_msg_ptr("tcsetattr", NULL));
 	line = readline("minishell>$ ");
-	if (tcsetattr(ms->dup_stdin, TCSANOW, &ms->original) == -1)
-		return (perror_msg_ptr("tcsetattr", NULL));
 	if (save_signal(NULL) == EXIT_SIGINT)	
-	{
-		ms->kill_stdin = 1;
-		if (dup2(ms->dup_stdin, ms->infd) == -1)
-			perror_msg_ptr("dup2", NULL);
-		close(ms->dup_stdin);
-		printf("\n");
 		return (NULL);
-	}
-	close(ms->dup_stdin);
 	if (!line)
 	{
 		ms_destroy(ms);

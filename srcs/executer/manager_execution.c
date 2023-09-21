@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:37:28 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/21 11:17:34 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 17:08:42 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int	waiting_for_my_workers(t_block *manager, int index)
 		//	printf("no pid, no manual status\n");
 		i++;
 	}
-	//printf("i am [%s], ending status %d, moving on, mypid %d\n", manager->prompt, manager->my_status, getpid());
+	//printf("ending status %d, moving on, mypid %d\n", manager->my_status, getpid());
 	if (!manager->i_am_forked && manager->my_manager)
 		manager->my_manager->my_status = manager->my_status;
 	manager->ms->exit_status = manager->my_status;

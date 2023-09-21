@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:30:56 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/21 13:15:21 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 17:14:51 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,10 @@ int	ms_disable_sigquit(t_ms *ms)
 	if (tcgetattr(ms->infd, &ms->original) == -1)
 		return (perror_msg_int("tcgetattr", 0));
 	ms->modified = ms->original;
-	ms->modified.c_lflag &= ~(ISIG);
+	//ms->modified.c_lflag &= ~(ISIG);
 	ms->modified.c_cc[VQUIT] = _POSIX_VDISABLE;
+	if (tcsetattr(ms->infd, TCSANOW, &ms->modified) == -1)
+		return (perror_msg_int("tcsetattr", 0));
 	return (1);
 }
 
@@ -40,7 +42,9 @@ int	ms_init(t_ms *ms, char *avzero, char **env)
 	ms->first = NULL;
 	ms->my_kid = -1;
 	ms->exit_status = 0;
-	ms->dup_stdin = -1;
+	ms->dup_stdin = dup(ms->infd);
+	if (ms->dup_stdin == -1)
+		return (ms_destroy(ms));
 	ms->kill_stdin = 0;
 	if (!ms_disable_sigquit(ms))
 		return (ms_destroy(ms));
@@ -127,5 +131,6 @@ int	ms_destroy(t_ms *ms)
 		return (0);
 	if (ms->kill_stdin)
 		close(ms->infd);
+	close(ms->dup_stdin);
 	return (1);
 }

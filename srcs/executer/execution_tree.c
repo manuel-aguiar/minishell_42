@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:26:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/21 13:23:59 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 15:29:10 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int	setup_execution_tree(t_ms *ms, t_block *manager, \
 	return (1);
 }
 
-int	here_doc_loop(t_block *block)
+int	get_all_here_docs(t_block *block)
 {
 	int	i;
 
@@ -109,32 +109,10 @@ int	here_doc_loop(t_block *block)
 		&& !block->has_arithmatic_parenthesis \
 		&& save_signal(NULL) != EXIT_SIGINT)
 		{
-			here_doc_loop(block->worker_list[i]);
+			get_all_here_docs(block->worker_list[i]);
 			i++;
 		}
 	}
 	open_here_docs_at_block(block);
-	return (1);
-}
-
-int	get_all_here_docs(t_ms *ms)
-{
-	ms->dup_stdin = dup(ms->infd);
-	if (!ms->dup_stdin)
-		return (perror_msg_int("dup", 0));
-	if (tcsetattr(ms->dup_stdin, TCSANOW, &ms->modified) == -1)
-		perror_msg_int("tcsetattr", 0);
-	here_doc_loop(ms->first);
-	if (tcsetattr(ms->dup_stdin, TCSANOW, &ms->original) == -1)
-		perror_msg_int("tcsetattr", 0);
-	if (save_signal(NULL) == EXIT_SIGINT)
-	{
-		ms->kill_stdin = 1;
-		if (dup2(ms->dup_stdin, ms->infd) == -1)
-			perror_msg_int("dup2", 0);
-		close(ms->dup_stdin);
-		return (0);
-	}
-	close(ms->dup_stdin);
 	return (1);
 }
