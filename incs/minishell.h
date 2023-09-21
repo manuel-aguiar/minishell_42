@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/20 17:51:26 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 08:53:02 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,7 @@ int		worker_dump_tasks_to_cmd_args(t_block *worker);
 int		execution_tree_exec_all(t_block *block);
 int		setup_execution_tree(t_ms *ms, t_block *manager, \
 							t_token_list *tasks, int my_id);
-int		get_all_here_docs(t_block *block);
+int		get_all_here_docs(t_ms *ms);
 
 /*manager_execution.c*/
 int		pipes_forks_and_conditionals(t_block *manager, int index);

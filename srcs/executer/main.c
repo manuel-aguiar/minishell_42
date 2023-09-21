@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/19 12:55:48 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 08:58:39 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ int	minishell_main_loop(t_ms *ms)
 		{
 			setup_execution_tree(ms, NULL, ms->prompt, 0);
 			if (save_signal(NULL) != EXIT_SIGINT)
-				get_all_here_docs(ms->first);
+				get_all_here_docs(ms);
 			if (save_signal(NULL) != EXIT_SIGINT)
 				execution_tree_exec_all(ms->first);
 			block_destroy(ms->first);

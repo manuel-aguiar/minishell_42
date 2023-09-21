@@ -9,3 +9,10 @@ EXPANSÃO TEM ERROS
 VER CHARACTERES ILEGAIS NO EXPORT
 
 VER LSTAT e STAT POR CAUSA DE OPEN FILES E WILDCARDS
+
+minishell>$ (cat || echo $? > erro )| ls
+minishell: syntax error near unexpected token `)'
+        -   não é um erro de syntax
+
+(cat || echo $? > erro && echo hey)| ls
+        -   Segfault
