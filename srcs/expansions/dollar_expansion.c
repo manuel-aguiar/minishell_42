@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dollar_expansion.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:42:58 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/17 13:33:57 by mnascime         ###   ########.fr       */
+/*   Updated: 2023/09/21 17:34:23 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	dollar_exit_status(char **to_expand, t_ms *ms, int *index, int dol_len)
 	char	*itoa;
 	char	*new;
 
-	check_for_signals(ms);
+	//check_for_signals(ms);
 	itoa = ft_itoa(ms->exit_status);
 	if (!itoa)
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 15:53:50 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/21 15:33:50 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 17:32:30 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ void	signal_handler(int signum)
 		code = 130;
 		save_signal(&code);
 	}
-	//if (signum == SIGQUIT)
-	//{
-	//	code = 131;
-	//	save_signal(&code);
-	//}
+	if (signum == SIGQUIT)
+	{
+		code = 131;
+		save_signal(&code);
+	}
 	if (signum == SIGPIPE)
 	{
 		ms_destroy(sigint_heredoc_where_ms_is(NULL));

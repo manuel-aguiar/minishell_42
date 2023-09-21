@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 00:13:38 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/21 15:32:25 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 15:38:22 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,7 @@ char	*prompt_readline(t_ms *ms)
 
 	line = readline("minishell>$ ");
 	if (save_signal(NULL) == EXIT_SIGINT)	
-	{
-		//printf("\n");
 		return (NULL);
-	}
 	if (!line)
 	{
 		ms_destroy(ms);

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/21 15:36:54 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/21 17:41:52 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ int	minishell_main_loop(t_ms *ms)
 			ms->dup_stdin = dup(ms->infd);
 			if (ms->dup_stdin == -1)
 				perror_msg_ptr("dup", NULL);
-			if (tcsetattr(ms->dup_stdin, TCSANOW, &ms->modified) == -1)
+			if (tcsetattr(ms->infd, TCSANOW, &ms->modified) == -1)
 				perror_msg_ptr("tcsetattr", NULL);
 			printf("\n");
 		}

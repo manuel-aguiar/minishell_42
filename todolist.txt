@@ -16,3 +16,6 @@ minishell: syntax error near unexpected token `)'
 AO USAR O EXPORT E UNSET PARECE HAVER MEMORY LEAKS, MAS NÃO ACUSA NOS builtins
 CENÁRIO: EXPORT _a_  , SEGUIDO DE UNSET _a_     e   EXIT.
 
+ECHO $? NAO APANHA EXIT STATUS CERTO EM SIGINT
+        - ex cat | ls, nosso echo $? = 130 (SIGINT) bash 0 (ls success)
+        - multiplos echo nao mudam o status para zero
