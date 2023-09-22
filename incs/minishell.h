@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/22 12:03:25 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 15:12:13 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,6 @@ int		ms_prepare_signal(t_ms *ms, void (*handler)(int));
 t_ms	*sigint_heredoc_where_ms_is(t_ms *ms);
 void	signal_handler_exec(int signum);
 int		ms_reset_signal(t_ms *ms);
-
 /* ms_prompt.c */
 
 
