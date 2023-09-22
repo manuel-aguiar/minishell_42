@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:37:28 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/22 15:14:26 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 15:45:54 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,11 @@ int	waiting_for_my_workers(t_block *manager, int index)
 			if (WIFEXITED(status))
 				manager->my_status = WEXITSTATUS(status);
 			else if (WIFSIGNALED(status))
+			{
 				manager->my_status = WTERMSIG(status) + EXIT_SIGNALED;
+				ft_putstr_fd("\n", manager->ms->errfd);
+			}
+				
 			//printf("  and changed to %d i received from child (%d, %d)\n", manager->my_status, manager->my_level +1, i);
 			manager->worker_pids[i] = 0;
 			ms_prepare_signal(manager->ms, signal_handler);
