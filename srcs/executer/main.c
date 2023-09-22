@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/22 19:37:02 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 21:54:13 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,8 +166,6 @@ int	minishell_main_loop(t_ms *ms)
 				else if (WIFSIGNALED(ms->exit_status))
 				{
 					//dprintf(2, "process was signaled by %d\n", WTERMSIG(exit_status));
-					if (WTERMSIG(ms->exit_status) == SIGINT)
-						ft_putstr_fd("\n", ms->errfd);
 					ms->exit_status = WTERMSIG(ms->exit_status) + EXIT_SIGNALED;
 					
 					//dprintf(2, "signal status %d\n", ms->exit_status);
@@ -187,8 +185,8 @@ int	minishell_main_loop(t_ms *ms)
 			if (ms->dup_stdin == -1)
 				perror_msg_ptr("dup", NULL);
 			
-			//if (g_signal == SIGINT)
-			//	printf("\n");
+			if (g_signal == SIGINT)
+				printf("\n");
 		}
 		if (tcsetattr(ms->infd, TCSANOW, &ms->modified) == -1)
 			perror_msg_ptr("tcsetattr", NULL);
