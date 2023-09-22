@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/22 13:06:06 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 14:21:12 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,17 +154,19 @@ int	minishell_main_loop(t_ms *ms)
 			block_destroy(ms->first);
 			if (ms->my_kid != -1)
 			{
-				waitpid(ms->my_kid, &ms->exit_status, 0);
-				if (WIFEXITED(ms->exit_status))
+				int status;
+
+				waitpid(ms->my_kid, &status, 0);
+				if (WIFEXITED(status))
 				{
 					dprintf(2, "process was exited\n");
-					ms->exit_status = WEXITSTATUS(ms->exit_status);
+					ms->exit_status = WEXITSTATUS(status);
 					dprintf(2, "exit status %d\n", ms->exit_status);
 				}
-				else if (WIFSIGNALED(ms->exit_status))
+				else if (WIFSIGNALED(status))
 				{
 					dprintf(2, "process was signaled\n");
-					ms->exit_status = WTERMSIG(ms->exit_status) + EXIT_SIGNALED;
+					ms->exit_status = WTERMSIG(status) + EXIT_SIGNALED;
 					dprintf(2, "signal status %d\n", ms->exit_status);
 				}
 				ms->my_kid = -1;

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:42:58 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/22 13:56:07 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 14:00:56 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,8 @@ int	here_doc_expand_dollars(char **to_expand, t_ms *ms)
 	i = 0;
 	while ((*to_expand)[i])
 	{
-		if ((*to_expand)[i] == '$' && (!quote || quote == '"'))
+		if ((*to_expand)[i] == '$' && (*to_expand)[i + 1] \
+		&& (!quote || quote == '"'))
 		{
 			if (!dollar_search_replace(to_expand, ms, &i))
 				return (0);
