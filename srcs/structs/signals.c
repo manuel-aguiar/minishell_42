@@ -6,20 +6,11 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 15:53:50 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/22 12:10:55 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 13:15:44 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_ms	*sigint_heredoc_where_ms_is(t_ms *ms)
-{
-	static t_ms	*save;
-
-	if (ms)
-		save = ms;
-	return (save);
-}
 
 void	signal_handler(int signum)
 {
@@ -38,34 +29,6 @@ void	signal_handler(int signum)
 		code = 131;
 		save_signal(&code);
 		g_signal = SIGQUIT;
-	}
-	if (signum == SIGPIPE)
-	{
-		ms_destroy(sigint_heredoc_where_ms_is(NULL));
-		g_signal = SIGPIPE;
-		exit(13);
-	}
-}
-
-void	signal_handler_exec(int signum)
-{
-	int	code;
-
-	if (signum == SIGINT)
-	{
-		
-		code = 130;
-		save_signal(&code);
-		g_signal = SIGINT;
-		close(STDIN_FILENO);
-	}
-	if (signum == SIGQUIT)
-	{
-		
-		code = 131;
-		save_signal(&code);
-		g_signal = SIGQUIT;
-		close(STDIN_FILENO);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:21:31 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/21 15:32:21 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 13:15:16 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static int	here_doc_fill(t_block *block, char *eof, int has_quote_guard)
 				has_quote_guard))
 				return (0);
 		}
-		else if (save_signal(NULL) != EXIT_SIGINT)
+		else if (g_signal != SIGINT)
 			return (here_doc_wrong_delimiter(block, eof, &count));
 		else
 			return (0);
@@ -75,7 +75,7 @@ int	here_doc(t_block *block, char *eof, int has_quote_guard)
 	if (block->here_doc_fd == -1)
 		return (perror_msg_func(block, block->here_doc, CODE_OPEN, 1));
 	here_doc_fill(block, eof, has_quote_guard);
-	if (save_signal(NULL) == EXIT_SIGINT)
+	if (g_signal == SIGINT)
 	{
 		close(block->here_doc_fd);
 		unlink(block->here_doc);
