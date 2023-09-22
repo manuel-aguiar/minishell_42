@@ -38,7 +38,8 @@ int	valid_redir_texts(t_ms *ms)
 	cur = ms->prompt->head;
 	while (cur)
 	{
-		if (cur->type >= T_INDIR_HD && cur->type <= T_OUTDIR_TRUNC && !cur->text)
+		if (cur->type >= T_INDIR_HD && \
+		cur->type <= T_OUTDIR_TRUNC && !cur->text)
 			return (invalid_elem_msg(ms, cur->type, cur->text, \
 		": syntax error near unexpected token `"));
 		cur = cur->next;

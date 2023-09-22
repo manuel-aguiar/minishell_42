@@ -84,7 +84,7 @@ static int	env_error(t_block *block, int is_exporting, char *arg)
 
 */
 
-int	get_corr_env(t_block *block, char *arg, int is_exporting)
+int	get_corr_env(t_block *block, char *arg, int is_export)
 {
 	int		i;
 	size_t	f;
@@ -94,11 +94,11 @@ int	get_corr_env(t_block *block, char *arg, int is_exporting)
 	j = 0;
 	while (arg[j] && (ft_isalpha(arg[j]) \
 	|| ft_isdigit(arg[j]) \
-	|| (arg[j] == '=' && is_exporting)))
+	|| (arg[j] == '=' && is_export)))
 		j++;
-	if ((j != ft_strlen(arg) && !ft_strrchr(arg, '_')) || \
-	(arg[0] == '=' && is_exporting) || (ft_strrchr(arg, '=') && !is_exporting))
-		return (env_error(block, is_exporting, arg));
+	if ((j != ft_strlen(arg) && !ft_strrchr(arg, '_')) || ft_strlen(arg) == 0 \
+	|| (arg[0] == '=' && is_export) || (ft_strrchr(arg, '=') && !is_export))
+		return (env_error(block, is_export, arg));
 	while (block->ms->env[++i])
 	{
 		f = 0;

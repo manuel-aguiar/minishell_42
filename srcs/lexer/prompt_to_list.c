@@ -30,7 +30,7 @@ static int	get_len_of_text_arg(char **prompt)
 		dummy_token = 0;
 		len++;
 		(*prompt)++;
-		update_quote_count(prompt, &count_squotes, &count_dquotes);
+		update_quote_count(**prompt, &count_squotes, &count_dquotes);
 	}
 	return (len);
 }
@@ -98,7 +98,7 @@ int token, int *dummy_token, char **temp)
 	|| ((ft_isspace(**prompt) && (count_squotes % 2 != 0 \
 	|| count_dquotes % 2 != 0)))))
 	{
-		update_quote_count(prompt, &count_squotes, &count_dquotes);
+		update_quote_count(**prompt, &count_squotes, &count_dquotes);
 		(*dummy_token) = 0;
 		len++;
 		(*prompt)++;

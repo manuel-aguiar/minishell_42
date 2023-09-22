@@ -36,7 +36,7 @@ char	*prompt_readline(t_ms *ms)
 	char	*line;
 
 	line = readline("minishell>$ ");
-	if (save_signal(NULL) == EXIT_SIGINT)	
+	if (save_signal(NULL) == EXIT_SIGINT)
 		return (NULL);
 	if (!line)
 	{
