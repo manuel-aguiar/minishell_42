@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/22 14:21:12 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 15:24:56 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,22 +154,25 @@ int	minishell_main_loop(t_ms *ms)
 			block_destroy(ms->first);
 			if (ms->my_kid != -1)
 			{
-				int status;
-
-				waitpid(ms->my_kid, &status, 0);
-				if (WIFEXITED(status))
+				ms_prepare_signal(ms, SIG_IGN);
+				if (waitpid(ms->my_kid, &ms->exit_status, 0) == -1)
+					perror("waitpid");
+				if (WIFEXITED(ms->exit_status))
 				{
-					dprintf(2, "process was exited\n");
-					ms->exit_status = WEXITSTATUS(status);
-					dprintf(2, "exit status %d\n", ms->exit_status);
+					//dprintf(2, "process was exited\n");
+					ms->exit_status = WEXITSTATUS(ms->exit_status);
+					//dprintf(2, "exit status %d\n", exit_status);
 				}
-				else if (WIFSIGNALED(status))
+				else if (WIFSIGNALED(ms->exit_status))
 				{
-					dprintf(2, "process was signaled\n");
-					ms->exit_status = WTERMSIG(status) + EXIT_SIGNALED;
-					dprintf(2, "signal status %d\n", ms->exit_status);
+					//dprintf(2, "process was signaled by %d\n", WTERMSIG(exit_status));
+					ms->exit_status = WTERMSIG(ms->exit_status) + EXIT_SIGNALED;
+					ft_putstr_fd("\n", ms->errfd);
+					//dprintf(2, "signal status %d\n", ms->exit_status);
 				}
 				ms->my_kid = -1;
+				ms_prepare_signal(ms, signal_handler);
+				//dprintf(2, "final exit status %d\n", ms->exit_status);
 			}
 		}
 		if (g_signal)
@@ -183,10 +186,10 @@ int	minishell_main_loop(t_ms *ms)
 				perror_msg_ptr("dup", NULL);
 			if (tcsetattr(ms->infd, TCSANOW, &ms->modified) == -1)
 				perror_msg_ptr("tcsetattr", NULL);
-			if (g_signal == SIGINT)
-				printf("\n");
+			//if (g_signal == SIGINT)
+			//	printf("\n");
 		}
-		check_for_signals(ms);
+		//check_for_signals(ms);
 		g_signal = 0;
 		//dprintf(2, "loop, pid %d\n", getpid());
 		//save_signal((int *)0);
