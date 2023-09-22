@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/22 12:11:28 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 12:18:29 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,17 +151,17 @@ int	minishell_main_loop(t_ms *ms)
 				get_all_here_docs(ms->first);
 			if (g_signal != SIGINT)
 			{
-				ms_prepare_signal(ms, signal_handler_exec);
-				if (tcsetattr(ms->infd, TCSANOW, &ms->original) == -1)
-					perror_msg_ptr("tcsetattr", NULL);
+				//ms_prepare_signal(ms, signal_handler_exec);
+				//if (tcsetattr(ms->infd, TCSANOW, &ms->original) == -1)
+				//	perror_msg_ptr("tcsetattr", NULL);
 				execution_tree_exec_all(ms->first);
-				ms_prepare_signal(ms, signal_handler);
+				//ms_prepare_signal(ms, signal_handler);
 			}
-			if (!g_signal)
-			{
-				if (tcsetattr(ms->infd, TCSANOW, &ms->modified) == -1)
-					perror_msg_ptr("tcsetattr", NULL);
-			}
+			//if (!g_signal)
+			//{
+			//	if (tcsetattr(ms->infd, TCSANOW, &ms->modified) == -1)
+			//		perror_msg_ptr("tcsetattr", NULL);
+			//}
 			block_destroy(ms->first);
 			if (ms->my_kid != -1)
 			{
