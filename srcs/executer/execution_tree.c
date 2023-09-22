@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:26:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/22 10:07:01 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 11:54:03 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,14 @@ int	execution_tree_exec_all(t_block *block)
 {
 	int	i;
 
-	if (save_signal(NULL) != EXIT_SIGINT && !prepare_redirections(block))
+	if (g_signal != SIGINT && !prepare_redirections(block))
 		return (0);
-	if (block->is_worker && save_signal(NULL) != EXIT_SIGINT)
+	if (block->is_worker && g_signal != SIGINT)
 		worker_execution(block);
-	else if (!block->has_arithmatic_parenthesis && save_signal(NULL) != EXIT_SIGINT)
+	else if (!block->has_arithmatic_parenthesis && g_signal != SIGINT)
 	{
 		i = 0;
-		while (block->worker_list[i] && save_signal(NULL) != EXIT_SIGINT)
+		while (block->worker_list[i] && g_signal != SIGINT)
 		{
 			if (i > 0 && block->op_id[i - 1] == T_OP_PIPE)
 				close(block->pipefd[1]);

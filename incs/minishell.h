@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/22 09:56:08 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 11:50:08 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@
 # define EXIT_SYNTAX 2
 # define EXIT_AMBIG_REDIR 1
 # define EXIT_SIGNALED 128
+
+extern int g_signal;
 
 typedef struct s_ms		t_ms;
 typedef struct s_block	t_block;
