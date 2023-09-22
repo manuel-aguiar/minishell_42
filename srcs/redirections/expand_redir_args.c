@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 14:02:09 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/21 12:13:24 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 17:34:21 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,35 @@ int	manage_io_expansion(t_block *block)
 {
 	char	*redir_copy;
 	char	*fail_return;
+	char	*copy;
+	char	**split;
+	int		count;
 
 	fail_return = NULL;
 	redir_copy = block->io_files->head->text;
-	if (!expand_dollars(&redir_copy, block->ms) \
-	|| !expand_wildcards(&redir_copy, &fail_return))
+	copy = ft_strdup(redir_copy);												//unprotected
+	
+	if (!expand_dollars(&redir_copy, block->ms))
+		return (0);
+	split = ft_split_count(redir_copy, "\n\t\v ", &count);						//unprotected
+	if (count != 1)
+	{
+		ambiguous_redirection_err(block, &copy);
+		ft_free_charmat_null(&split, free);
+		dprintf(2, "NO EXIT STATUS YET\n");
+		block->io_files->head->text = redir_copy;
+		return (0);
+	}
+	ft_free_set_null(&copy);
+	ft_free_charmat_null(&split, free);
+	if (!expand_wildcards(&redir_copy, &fail_return))
+		return (0);
+	if (!remove_unguarded_quotes(&redir_copy, NULL))
 		return (0);
 	if (fail_return)
 		return (ambiguous_redirection_err(block, &fail_return));
-	if (!remove_unguarded_quotes(&redir_copy, NULL))
-		return (0);
+	if (!*(redir_copy))
+		dprintf(2, "no such file or directory REVER E ERROR MESSAGE\n");
 	block->io_files->head->text = redir_copy;
 	return (1);
 }

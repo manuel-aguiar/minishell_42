@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/22 15:24:04 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 16:45:17 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,8 +273,9 @@ int	parent_process(t_block *block, pid_t pid)
 			block->my_status = WEXITSTATUS(block->my_status);
 		else if (WIFSIGNALED(block->my_status))
 		{
+			if (WTERMSIG(block->my_status) == SIGINT)
+				ft_putstr_fd("\n", block->ms->errfd);
 			block->my_status = WTERMSIG(block->my_status) + EXIT_SIGNALED;
-			ft_putstr_fd("\n", block->ms->errfd);
 		}
 		ms_prepare_signal(block->ms, signal_handler);
 	}

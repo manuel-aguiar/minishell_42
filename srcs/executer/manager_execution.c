@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:37:28 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/22 15:45:54 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 16:45:12 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,12 +94,14 @@ int	waiting_for_my_workers(t_block *manager, int index)
 			if (waitpid(manager->worker_pids[i], &status, 0) == -1)
 					perror("waitpid");
 			//dprintf(2, "manager %d received pid %d\n", getpid(), manager->worker_pids[i]);
-			if (WIFEXITED(status))
-				manager->my_status = WEXITSTATUS(status);
+			if (WIFEXITED(manager->my_status))
+				manager->my_status = WEXITSTATUS(manager->my_status);
 			else if (WIFSIGNALED(status))
 			{
-				manager->my_status = WTERMSIG(status) + EXIT_SIGNALED;
-				ft_putstr_fd("\n", manager->ms->errfd);
+				if (WTERMSIG(manager->my_status) == SIGINT)
+					ft_putstr_fd("\n", manager->ms->errfd);
+				manager->my_status = WTERMSIG(manager->my_status) + EXIT_SIGNALED;
+				
 			}
 				
 			//printf("  and changed to %d i received from child (%d, %d)\n", manager->my_status, manager->my_level +1, i);
