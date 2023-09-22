@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 15:53:50 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/22 12:00:59 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 12:10:55 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	signal_handler_exec(int signum)
 		code = 131;
 		save_signal(&code);
 		g_signal = SIGQUIT;
-		//close(STDIN_FILENO);
+		close(STDIN_FILENO);
 	}
 }
 

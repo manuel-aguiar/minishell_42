@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/22 11:50:08 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 12:03:25 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,12 +165,10 @@ void	signal_handler(int signum);
 int		ms_prepare_signal(t_ms *ms, void (*handler)(int));
 t_ms	*sigint_heredoc_where_ms_is(t_ms *ms);
 void	signal_handler_exec(int signum);
-
+int		ms_reset_signal(t_ms *ms);
 
 /* ms_prompt.c */
 
-int		get_prompt(t_ms *ms);
-int		setup_prompt(t_ms *ms);
 
 
 //functions to split prompt into children
@@ -330,6 +328,7 @@ int		env_remove(t_block *block, int index);
 //////////////////////////////////////
 
 int				get_prompt(t_ms *ms);
+int				setup_prompt(t_ms *ms);
 int				prompt_token_setup(t_ms *ms, char *line);
 char			*prompt_readline(t_ms *ms);
 
