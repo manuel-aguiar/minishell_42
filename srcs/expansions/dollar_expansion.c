@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:42:58 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/22 12:44:01 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 13:56:07 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,11 @@ int	dollar_search_replace(char **to_expand, t_ms *ms, int *index)
 	if ((*to_expand)[*index + 1] == '?')
 		return (dollar_exit_status(to_expand, ms, index, 2));
 	len = 0;
-	while ((*to_expand)[*index + 1 + len] && (*to_expand)[*index + 1 + len] != ' ' \
-	&& (*to_expand)[*index + 1 + len] != '\'' && (*to_expand)[*index + 1 + len] != '"' \
-	&& (*to_expand)[*index + 1 + len] != '$')
+	//while ((*to_expand)[*index + 1 + len] && (*to_expand)[*index + 1 + len] != ' ' 
+	//&& (*to_expand)[*index + 1 + len] != '\'' && (*to_expand)[*index + 1 + len] != '"' 
+	//&& (*to_expand)[*index + 1 + len] != '$')
+	while ((*to_expand)[*index + 1 + len] && \
+	ft_isalnum((*to_expand)[*index + 1 + len]))
 		len++;
 	return (dollar_search_env(to_expand, ms, index, len));
 }
