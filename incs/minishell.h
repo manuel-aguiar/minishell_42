@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/22 08:37:57 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 09:56:08 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@
 # define CODE_EXECVE 123123     //i don't know...
 
 # define EXIT_SIGINT 130
+# define EXIT_SIGQUIT 131
 
 # define EXIT_SYNTAX 2
 # define EXIT_AMBIG_REDIR 1

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:26:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/22 09:35:26 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 10:07:01 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	execution_tree_exec_all(t_block *block)
 		return (0);
 	if (block->is_worker && save_signal(NULL) != EXIT_SIGINT)
 		worker_execution(block);
-	else if (!block->has_arithmatic_parenthesis)
+	else if (!block->has_arithmatic_parenthesis && save_signal(NULL) != EXIT_SIGINT)
 	{
 		i = 0;
 		while (block->worker_list[i] && save_signal(NULL) != EXIT_SIGINT)

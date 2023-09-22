@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:37:28 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/22 09:17:35 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 10:00:21 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ int	pipes_forks_and_conditionals(t_block *manager, int index)
 			//if (index > 0 && manager->op_id[index - 1] == T_OP_PIPE)
 			//	close(manager->prev_pipe[1]);
 		}
-		else
-			dprintf(2, "manager %d created pid %d\n", getpid(), manager->worker_pids[index]);
+		//else
+		//	dprintf(2, "manager %d created pid %d\n", getpid(), manager->worker_pids[index]);
 	}
 	return (1);
 }
@@ -90,7 +90,7 @@ int	waiting_for_my_workers(t_block *manager, int index)
 		{
 			//printf("my lvl id (%d, %d), waiting for pid %d, my status now is: %d  ", manager->my_level, manager->my_id, manager->worker_pids[i], manager->my_status);
 			waitpid(manager->worker_pids[i], &manager->my_status, 0);
-			dprintf(2, "manager %d received pid %d\n", getpid(), manager->worker_pids[i]);
+			//dprintf(2, "manager %d received pid %d\n", getpid(), manager->worker_pids[i]);
 			if (WIFEXITED(manager->my_status))
 				manager->my_status = WEXITSTATUS(manager->my_status);
 			//printf("  and changed to %d i received from child (%d, %d)\n", manager->my_status, manager->my_level +1, i);
