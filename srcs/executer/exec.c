@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/22 10:00:46 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 12:25:56 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,7 @@ int	exec_command(t_block *block)
 
 int	child_process(t_block *block)
 {
-	if (block->final_in == block->ms->infd && save_signal(NULL) == EXIT_SIGQUIT)
+	if (block->final_in == block->ms->infd && g_signal == EXIT_SIGQUIT)
 	{
 		block->ms->kill_stdin = 1;
 		if (dup2(block->ms->dup_stdin, block->ms->infd) == -1)
@@ -230,9 +230,10 @@ int	child_process(t_block *block)
 		block->ms->dup_stdin = dup(block->ms->infd);
 		if (block->ms->dup_stdin == -1)
 			perror_msg_ptr("dup", NULL);
-		if (tcsetattr(block->ms->infd, TCSANOW, &block->ms->original) == -1)
-			perror_msg_ptr("tcsetattr", NULL);
 	}
+	if (tcsetattr(block->ms->infd, TCSANOW, &block->ms->original) == -1)
+		perror_msg_ptr("tcsetattr", NULL);
+	ms_reset_signal(block->ms);
 	if (dup2(block->final_in, block->ms->infd) == -1)
 		perror_child_exit(block, block->cmd_args[0], CODE_DUP2, 1);
 	close_in_fds(block);
