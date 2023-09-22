@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:18:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/21 12:15:09 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 13:55:33 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,15 @@ int	worker_args_split_unguarded_quotes(t_block *worker)
 	cur = worker->prompt->head;
 	while (cur)
 	{
-		if (!worker_args_split_add_token(worker, cur, &move))
-			return (0);
-		while (move-- > 0)
+		if (!*(cur->text))
 			cur = cur->next;
+		else 
+		{
+			if (!worker_args_split_add_token(worker, cur, &move))
+				return (0);
+			while (move-- > 0)
+				cur = cur->next;
+		} 
 	}
 	return (1);
 }

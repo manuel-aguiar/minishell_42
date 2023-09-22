@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:26:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/22 11:54:03 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 13:13:58 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int	get_all_here_docs(t_block *block)
 		i = 0;
 		while (block->worker_list[i] \
 		&& !block->has_arithmatic_parenthesis \
-		&& save_signal(NULL) != EXIT_SIGINT)
+		&& g_signal != SIGINT)
 		{
 			get_all_here_docs(block->worker_list[i]);
 			i++;

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:30:56 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/22 12:23:29 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 13:13:22 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ int	ms_init(t_ms *ms, char *avzero, char **env)
 	ms->kill_stdin = 0;
 	if (!ms_disable_sigquit(ms))
 		return (ms_destroy(ms));
-	sigint_heredoc_where_ms_is(ms);
 	if (!ms_prepare_signal(ms, signal_handler))
 		return (ms_destroy(ms));
 	return (1);
