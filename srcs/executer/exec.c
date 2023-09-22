@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/21 17:39:36 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 09:17:46 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,6 +253,7 @@ int	parent_process(t_block *block, pid_t pid)
 	if (block->i_am_forked)
 	{
 		waitpid(pid, &block->my_status, 0);
+		dprintf(2, "exec %d received pid %d\n", getpid(), pid);
 		if (WIFEXITED(block->my_status))
 			block->my_status = WEXITSTATUS(block->my_status);
 	}
@@ -288,6 +289,7 @@ int	process_execution(t_block *block)
 			return (perror_msg("fork"));
 		if (!pid)
 			child_process(block);
+		dprintf(2, "exec %d created pid %d\n", getpid(), pid);
 		parent_process(block, pid);
 	}
 	else

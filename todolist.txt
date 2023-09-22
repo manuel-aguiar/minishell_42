@@ -19,3 +19,6 @@ CENÁRIO: EXPORT _a_  , SEGUIDO DE UNSET _a_     e   EXIT.
 ECHO $? NAO APANHA EXIT STATUS CERTO EM SIGINT
         - ex cat | ls, nosso echo $? = 130 (SIGINT) bash 0 (ls success)
         - multiplos echo nao mudam o status para zero
+
+
+REPLENISH STDIN MID EXECUTION

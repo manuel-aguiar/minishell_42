@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/21 17:41:52 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 08:58:22 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,17 +150,38 @@ int	minishell_main_loop(t_ms *ms)
 			if (save_signal(NULL) != EXIT_SIGINT)
 				get_all_here_docs(ms->first);
 			if (save_signal(NULL) != EXIT_SIGINT)
+			{
+				ms_prepare_signal(ms, signal_handler_exec);
+				if (tcsetattr(ms->infd, TCSANOW, &ms->original) == -1)
+					perror_msg_ptr("tcsetattr", NULL);
 				execution_tree_exec_all(ms->first);
+				ms_prepare_signal(ms, signal_handler);
+			}
+			if (save_signal(NULL) == 0)
+			{
+				if (tcsetattr(ms->infd, TCSANOW, &ms->modified) == -1)
+					perror_msg_ptr("tcsetattr", NULL);
+			}
 			block_destroy(ms->first);
 			if (ms->my_kid != -1)
 			{
 				waitpid(ms->my_kid, &ms->exit_status, 0);
 				if (WIFEXITED(ms->exit_status))
+				{
+					dprintf(2, "process was exited\n");
 					ms->exit_status = WEXITSTATUS(ms->exit_status);
+					dprintf(2, "exit status %d\n", ms->exit_status);
+				}
+				else if (WIFSIGNALED(ms->exit_status))
+				{
+					dprintf(2, "process was signaled\n");
+					ms->exit_status = WTERMSIG(ms->exit_status) + EXIT_SIGNALED;
+					dprintf(2, "signal status %d\n", ms->exit_status);
+				}
 				ms->my_kid = -1;
 			}
 		}
-		if (save_signal(NULL) == EXIT_SIGINT)
+		if (save_signal(NULL) != 0)
 		{
 			ms->kill_stdin = 1;
 			if (dup2(ms->dup_stdin, ms->infd) == -1)
@@ -174,6 +195,8 @@ int	minishell_main_loop(t_ms *ms)
 			printf("\n");
 		}
 		check_for_signals(ms);
+		dprintf(2, "loop, pid %d\n", getpid());
+		//save_signal((int *)0);
 	}
 	return (1);
 }
