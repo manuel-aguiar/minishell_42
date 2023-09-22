@@ -153,7 +153,6 @@ int	prompt_to_list(t_token_list *list, char *prompt)
 		else if (*prompt && ft_isquote(*prompt))
 		{
 			deals_with_quotes(&prompt, &temp);
-			printf("%s\n", temp);
 			token_list_in_tail(list, T_ARG, temp);
 		}
 		else if (*prompt)

@@ -107,7 +107,7 @@ int	get_corr_env(t_block *block, char *arg, int is_export)
 			f++;
 		if (f < j)
 			f = j;
-		if (f > 0 && ft_strncmp(block->ms->env[i], arg, --f) == 0)
+		if (f > 0 && ft_strncmp(block->ms->env[i], arg, f) == 0)
 			return (i);
 	}
 	return (-1);
