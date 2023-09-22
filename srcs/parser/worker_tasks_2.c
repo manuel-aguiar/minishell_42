@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:18:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/22 21:18:40 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 17:29:58 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,8 @@ int	worker_args_rm_unguarded_quotes(t_block *worker)
 	return (1);
 }
 
+/*expansion is unprotected */
+
 int	worker_args_expand_dollar_wildcard(t_block *worker)
 {
 	t_token_node	*cur;
@@ -128,9 +130,8 @@ int	worker_args_expand_dollar_wildcard(t_block *worker)
 			cur = cur->next;
 		else
 		{
-			if (!expand_dollars(&cur->text, worker->ms) \
-			|| expand_wildcards(&cur->text, NULL))
-				return (0);
+			expand_dollars(&cur->text, worker->ms);
+			expand_wildcards(&cur->text, NULL);
 			if (!*(cur->text))
 			{
 				next = cur->next;

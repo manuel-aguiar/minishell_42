@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:37:28 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/22 21:12:49 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 19:40:44 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,24 @@ int	pipes_forks_and_conditionals(t_block *manager, int index)
 	}
 	if (manager->must_subshell \
 	&& !manager->has_arithmatic_parenthesis && manager->op_count == 0)
+	{
+		//printf("child: [%s] has parenthesis and must be forked\n", manager->worker_list[index]->prompt);
 		manager->worker_list[index]->i_am_forked = 1;
+	}
 	if (manager->worker_list[index]->i_am_forked)
 	{
 		manager->worker_pids[index] = fork();
 		if (manager->worker_pids[index] == -1)
 			return (perror_msg("fork"));
-		if (!manager->worker_pids[index] && index < manager->op_count && manager->op_id[index] == T_OP_PIPE)
-			close(manager->pipefd[0]);
+		if (!manager->worker_pids[index])
+		{
+			if (index < manager->op_count && manager->op_id[index] == T_OP_PIPE)
+				close(manager->pipefd[0]);
+			//if (index > 0 && manager->op_id[index - 1] == T_OP_PIPE)
+			//	close(manager->prev_pipe[1]);
+		}
+		//else
+		//	dprintf(2, "manager %d created pid %d\n", getpid(), manager->worker_pids[index]);
 	}
 	return (1);
 }
@@ -68,26 +78,52 @@ int	waiting_for_my_workers(t_block *manager, int index)
 {
 	int	i;
 
+	//check_for_signals(manager->ms);
 	i = 0;
+	//printf("manager [%s] waiting for %d children \n", manager->prompt, manager->op_count + 1);
+	//printf("i am [%s], starting status %d, waiting, mypid %d\n", manager->prompt, manager->my_status, getpid());
+	//print_worker_pids(manager);
+	//printf("global here %d\n", g_signal);
 	while (i < index)
 	{
+		
+		//printf("child [%s], index, %d, has pid? %d\n", manager->worker_list[i]->prompt, i, manager->worker_pids[i]);
 		if (manager->worker_pids[i] != 0)
 		{
-			if (waitpid(manager->worker_pids[i], &manager->my_status, 0) == -1)
-				perror("waitpid");
+			int status;
+			//ms_prepare_signal(manager->ms, SIG_IGN);
+			//printf("my lvl id (%d, %d), waiting for pid %d, my status now is: %d  ", manager->my_level, manager->my_id, manager->worker_pids[i], manager->my_status);
+			if (waitpid(manager->worker_pids[i], &status, 0) == -1)
+					perror("waitpid");
+			//dprintf(2, "manager %d received pid %d\n", getpid(), manager->worker_pids[i]);
 			if (WIFEXITED(manager->my_status))
 				manager->my_status = WEXITSTATUS(manager->my_status);
-			else if (WIFSIGNALED(manager->my_status))
+			else if (WIFSIGNALED(status))
+			{
+				if (WTERMSIG(manager->my_status) == SIGINT)
+				{
+					//manager->hit_sigint = 1;
+					ft_putstr_fd("\n", manager->ms->errfd);
+				}
 				manager->my_status = WTERMSIG(manager->my_status) + EXIT_SIGNALED;
+				
+			}
+			//printf("global is %d\n", g_signal);	
+			//printf("  and changed to %d i received from child (%d, %d)\n", manager->my_status, manager->my_level +1, i);
 			manager->worker_pids[i] = 0;
+			//ms_prepare_signal(manager->ms, signal_handler);
 		}
 		else if (manager->worker_exit_status[i] >= 0)
 		{
+			//printf("my lvl id (%d, %d) original status %d will change to %d from child wnumber (%d,%d)\n", manager->my_level, manager->my_id, manager->my_status, manager->worker_exit_status[i], manager->my_level +1, i);
 			manager->my_status = manager->worker_exit_status[i];
 			manager->worker_exit_status[i] = -1;
 		}
+		//else
+		//	printf("no pid, no manual status\n");
 		i++;
 	}
+	//printf("ending status %d, moving on, mypid %d\n", manager->my_status, getpid());
 	if (!manager->i_am_forked && manager->my_manager)
 		manager->my_manager->my_status = manager->my_status;
 	manager->ms->exit_status = manager->my_status;
