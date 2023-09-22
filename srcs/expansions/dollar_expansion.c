@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:42:58 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/22 17:36:15 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 18:42:56 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,6 @@ int	dollar_search_replace(char **to_expand, t_ms *ms, int *index)
 	if ((*to_expand)[*index + 1] == '?')
 		return (dollar_exit_status(to_expand, ms, index, 2));
 	len = 0;
-	//while ((*to_expand)[*index + 1 + len] && (*to_expand)[*index + 1 + len] != ' ' 
-	//&& (*to_expand)[*index + 1 + len] != '\'' && (*to_expand)[*index + 1 + len] != '"' 
-	//&& (*to_expand)[*index + 1 + len] != '$')
 	while ((*to_expand)[*index + 1 + len] && \
 	ft_isalnum((*to_expand)[*index + 1 + len]))
 		len++;
@@ -116,7 +113,7 @@ int	expand_dollars(char **to_expand, t_ms *ms)
 			i++;
 		}
 		else if ((*to_expand)[i] == '$' && (*to_expand)[i + 1] \
-				&& (!quote || quote == '"'))
+			&& (*to_expand)[i + 1] != '$' && (!quote || quote == '"'))
 		{
 			if (!dollar_search_replace(to_expand, ms, &i))
 				return (0);
@@ -137,7 +134,7 @@ int	here_doc_expand_dollars(char **to_expand, t_ms *ms)
 	while ((*to_expand)[i])
 	{
 		if ((*to_expand)[i] == '$' && (*to_expand)[i + 1] \
-		&& (!quote || quote == '"'))
+		&& (*to_expand)[i + 1] != '$' && (!quote || quote == '"'))
 		{
 			if (!dollar_search_replace(to_expand, ms, &i))
 				return (0);

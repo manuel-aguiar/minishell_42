@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:37:28 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/22 16:45:12 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 19:40:44 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,13 +83,15 @@ int	waiting_for_my_workers(t_block *manager, int index)
 	//printf("manager [%s] waiting for %d children \n", manager->prompt, manager->op_count + 1);
 	//printf("i am [%s], starting status %d, waiting, mypid %d\n", manager->prompt, manager->my_status, getpid());
 	//print_worker_pids(manager);
+	//printf("global here %d\n", g_signal);
 	while (i < index)
 	{
+		
 		//printf("child [%s], index, %d, has pid? %d\n", manager->worker_list[i]->prompt, i, manager->worker_pids[i]);
 		if (manager->worker_pids[i] != 0)
 		{
 			int status;
-			ms_prepare_signal(manager->ms, SIG_IGN);
+			//ms_prepare_signal(manager->ms, SIG_IGN);
 			//printf("my lvl id (%d, %d), waiting for pid %d, my status now is: %d  ", manager->my_level, manager->my_id, manager->worker_pids[i], manager->my_status);
 			if (waitpid(manager->worker_pids[i], &status, 0) == -1)
 					perror("waitpid");
@@ -99,14 +101,17 @@ int	waiting_for_my_workers(t_block *manager, int index)
 			else if (WIFSIGNALED(status))
 			{
 				if (WTERMSIG(manager->my_status) == SIGINT)
+				{
+					//manager->hit_sigint = 1;
 					ft_putstr_fd("\n", manager->ms->errfd);
+				}
 				manager->my_status = WTERMSIG(manager->my_status) + EXIT_SIGNALED;
 				
 			}
-				
+			//printf("global is %d\n", g_signal);	
 			//printf("  and changed to %d i received from child (%d, %d)\n", manager->my_status, manager->my_level +1, i);
 			manager->worker_pids[i] = 0;
-			ms_prepare_signal(manager->ms, signal_handler);
+			//ms_prepare_signal(manager->ms, signal_handler);
 		}
 		else if (manager->worker_exit_status[i] >= 0)
 		{
