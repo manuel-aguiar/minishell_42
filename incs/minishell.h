@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/21 15:29:29 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 09:56:08 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,11 @@
 # define CODE_EXECVE 123123     //i don't know...
 
 # define EXIT_SIGINT 130
+# define EXIT_SIGQUIT 131
 
 # define EXIT_SYNTAX 2
 # define EXIT_AMBIG_REDIR 1
+# define EXIT_SIGNALED 128
 
 typedef struct s_ms		t_ms;
 typedef struct s_block	t_block;
@@ -160,7 +162,7 @@ int		check_for_signals(t_ms *ms);
 void	signal_handler(int signum);
 int		ms_prepare_signal(t_ms *ms, void (*handler)(int));
 t_ms	*sigint_heredoc_where_ms_is(t_ms *ms);
-void	signal_handler_heredoc(int signum);
+void	signal_handler_exec(int signum);
 
 
 /* ms_prompt.c */

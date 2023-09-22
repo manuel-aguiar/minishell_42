@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 15:53:50 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/21 17:32:30 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 08:43:45 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,24 @@ void	signal_handler(int signum)
 	}
 }
 
+void	signal_handler_exec(int signum)
+{
+	int	code;
+
+	if (signum == SIGINT)
+	{
+		close(STDIN_FILENO);
+		code = 130;
+		save_signal(&code);
+	}
+	if (signum == SIGQUIT)
+	{
+		close(STDIN_FILENO);
+		code = 131;
+		save_signal(&code);
+	}
+}
+
 int	save_signal(int *num)
 {
 	static int	g_my_signal;
@@ -74,8 +92,6 @@ int	ms_prepare_signal(t_ms *ms, void (*handler)(int))
 	if (sigaction(SIGINT, &ms->sigact, NULL) == -1)
 		return (perror_msg("sigaction"));
 	if (sigaction(SIGQUIT, &ms->sigact, NULL) == -1)
-		return (perror_msg("sigaction"));
-	if (sigaction(SIGPIPE, &ms->sigact, NULL) == -1)
 		return (perror_msg("sigaction"));
 	return (1);
 }
