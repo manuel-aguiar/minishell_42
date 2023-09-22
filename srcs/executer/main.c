@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/22 16:45:22 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 19:37:02 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ int	minishell_main_loop(t_ms *ms)
 			block_destroy(ms->first);
 			if (ms->my_kid != -1)
 			{
-				ms_prepare_signal(ms, SIG_IGN);
+				//ms_prepare_signal(ms, SIG_IGN);
 				if (waitpid(ms->my_kid, &ms->exit_status, 0) == -1)
 					perror("waitpid");
 				if (WIFEXITED(ms->exit_status))
@@ -173,7 +173,7 @@ int	minishell_main_loop(t_ms *ms)
 					//dprintf(2, "signal status %d\n", ms->exit_status);
 				}
 				ms->my_kid = -1;
-				ms_prepare_signal(ms, signal_handler);
+				//ms_prepare_signal(ms, signal_handler);
 				//dprintf(2, "final exit status %d\n", ms->exit_status);
 			}
 		}
