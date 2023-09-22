@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/22 15:24:56 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/22 16:45:22 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,8 +166,10 @@ int	minishell_main_loop(t_ms *ms)
 				else if (WIFSIGNALED(ms->exit_status))
 				{
 					//dprintf(2, "process was signaled by %d\n", WTERMSIG(exit_status));
+					if (WTERMSIG(ms->exit_status) == SIGINT)
+						ft_putstr_fd("\n", ms->errfd);
 					ms->exit_status = WTERMSIG(ms->exit_status) + EXIT_SIGNALED;
-					ft_putstr_fd("\n", ms->errfd);
+					
 					//dprintf(2, "signal status %d\n", ms->exit_status);
 				}
 				ms->my_kid = -1;
@@ -184,11 +186,12 @@ int	minishell_main_loop(t_ms *ms)
 			ms->dup_stdin = dup(ms->infd);
 			if (ms->dup_stdin == -1)
 				perror_msg_ptr("dup", NULL);
-			if (tcsetattr(ms->infd, TCSANOW, &ms->modified) == -1)
-				perror_msg_ptr("tcsetattr", NULL);
+			
 			//if (g_signal == SIGINT)
 			//	printf("\n");
 		}
+		if (tcsetattr(ms->infd, TCSANOW, &ms->modified) == -1)
+			perror_msg_ptr("tcsetattr", NULL);
 		//check_for_signals(ms);
 		g_signal = 0;
 		//dprintf(2, "loop, pid %d\n", getpid());
