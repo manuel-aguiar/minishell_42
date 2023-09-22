@@ -96,8 +96,9 @@ int	get_corr_env(t_block *block, char *arg, int is_export)
 	|| ft_isdigit(arg[j]) \
 	|| (arg[j] == '=' && is_export)))
 		j++;
-	if (ft_strlen(arg) == 0 || (arg[0] == '=' && is_export) \
-	|| (ft_strrchr(arg, '=') && !is_export))
+	if ((j == 0 && ft_strlen(arg) > 0 && !ft_strrchr(arg, '_')) || \
+	ft_strlen(arg) == 0 || (arg[0] == '=' && is_export) || \
+	(ft_strrchr(arg, '=') && !is_export))
 		return (env_error(block, is_export, arg));
 	while (block->ms->env[++i])
 	{

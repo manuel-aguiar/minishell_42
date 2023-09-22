@@ -61,24 +61,27 @@ void	deals_with_quotes(char **prompt, char **temp)
 	int		len;
 	char	*str;
 	char	current;
+	char	quotes;
 
 	len = 0;
+	quotes = 0;
 	current = **prompt;
 	str = (*prompt);
-	str++;
-	while (str[len] && !ft_isspace(str[len]))
+	while (str[len] && (!ft_isspace(str[len]) \
+	|| (ft_isspace(str[len]) && quotes % 2 != 0)))
 	{
 		while (str[len] && str[len] != current)
 			len++;
 		if (str[len] && str[len] == current)
+		{
 			len++;
+			quotes++;
+		}
 	}
-	(*temp) = ft_strdup_len((*prompt), len + 1);
+	(*temp) = ft_strdup_len((*prompt), len);
 	if (!(*temp))
 		return ;
 	(*prompt) += len;
-	if (**prompt && **prompt + 1)
-		(*prompt)++;
 }
 
 void	create_args_for_token(char **prompt, \
@@ -150,6 +153,7 @@ int	prompt_to_list(t_token_list *list, char *prompt)
 		else if (*prompt && ft_isquote(*prompt))
 		{
 			deals_with_quotes(&prompt, &temp);
+			printf("%s\n", temp);
 			token_list_in_tail(list, T_ARG, temp);
 		}
 		else if (*prompt)
