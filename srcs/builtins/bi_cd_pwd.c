@@ -90,9 +90,14 @@ static int	upd_pwd(t_block *block)
 
 static int	cd_error(t_block *block, int arg)
 {
-	ft_putstr_fd("minishell: cd: ", block->final_out);
-	ft_putstr_fd(block->cmd_args[arg], block->final_out);
-	ft_putstr_fd(": No such file or directory\n", block->final_out);
+	ft_printf_fd(block->final_out, "%s: cd: ", block->ms->name);
+	if (arg == -1)
+		ft_printf_fd(block->final_out, "too many arguments\n");
+	else
+	{
+		ft_printf_fd(block->final_out, block->cmd_args[arg]);
+		ft_printf_fd(block->final_out, ": No such file or directory\n");
+	}
 	return (0);
 }
 
@@ -112,6 +117,8 @@ int	cd_exists(t_block *block)
 		i++;
 	if (!block->cmd_args[1] && !block->ms->env[i])
 		return (1);
+	else if (block->cmd_args[1] && block->cmd_args[2])
+		return (cd_error(block, -1));
 	else if ((!block->cmd_args[1] || (block->cmd_args[1] \
 	&& block->cmd_args[1][0] == '~')) && block->ms->env[i])
 	{

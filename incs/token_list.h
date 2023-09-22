@@ -86,7 +86,7 @@ t_token_list *from, t_token_node *target);
 void			token_list_del_node(t_token_list *list, t_token_node *node);
 
 int				prompt_to_list(t_token_list *list, char *prompt);
-int				update_quote_count(char **prompt, int *squotes, int *dquotes);
+int				update_quote_count(char prompt, int *squotes, int *dquotes);
 int				is_token(char **str, int *place_token, int to_update);
 int				token_is_operator(int token);
 char			*token_enum_to_text(int token);

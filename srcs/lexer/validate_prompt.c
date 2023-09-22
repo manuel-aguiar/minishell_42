@@ -68,6 +68,9 @@ static int	valid_num_of_pars(t_ms *ms)
 
 static int	valid_quote_num(t_ms *ms)
 {
+	int				i;
+	int				squote;
+	int				dquote;
 	t_token_node	*cur;
 
 	if (!ms->prompt)
@@ -75,11 +78,14 @@ static int	valid_quote_num(t_ms *ms)
 	cur = ms->prompt->head;
 	while (cur)
 	{
-		if (cur->type >= T_INDIR_HD && cur->text && \
-		(cur->text[0] == '\'' || cur->text[0] == '\"'))
+		if (cur->type >= T_INDIR_HD && cur->text)
 		{
-			if (cur->text && cur->text[0] != \
-			cur->text[ft_strlen(cur->text) - 1])
+			i = -1;
+			squote = 0;
+			dquote = 0;
+			while (cur->text[++i])
+				update_quote_count(cur->text[i], &squote, &dquote);
+			if (squote % 2 != 0 || dquote % 2 != 0)
 				return (invalid_elem_msg(ms, cur->type, \
 				cur->text, ": lack of matching quote for argument `"));
 		}

@@ -12,11 +12,11 @@
 
 #include "token_list.h"
 
-int	update_quote_count(char **prompt, int *squotes, int *dquotes)
+int	update_quote_count(char prompt, int *squotes, int *dquotes)
 {
-	if (ft_isquote(**prompt) && **prompt == '\'')
+	if (prompt == '\'')
 		(*squotes)++;
-	else if (ft_isquote(**prompt) && **prompt == '\"')
+	else if (prompt == '\"')
 		(*dquotes)++;
 	else
 		return (0);
