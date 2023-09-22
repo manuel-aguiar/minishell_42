@@ -61,8 +61,7 @@ static int	valid_consecutive_elem(t_ms *ms, t_token_node *cur)
 	&& cur->type == T_CLOSE_PAR) || \
 	(cur->type == T_OPEN_PAR && cur->prev->type == T_CLOSE_PAR) || \
 	(cur->type == T_CLOSE_PAR && cur->prev->type == T_OPEN_PAR) || \
-	(cur->type >= T_OPEN_PAR && cur->type <= T_CLOSE_PAR && \
-	cur->prev->type >= T_INDIR_HD && cur->prev->type <= T_OUTDIR_TRUNC)))
+	(cur->type == T_OPEN_PAR && cur->prev->type >= T_INDIR_HD)))
 		return (invalid_elem_msg(ms, cur->type, cur->text, \
 	": syntax error near unexpected token `"));
 	else if (cur->type == T_ARG && cur->prev->type == T_CLOSE_PAR)
