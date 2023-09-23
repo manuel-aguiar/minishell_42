@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/23 15:24:14 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 19:58:21 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,7 +261,6 @@ int		run_export(t_block *block);
 int		run_exit(t_block *block);
 
 int		set_beg_path(t_block *block, char **curpath, char *curr);
-int		cd_exists(t_block *block);
 int		get_corr_env(t_block *block, char *arg, int is_exporting);
 int		env_add(t_block *block, char *new);
 int		env_remove(t_block *block, int index);

@@ -1,76 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bi_env.c                                           :+:      :+:    :+:   */
+/*   unset_export_aux.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/12 19:21:09 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/23 20:04:36 by codespace        ###   ########.fr       */
+/*   Created: 2023/09/03 17:09:22 by mnascime          #+#    #+#             */
+/*   Updated: 2023/09/23 20:06:46 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	run_env(t_block *block)
-{
-	int	i;
-
-	i = 0;
-	if (!block->ms->env)
-		return (1);
-	while (block->ms->env[i])
-	{
-		if (ft_strchr(block->ms->env[i], '='))
-		{
-			if (ft_putstr_fd(block->ms->env[i], block->final_out) == -1)
-				block->my_status = SIGPIPE + EXIT_SIGNALED;
-			if (write(block->final_out, "\n", 1) == -1)
-				block->my_status = SIGPIPE + EXIT_SIGNALED;
-		}
-		i++;
-	}
-	return (1);
-}
-
-int	env_remove(t_block *block, int index)
-{
-	char	**res;
-	int		len;
-	int		i;
-	int		found;
-
-	len = ft_matrixlen(block->ms->env);
-	res = malloc(len * sizeof(*res));
-	if (!res)
-		return (0);
-	i = 0;
-	found = 0;
-	while (i < len - 1)
-	{
-		if (i == index)
-		{
-			found = 1;
-			free(block->ms->env[i]);
-		}
-		res[i] = block->ms->env[i + found];
-		i++;
-	}
-	res[i] = NULL;
-	free(block->ms->env);
-	block->ms->env = res;
-	return (1);
-}
-
 static int	env_error(t_block *block, int is_exporting, char *arg)
 {
-	ft_putstr_fd("minishell: ", block->final_out);
+	if (ft_putstr_fd(block->ms->name, block->final_out) == -1)
+		block->my_status = SIGPIPE + EXIT_SIGNALED;
+	if (ft_putstr_fd(": ", block->final_out) == -1)
+		block->my_status = SIGPIPE + EXIT_SIGNALED;
 	if (is_exporting)
-		ft_putstr_fd("export: `", block->final_out);
+	{
+		if (ft_putstr_fd("export: `", block->final_out) == -1)
+			block->my_status = SIGPIPE + EXIT_SIGNALED;
+	}
 	else
-		ft_putstr_fd("unset: `", block->final_out);
-	ft_putstr_fd(arg, block->final_out);
-	ft_putstr_fd("': not a valid identifier\n", block->final_out);
+	{
+		if (ft_putstr_fd("unset: `", block->final_out) == -1)
+			block->my_status = SIGPIPE + EXIT_SIGNALED;
+	}
+	if (ft_putstr_fd(arg, block->final_out) == -1)
+		block->my_status = SIGPIPE + EXIT_SIGNALED;
+	if (ft_putstr_fd("': not a valid identifier\n", block->final_out) == -1)
+		block->my_status = SIGPIPE + EXIT_SIGNALED;
+	if (block->my_status != SIGPIPE + EXIT_SIGNALED)
+		block->my_status = 1;		//add macro
 	return (-2);
 }
 
@@ -124,7 +87,7 @@ int	env_add(t_block *block, char *new)
 	len = ft_matrixlen(block->ms->env);
 	res = malloc((len + 2) * sizeof(*res));
 	if (!res)
-		return (0);
+		return (perror_msg_int("malloc", 0));
 	i = -1;
 	while (++i < len + 1)
 	{
@@ -143,16 +106,31 @@ int	env_add(t_block *block, char *new)
 	return (0);
 }
 
-int	env_strcmp(void *s1, void *s2)
+int	env_remove(t_block *block, int index)
 {
+	char	**res;
+	int		len;
 	int		i;
-	char	*str1;
-	char	*str2;
+	int		found;
 
-	str1 = (char *)s1;
-	str2 = (char *)s2;
+	len = ft_matrixlen(block->ms->env);
+	res = malloc(len * sizeof(*res));
+	if (!res)
+		return (perror_msg_int("malloc", 0));
 	i = 0;
-	while (str1[i] == str2[i] && str1[i] != '\0' && str2[i] != '\0')
+	found = 0;
+	while (i < len - 1)
+	{
+		if (i == index)
+		{
+			found = 1;
+			free(block->ms->env[i]);
+		}
+		res[i] = block->ms->env[i + found];
 		i++;
-	return (!(str2[i] >= str1[i]));
+	}
+	res[i] = NULL;
+	free(block->ms->env);
+	block->ms->env = res;
+	return (1);
 }
