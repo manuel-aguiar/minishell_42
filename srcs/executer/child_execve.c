@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/23 11:35:39 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/23 16:34:09 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 16:58:30 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,13 @@ static int	join_path_bin(char **full_path, char *path, char *bin)
 static int	exec_cmd_with_path(t_block *block)
 {
 	if (access(block->cmd, F_OK))
-		perror_child_exit(block, CODE_CMD, 1);											//double check this
+		perror_child_exit(block, CODE_CMD, 1);
 	else if (execve(block->cmd, block->cmd_args, block->ms->env) == -1)
-		perror_child_exit(block, CODE_EXECVE, 1);											//double check this
+		perror_child_exit(block, CODE_EXECVE, 1);
 	return (1);
 }
 
-int	get_path_from_env(t_block *block)
+static int	get_path_from_env(t_block *block)
 {
 	int		i;
 

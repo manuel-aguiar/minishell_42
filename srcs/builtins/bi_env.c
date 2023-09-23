@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 19:21:09 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/23 10:34:32 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 17:15:13 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,4 +139,18 @@ int	env_add(t_block *block, char *new)
 	free(block->ms->env);
 	block->ms->env = res;
 	return (0);
+}
+
+int	env_strcmp(void *s1, void *s2)
+{
+	int		i;
+	char	*str1;
+	char	*str2;
+
+	str1 = (char *)s1;
+	str2 = (char *)s2;
+	i = 0;
+	while (str1[i] == str2[i] && str1[i] != '\0' && str2[i] != '\0')
+		i++;
+	return (!(str2[i] >= str1[i]));
 }
