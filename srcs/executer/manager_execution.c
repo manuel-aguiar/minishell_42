@@ -6,11 +6,34 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:37:28 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/23 15:25:12 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 17:07:53 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	check_subshell_and_prepare_forks(t_block *manager, int index)
+{
+	if (manager->must_subshell \
+	&& !manager->has_arithmatic_parenthesis && manager->op_count == 0)
+		manager->worker_list[index]->i_am_forked = 1;
+	if (manager->worker_list[index]->i_am_forked)
+	{
+		manager->worker_pids[index] = fork();
+		if (manager->worker_pids[index] == -1)
+			return (perror_msg_int("fork", 0));
+		if (!manager->worker_pids[index])
+		{
+			if (index < manager->op_count \
+			&& manager->op_id[index] == T_OP_PIPE)
+			{
+				if (close(manager->pipefd[0]) == -1)
+					perror("close");
+			}
+		}
+	}
+	return (1);
+}
 
 int	pipes_forks_and_conditionals(t_block *manager, int index)
 {
@@ -27,41 +50,23 @@ int	pipes_forks_and_conditionals(t_block *manager, int index)
 		manager->worker_list[index]->i_am_forked = 1;
 	}
 	if (index > 0 && index <= manager->op_count \
-	&& (manager->op_id[index - 1] == T_OP_AND || manager->op_id[index - 1] == T_OP_OR))
+	&& (manager->op_id[index - 1] == T_OP_AND \
+	|| manager->op_id[index - 1] == T_OP_OR))
 	{
 		waiting_for_my_workers(manager, index);
-		if ((manager->op_id[index - 1] == T_OP_AND && manager->ms->exit_status != 0) \
-		|| (manager->op_id[index - 1] == T_OP_OR && manager->ms->exit_status == 0))
+		if ((manager->op_id[index - 1] == T_OP_AND \
+		&& manager->ms->exit_status != 0) \
+		|| (manager->op_id[index - 1] == T_OP_OR \
+		&& manager->ms->exit_status == 0))
 			return (0);
 	}
-	if (manager->must_subshell \
-	&& !manager->has_arithmatic_parenthesis && manager->op_count == 0)
-	{
-		//printf("child: [%s] has parenthesis and must be forked\n", manager->worker_list[index]->prompt);
-		manager->worker_list[index]->i_am_forked = 1;
-	}
-	if (manager->worker_list[index]->i_am_forked)
-	{
-		manager->worker_pids[index] = fork();
-		if (manager->worker_pids[index] == -1)
-			return (perror_msg_int("fork", 0));
-		if (!manager->worker_pids[index])
-		{
-			if (index < manager->op_count && manager->op_id[index] == T_OP_PIPE)
-				close(manager->pipefd[0]);
-			//if (index > 0 && manager->op_id[index - 1] == T_OP_PIPE)
-			//	close(manager->prev_pipe[1]);
-		}
-		//else
-		//	dprintf(2, "manager %d created pid %d\n", getpid(), manager->worker_pids[index]);
-	}
-	return (1);
+	return (check_subshell_and_prepare_forks(manager, index));
 }
 
 int	wait_and_save_status(pid_t pid, int *status, int errfd)
 {
 	if (waitpid(pid, status, 0) == -1)
-			perror("waitpid");
+		perror("waitpid");
 	if (WIFEXITED(*status))
 		*status = WEXITSTATUS(*status);
 	else if (WIFSIGNALED(*status))
@@ -69,7 +74,7 @@ int	wait_and_save_status(pid_t pid, int *status, int errfd)
 		if (WTERMSIG(*status) == SIGINT)
 			ft_putstr_fd("\n", errfd);
 		*status = WTERMSIG(*status) + EXIT_SIGNALED;
-	}	
+	}
 	return (1);
 }
 

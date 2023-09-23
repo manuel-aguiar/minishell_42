@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 13:44:40 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/21 12:13:08 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 18:41:30 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,20 @@
 
 void	close_in_fds(t_block *block)
 {
-	if ((block->my_manager \
-    && block->final_in != block->my_manager->final_in) \
-	|| (!block->my_manager \
-    && block->final_in != block->ms->infd))
-		close(block->final_in);
+	if ((block->my_manager && block->final_in != block->my_manager->final_in)
+		|| (!block->my_manager && block->final_in != block->ms->infd))
+	{
+		if (close(block->final_in) == -1)
+			perror("close");
+	}
 }
 
 void	close_out_fds(t_block *block)
 {
-	if ((block->my_manager \
-    && block->final_out != block->my_manager->final_out) \
-	|| (!block->my_manager \
-    && block->final_out != block->ms->outfd))
-		close(block->final_out);
+	if ((block->my_manager && block->final_out != block->my_manager->final_out)
+		|| (!block->my_manager && block->final_out != block->ms->outfd))
+	{
+		if (close(block->final_out) == -1)
+			perror("close");
+	}
 }

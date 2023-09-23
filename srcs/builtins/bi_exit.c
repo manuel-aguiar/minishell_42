@@ -18,23 +18,25 @@ static void	exit_error(t_block *block, char *arg, int is_error);
 
 int	run_exit(t_block *block)
 {
-	if (block->cmd_args[1])
+	if (!block->i_am_forked)
+		ft_putstr_fd("exit\n", block->ms->outfd);
+	if (is_error)
 	{
 		if (!exit_atoi(block->cmd_args[1], &block->my_status))
 		{
-			block->my_status = 2;									//EXIT_CODE  non_numerical value = 2, SUBSTITUTE WITH MACRO;
+			block->my_status = 2;
 			exit_execution(block, block->cmd_args[1], 1, 1);
 		}
 		else if (block->cmd_args[2])
 		{
-			block->my_status = 1;									//EXIT_CODE  too many args = 1, SUBSTITUTE WITH MACRO;
+			block->my_status = 1;
 			exit_execution(block, NULL, 0, 1);
 		}
 		else
-			exit_execution(block, NULL, 1, 0);						//clean exit
+			exit_execution(block, NULL, 1, 0);
 	}
 	else
-		exit_execution(block, NULL, 1, 0);							//clean exit without arguments, exits with whatever there was
+		exit_execution(block, NULL, 1, 0);
 	return (1);
 }
 
@@ -97,4 +99,19 @@ static void	exit_error(t_block *block, char *arg, int is_error)
 		else
 			ft_putstr_fd("too many arguments\n", block->ms->errfd);
 	}
-}
+		if (!exit_atoi(block->cmd_args[1], &block->my_status))
+		{
+			block->my_status = 2;									
+			exit_execution(block, block->cmd_args[1], 1, 1);
+		}
+		else if (block->cmd_args[2])
+		{
+			block->my_status = 1;									
+			exit_execution(block, NULL, 0, 1);
+		}
+		else
+			exit_execution(block, NULL, 1, 0);						
+	}
+	else
+		exit_execution(block, NULL, 1, 0);		
+	return (1);

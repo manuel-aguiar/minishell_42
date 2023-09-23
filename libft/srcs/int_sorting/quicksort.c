@@ -46,13 +46,10 @@ static int	partition(int arr[], int low, int high, int (*cmp)(int, int))
 
 static void	qs_recursion(int *arr, int low, int high, int (*cmp)(int, int))
 {
-	int	randpivot;
 	int	part;
 
 	if (low < high)
 	{
-		randpivot = low;
-		swap(&arr[low], &arr[randpivot]);
 		part = partition(arr, low, high, cmp);
 		qs_recursion(arr, low, part, cmp);
 		qs_recursion(arr, part + 1, high, cmp);

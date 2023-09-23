@@ -40,7 +40,7 @@ int	ft_putnbr_fd(int nb, int fd)
 
 int	ft_putnbr(int nb)
 {
-	return(ft_putnbr_fd(nb, 1));
+	return (ft_putnbr_fd(nb, 1));
 }
 
 /*
