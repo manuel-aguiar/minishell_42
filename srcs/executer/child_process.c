@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/23 11:35:14 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/23 14:15:20 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 16:35:24 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,6 @@ int	child_process(t_block *block)
 void	error_child_exit(t_block *block, char *error_msg, int errcode,
 		int with_ms)
 {
-	if (block->my_manager)
-		block->my_manager->my_status = errcode;
-	else
-		block->ms->exit_status = errcode;
 	if (with_ms)
 	{
 		ft_putstr_fd(block->ms->name, block->ms->errfd);
@@ -65,10 +61,6 @@ void	error_child_exit(t_block *block, char *error_msg, int errcode,
 void	perror_child_exit(t_block *block, int errcode,
 		int with_ms)
 {
-	if (block->my_manager)
-		block->my_manager->my_status = errcode;
-	else
-		block->ms->exit_status = errcode;
 	if (with_ms)
 	{
 		ft_putstr_fd(block->ms->name, block->ms->errfd);
