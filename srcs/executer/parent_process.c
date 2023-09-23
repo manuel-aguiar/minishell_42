@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.c                                             :+:      :+:    :+:   */
+/*   parent_process.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/23 11:39:05 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 14:58:00 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ int	process_execution(t_block *block)
 	}
 	else
 	{
+		ms_prepare_signal(block->ms, SIG_IGN);
 		if (exec_builtin(block, builtin))
 		{
 			block->my_status = 0;
@@ -119,9 +120,8 @@ int	process_execution(t_block *block)
 				block->my_manager->worker_exit_status[block->my_id] = 0;						
 			else
 				block->ms->exit_status = 0;
-																						// success
-																						// manage for non success
 		}
+		ms_prepare_signal(block->ms, signal_handler);
 		close_in_fds(block);
 		close_out_fds(block);
 	}

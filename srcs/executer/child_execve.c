@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/23 11:35:39 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/23 11:48:21 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 14:17:28 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,35 +45,52 @@ static int	exec_cmd_with_path(t_block *block)
 	return (1);
 }
 
-static int	exec_cmd_search_path(t_block *block)
+int	get_path_from_env(t_block *block)
+{
+	int		i;
+
+	if (!block->ms->env)
+		return (0);
+	i = 0;
+	while (block->ms->env[i] && ft_strncmp("PATH=", block->ms->env[i], 5))
+		i++;
+	if (!block->ms->env[i])
+		return (0);
+	else
+	{
+		block->env_path = ft_split(&block->ms->env[i][5], ':');
+		if (!block->env_path)
+			return (0);
+	}
+	return (1);
+}
+
+static void	exec_cmd_search_path(t_block *block)
 {
 	int		i;
 	char	*full_path;
 
-	if (!block->ms->path)
-	{
-		error_child_exit(block, ERR_CMD, CODE_CMD, 1);		// substituir
-		return (0);
-	}
+	if (!get_path_from_env(block))
+		return (error_child_exit(block, ERR_CMD, CODE_CMD, 1));
 	i = 0;
-	while (block->ms->path[i])
+	while (block->env_path[i])
 	{
-		if (!join_path_bin(&full_path, block->ms->path[i++], block->cmd))
-			return (0);
+		if (!join_path_bin(&full_path, block->env_path[i++], block->cmd))
+			return ;
 		if (access(full_path, F_OK) == 0)
 		{
 			if (execve(full_path, block->cmd_args, block->ms->env) == -1)
 			{
-				perror_child_exit(block, CODE_EXECVE, 1);
 				ft_free_set_null(&full_path);
-				return (0);
+				perror_child_exit(block, CODE_EXECVE, 1);
+				return ;
 			}
 		}
 		else
 			ft_free_set_null(&full_path);
 	}
-	error_child_exit(block, ERR_CMD, CODE_CMD, 1);    //error messageeeeeee
-	return (0);
+	error_child_exit(block, ERR_CMD, CODE_CMD, 1);
+	return ;
 }
 
 int	exec_command(t_block *block)
