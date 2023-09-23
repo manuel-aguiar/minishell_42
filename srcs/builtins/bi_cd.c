@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:26:37 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/23 19:58:04 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 21:51:36 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ int	run_cd(t_block *block)
 		i++;
 	if (block->ms->env[i])
 	{
-		temp = ft_strjoin("OLDPWD=", block->ms->env[i]);
+		temp = ft_strjoin("OLDPWD=", &block->ms->env[i][4]);
 		if (!temp)
 			return (perror_msg_int("malloc", 0));
 		i = 0;
 		while (block->ms->env[i] && !ft_strnstr(block->ms->env[i], \
-		"OLDPWD=/", ft_strlen(block->ms->env[i])))
+		"OLDPWD=", 7))
 			i++;
 		env_remove(block, i);
 		env_add(block, temp);
@@ -72,25 +72,17 @@ static int	cd_exists(t_block *block)
 
 static int	cd_error(t_block *block, int arg)
 {
-	if (ft_putstr_fd(block->ms->name, block->final_out) == -1)
-		block->my_status = SIGPIPE + EXIT_SIGNALED;
-	if (ft_putstr_fd(": cd: ", block->final_out) == -1)
-		block->my_status = SIGPIPE + EXIT_SIGNALED;
+	block->my_status = CODE_SYNTAX_BINS;
+	ft_putstr_fd(block->ms->name, block->ms->errfd);
+	ft_putstr_fd(": cd: ", block->ms->errfd);
 	if (arg == -1)
-	{
-		if (ft_putstr_fd("too many arguments\n", block->final_out) == -1)
-			block->my_status = SIGPIPE + EXIT_SIGNALED;
-	}
+		ft_putstr_fd("too many arguments\n", block->ms->errfd);
 	else
 	{
-		if (ft_putstr_fd(block->cmd_args[arg], block->final_out) == -1)
-			block->my_status = SIGPIPE + EXIT_SIGNALED;
-		if (ft_putstr_fd(": No such file or directory\n", \
-		block->final_out) == -1)
-			block->my_status = SIGPIPE + EXIT_SIGNALED;
+		ft_putstr_fd(block->cmd_args[arg], block->ms->errfd);
+		ft_putstr_fd(": No such file or directory\n", \
+		block->ms->errfd);
 	}
-	if (block->my_status != SIGPIPE + EXIT_SIGNALED)
-		block->my_status = 1;		//add macro
 	return (0);
 }
 
@@ -117,9 +109,3 @@ static int	upd_pwd(t_block *block)
 	free(temp);
 	return (1);
 }
-
-/*
-  109 |  else if ((!block->cmd_args[1] || block->cmd_args[1] \
-      |                                   ~~~~~~~~~~~~~~~~~~~~
-  110 |  && block->cmd_args[1][0] == '~') && block->ms->env[i])
-*/

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 17:09:22 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/23 20:06:46 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 21:36:50 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,15 @@
 
 static int	env_error(t_block *block, int is_exporting, char *arg)
 {
-	if (ft_putstr_fd(block->ms->name, block->final_out) == -1)
-		block->my_status = SIGPIPE + EXIT_SIGNALED;
-	if (ft_putstr_fd(": ", block->final_out) == -1)
-		block->my_status = SIGPIPE + EXIT_SIGNALED;
+	block->my_status = CODE_SYNTAX_BINS;
+	ft_putstr_fd(block->ms->name, block->ms->errfd);
+	ft_putstr_fd(": ", block->ms->errfd);
 	if (is_exporting)
-	{
-		if (ft_putstr_fd("export: `", block->final_out) == -1)
-			block->my_status = SIGPIPE + EXIT_SIGNALED;
-	}
+		ft_putstr_fd("export: `", block->ms->errfd);
 	else
-	{
-		if (ft_putstr_fd("unset: `", block->final_out) == -1)
-			block->my_status = SIGPIPE + EXIT_SIGNALED;
-	}
-	if (ft_putstr_fd(arg, block->final_out) == -1)
-		block->my_status = SIGPIPE + EXIT_SIGNALED;
-	if (ft_putstr_fd("': not a valid identifier\n", block->final_out) == -1)
-		block->my_status = SIGPIPE + EXIT_SIGNALED;
-	if (block->my_status != SIGPIPE + EXIT_SIGNALED)
-		block->my_status = 1;		//add macro
+		ft_putstr_fd("unset: `", block->ms->errfd);
+	ft_putstr_fd(arg, block->ms->errfd);
+	ft_putstr_fd("': not a valid identifier\n", block->ms->errfd);
 	return (-2);
 }
 
