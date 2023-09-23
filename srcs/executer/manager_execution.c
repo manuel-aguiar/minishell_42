@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:37:28 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/22 19:40:44 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 09:59:46 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,21 @@ int	pipes_forks_and_conditionals(t_block *manager, int index)
 	return (1);
 }
 
+int	wait_and_save_status(pid_t pid, int *status, int errfd)
+{
+	if (waitpid(pid, status, 0) == -1)
+			perror("waitpid");
+	if (WIFEXITED(*status))
+		*status = WEXITSTATUS(*status);
+	else if (WIFSIGNALED(*status))
+	{
+		if (WTERMSIG(*status) == SIGINT)
+			ft_putstr_fd("\n", errfd);
+		*status = WTERMSIG(*status) + EXIT_SIGNALED;
+	}	
+	return (1);
+}
+
 int	waiting_for_my_workers(t_block *manager, int index)
 {
 	int	i;
@@ -90,10 +105,11 @@ int	waiting_for_my_workers(t_block *manager, int index)
 		//printf("child [%s], index, %d, has pid? %d\n", manager->worker_list[i]->prompt, i, manager->worker_pids[i]);
 		if (manager->worker_pids[i] != 0)
 		{
-			int status;
+			//int status;
 			//ms_prepare_signal(manager->ms, SIG_IGN);
 			//printf("my lvl id (%d, %d), waiting for pid %d, my status now is: %d  ", manager->my_level, manager->my_id, manager->worker_pids[i], manager->my_status);
-			if (waitpid(manager->worker_pids[i], &status, 0) == -1)
+			wait_and_save_status(manager->worker_pids[i], &manager->my_status, manager->ms->errfd);
+			/*if (waitpid(manager->worker_pids[i], &status, 0) == -1)
 					perror("waitpid");
 			//dprintf(2, "manager %d received pid %d\n", getpid(), manager->worker_pids[i]);
 			if (WIFEXITED(manager->my_status))
@@ -107,7 +123,7 @@ int	waiting_for_my_workers(t_block *manager, int index)
 				}
 				manager->my_status = WTERMSIG(manager->my_status) + EXIT_SIGNALED;
 				
-			}
+			}*/
 			//printf("global is %d\n", g_signal);	
 			//printf("  and changed to %d i received from child (%d, %d)\n", manager->my_status, manager->my_level +1, i);
 			manager->worker_pids[i] = 0;

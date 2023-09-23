@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 00:13:38 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/22 18:53:12 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 10:01:47 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ char	*prompt_readline(t_ms *ms)
 	if (g_signal == SIGINT)
 	{
 		ms->exit_status = EXIT_SIGINT;
+		ft_putstr_fd("\n", ms->errfd);
 		return (NULL);
 	}
 	if (!line)

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/22 19:25:37 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 09:55:58 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,6 +217,7 @@ int		get_all_here_docs(t_block *block);
 /*manager_execution.c*/
 int		pipes_forks_and_conditionals(t_block *manager, int index);
 int		waiting_for_my_workers(t_block *manager, int index);
+int		wait_and_save_status(pid_t pid, int *status, int errfd);
 
 /*worker_execution.c*/
 int		worker_execution(t_block *worker);

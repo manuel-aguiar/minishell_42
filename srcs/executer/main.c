@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/22 21:54:13 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 10:01:12 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,8 +154,9 @@ int	minishell_main_loop(t_ms *ms)
 			block_destroy(ms->first);
 			if (ms->my_kid != -1)
 			{
+				wait_and_save_status(ms->my_kid, &ms->exit_status, ms->errfd);
 				//ms_prepare_signal(ms, SIG_IGN);
-				if (waitpid(ms->my_kid, &ms->exit_status, 0) == -1)
+				/*if (waitpid(ms->my_kid, &ms->exit_status, 0) == -1)
 					perror("waitpid");
 				if (WIFEXITED(ms->exit_status))
 				{
@@ -169,7 +170,7 @@ int	minishell_main_loop(t_ms *ms)
 					ms->exit_status = WTERMSIG(ms->exit_status) + EXIT_SIGNALED;
 					
 					//dprintf(2, "signal status %d\n", ms->exit_status);
-				}
+				}*/
 				ms->my_kid = -1;
 				//ms_prepare_signal(ms, signal_handler);
 				//dprintf(2, "final exit status %d\n", ms->exit_status);
@@ -184,9 +185,6 @@ int	minishell_main_loop(t_ms *ms)
 			ms->dup_stdin = dup(ms->infd);
 			if (ms->dup_stdin == -1)
 				perror_msg_ptr("dup", NULL);
-			
-			if (g_signal == SIGINT)
-				printf("\n");
 		}
 		if (tcsetattr(ms->infd, TCSANOW, &ms->modified) == -1)
 			perror_msg_ptr("tcsetattr", NULL);

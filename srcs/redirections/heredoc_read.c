@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:21:31 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/22 13:15:16 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 10:04:45 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	here_doc(t_block *block, char *eof, int has_quote_guard)
 	{
 		close(block->here_doc_fd);
 		unlink(block->here_doc);
-		//printf("\n");
+		ft_putstr_fd("\n", block->ms->errfd);
 		return (0);
 	}
 	close(block->here_doc_fd);
