@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/23 19:58:21 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 21:40:47 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@
 # define EXIT_SIGINT 130
 # define EXIT_SIGQUIT 131
 
+# define CODE_SYNTAX_BINS 1
 # define EXIT_SYNTAX 2
 # define EXIT_AMBIG_REDIR 1
 # define EXIT_SIGNALED 128
