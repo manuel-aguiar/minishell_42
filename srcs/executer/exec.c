@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/23 10:03:32 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 10:23:30 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,18 +264,7 @@ int	parent_process(t_block *block, pid_t pid)
 		ft_free_set_null(&block->here_doc);
 	}
 	if (block->i_am_forked)
-	{
-		ms_prepare_signal(block->ms, SIG_IGN);
 		wait_and_save_status(pid, &block->my_status, block->ms->errfd);
-		/*if (waitpid(pid, &block->my_status, 0) == -1)
-					perror("waitpid");
-		//dprintf(2, "exec %d received pid %d\n", getpid(), pid);
-		if (WIFEXITED(block->my_status))
-			block->my_status = WEXITSTATUS(block->my_status);
-		else if (WIFSIGNALED(block->my_status))
-			block->my_status = WTERMSIG(block->my_status) + EXIT_SIGNALED;*/
-		ms_prepare_signal(block->ms, signal_handler);
-	}
 	return (1);
 }
 
