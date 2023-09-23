@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:37:28 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/23 10:18:44 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 10:36:41 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	pipes_forks_and_conditionals(t_block *manager, int index)
 	if (index < manager->op_count && manager->op_id[index] == T_OP_PIPE)
 	{
 		if (pipe(manager->pipefd) == -1)
-			return (perror_msg("pipe"));
+			return (perror_msg_int("pipe", 0));
 		manager->worker_list[index]->i_am_forked = 1;
 	}
 	if (index > 0 && index <= manager->op_count \
@@ -44,7 +44,7 @@ int	pipes_forks_and_conditionals(t_block *manager, int index)
 	{
 		manager->worker_pids[index] = fork();
 		if (manager->worker_pids[index] == -1)
-			return (perror_msg("fork"));
+			return (perror_msg_int("fork", 0));
 		if (!manager->worker_pids[index])
 		{
 			if (index < manager->op_count && manager->op_id[index] == T_OP_PIPE)

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 09:57:09 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/21 12:13:52 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 10:36:21 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	setup_task_distributor(t_block *block)
 			* sizeof(*(block->worker_exit_status)));
 		if (!block->op_id || !block->worker_tasks || !block->worker_pids)
 		{
-			perror_msg("malloc");
+			perror_msg_int("malloc", 0);
 			return (free_task_distributor(block));
 		}
 		i = 0;

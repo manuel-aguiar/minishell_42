@@ -6,17 +6,11 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/23 10:23:30 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 10:37:43 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	perror_msg(char *text)
-{
-	perror(text);
-	return (0);
-}
 
 int	error_msg(char *text)
 {
@@ -110,7 +104,7 @@ int	join_path_bin(char **full_path, char *path, char *bin)
 	if (!new)
 	{
 		*full_path = new;
-		return (perror_msg("malloc"));
+		return (perror_msg_int("malloc", 0));
 	}
 	ft_memcpy(new, path, path_len);
 	new[path_len] = '/';
@@ -133,9 +127,9 @@ int	join_path_bin(char **full_path, char *path, char *bin)
 int	exec_cmd_with_path(t_block *block)
 {
 	if (access(block->cmd, F_OK))
-		return (perror_msg(block->cmd));											//double check this
+		return (perror_msg_int(block->cmd, 0));											//double check this
 	else if (execve(block->cmd, block->cmd_args, block->ms->env) == -1)
-		return (perror_msg(block->cmd));											//double check this
+		return (perror_msg_int(block->cmd, 0));											//double check this
 	return (1);
 }
 
@@ -294,7 +288,7 @@ int	process_execution(t_block *block)
 				block->ms->my_kid = pid;
 		}
 		if (pid == -1)
-			return (perror_msg("fork"));
+			return (perror_msg_int("fork", 0));
 		if (!pid)
 			child_process(block);
 		//dprintf(2, "exec %d created pid %d\n", getpid(), pid);

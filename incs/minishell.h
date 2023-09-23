@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/23 09:55:58 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 10:37:47 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -356,6 +356,5 @@ char	**ft_split_count_replenish(t_cchar *s, t_cchar *og, \
 char *sepset, int *place_count);
 char	*ft_split_join(char **split, char *sep);
 char	*ft_triple_join(char *first, char *second, char *third);
-int		perror_msg(char *text);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:26:37 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/21 12:11:00 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 10:33:39 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	run_pwd(t_block *block)
 		return (1);
 	pwd = ft_strdup(&block->ms->env[i][4]);
 	if (!pwd)
-		return (perror_msg("malloc"));
+		return (perror_msg_int("malloc", 0));
 	ft_putstr_fd(pwd, block->final_out);
 	write(block->final_out, "\n", 1);
 	free(pwd);

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 19:21:09 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/21 12:12:07 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 10:34:32 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ int	env_add(t_block *block, char *new)
 		{
 			res[i] = ft_strdup(new);
 			if (!res[i])
-				return (perror_msg("malloc"));
+				return (perror_msg_int("malloc", 0));
 		}
 		else
 			res[i] = block->ms->env[i - 1];
