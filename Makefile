@@ -39,7 +39,7 @@ FILES_STRUCTS	=	ms_setup.c								\
 					block_setup.c							\
 					signals.c
 
-FILES_LEXER	=		ms_prompt.c								\
+FILES_LEXER	=		get_prompt.c								\
 					create_tokens.c 						\
 					prompt_to_list.c 						\
 					token_list_print.c						\
@@ -57,7 +57,9 @@ FILES_BUILTINS	=	bi_exit.c 								\
 FILES_EXECUTER	=	execution_tree.c					\
 					manager_execution.c					\
 					worker_execution.c					\
-					exec.c					\
+					parent_process.c					\
+					child_process.c						\
+					child_execve.c						\
 					main.c
 
 FILES_FD_MAN	=	prepare_redirections.c	\
