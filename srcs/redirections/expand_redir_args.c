@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 14:02:09 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/23 18:38:10 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 19:47:37 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,20 +24,6 @@ static int	ambiguous_redirection_err(t_block *block, char **fail_return)
 	return (0);
 }
 
-static int	helper_io_expansion(t_block *block, char **redir_copy, \
-			char **fail_return)
-{
-	if (!expand_wildcards(redir_copy, fail_return))
-		return (0);
-	if (!remove_unguarded_quotes(redir_copy, NULL))
-		return (0);
-	if (fail_return)
-		return (ambiguous_redirection_err(block, fail_return));
-	if (!*(redir_copy) || !**(redir_copy))
-		return (perror_msg_func(block, *redir_copy, CODE_OPEN, 1));
-	return (1);
-}
-
 int	manage_io_expansion(t_block *block)
 {
 	char	*redir_copy;
@@ -51,18 +37,18 @@ int	manage_io_expansion(t_block *block)
 		return (perror_msg_int("malloc", 0));
 	if (!expand_dollars(&redir_copy, block->ms))
 		return (0);
-	split = ft_split_count(redir_copy, "\n\t\v ", &count);
+	if (!expand_wildcards(&redir_copy, NULL))
+		return (0);
+	split = ft_split_count(redir_copy, "\t\v\n\r ", &count);
+	ft_free_charmat_null(&split, free);
+	if (!remove_unguarded_quotes(&redir_copy, NULL))
+		return (0);
 	block->io_files->head->text = redir_copy;
 	if (count != 1)
-	{
-		ambiguous_redirection_err(block, &fail_return);
-		ft_free_charmat_null(&split, free);
-		return (0);
-	}
+		return (ambiguous_redirection_err(block, &fail_return));
 	ft_free_set_null(&fail_return);
-	ft_free_charmat_null(&split, free);
-	if (!helper_io_expansion(block, &block->io_files->head->text, \
-	&fail_return))
-		return (0);
+	if (!block->io_files->head->text || !*(block->io_files->head->text))
+		return (perror_msg_func(block, block->io_files->head->text, 
+		CODE_OPEN, 1));
 	return (1);
 }

@@ -6,13 +6,13 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:33:20 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/23 18:27:24 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 18:41:04 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int check_if_prev_heredoc_and_get_new(t_block *block, \
+static int	check_if_prev_heredoc_and_get_new(t_block *block, \
 			t_token_node *cur, int index)
 {
 	int	has_quotes;
