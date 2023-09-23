@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/23 11:59:48 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 12:03:10 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 
 # include <fcntl.h>
 # include <stdlib.h>
-# include <stdio.h>
 # include <unistd.h>
 # include <stdio.h>
 # include <limits.h>
@@ -28,17 +27,14 @@
 # include <signal.h>
 # include <termios.h>
 
-
 # include "libft.h"
 # include "token_list.h"
-
-# define TRUE 1
-# define FALSE 0
 
 # define MYNAME "minishell"
 
 /* error name macros */
 # define ERR_CMD "command not found"
+// provavelmente adicionar ambiguous redirect aqui também
 
 /* error code macros */
 # define CODE_OPEN 1
@@ -169,7 +165,6 @@ int				get_prompt(t_ms *ms);
 char			*prompt_readline(t_ms *ms);
 int				prompt_token_setup(t_ms *ms, char *line);
 
-
 /* ??????? */																	// discriminar por ficheiros
 int				ft_isquote(int c);
 char			*ft_strdup_len(char *s, int len);
@@ -247,6 +242,32 @@ int		perror_msg_func(t_block *block, char *function, int errcode, int with_ms);
 
 //////////////////////////////////////
 //////////////////////////////////////
+//////////// BUILTINS ////////////////
+//////////////////////////////////////
+//////////////////////////////////////
+
+/*bi_check_and_exec.c*/
+int		check_builtins(t_block *block);
+int		exec_builtin(t_block *block, int builtin);
+
+/* ??????? */																// discriminar por ficheiros
+int		run_cd(t_block *block);
+int		run_env(t_block *block);
+int		run_pwd(t_block *block);
+int		run_echo(t_block *block);
+int		run_unset(t_block *block);
+int		run_export(t_block *block);
+int		run_exit(t_block *block);
+
+int		set_beg_path(t_block *block, char **curpath, char *curr);
+int		cd_exists(t_block *block);
+int		get_corr_env(t_block *block, char *arg, int is_exporting);
+int		env_add(t_block *block, char *new);
+int		env_remove(t_block *block, int index);
+int		env_strcmp(void *s1, void *s2);
+
+//////////////////////////////////////
+//////////////////////////////////////
 //////////// REDIRECTIONS ////////////
 //////////////////////////////////////
 //////////////////////////////////////
@@ -305,31 +326,6 @@ int		remove_unguarded_quotes(char **str, int *has_guards);
 
 //////////////////////////////////////
 //////////////////////////////////////
-//////////// BUILTINS ////////////////
-//////////////////////////////////////
-//////////////////////////////////////
-
-/*bi_check_and_exec.c*/
-int		check_builtins(t_block *block);
-int		exec_builtin(t_block *block, int builtin);
-
-/* ??????? */																// discriminar por ficheiros
-int		run_cd(t_block *block);
-int		run_env(t_block *block);
-int		run_pwd(t_block *block);
-int		run_echo(t_block *block);
-int		run_unset(t_block *block);
-int		run_export(t_block *block);
-int		run_exit(t_block *block);
-
-int		set_beg_path(t_block *block, char **curpath, char *curr);
-int		cd_exists(t_block *block);
-int		get_corr_env(t_block *block, char *arg, int is_exporting);
-int		env_add(t_block *block, char *new);
-int		env_remove(t_block *block, int index);
-
-//////////////////////////////////////
-//////////////////////////////////////
 //////////// GENERIC UTILS ///////////
 //////////////////////////////////////
 //////////////////////////////////////
@@ -337,7 +333,7 @@ int		env_remove(t_block *block, int index);
 int		ft_matrixlen(void *mat);
 int		ft_charmatdup(char ***dest, char **src);
 void	*quicksort_pointers(void *arr, int size, int (*cmp)(void *, void *));
-int		env_strcmp(void *s1, void *s2);
+
 int		ft_matrixlen(void *mat);
 char	**ft_split_count_replenish(t_cchar *s, t_cchar *og, \
 		char *sepset, int *place_count);
