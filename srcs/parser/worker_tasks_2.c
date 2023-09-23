@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:18:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/22 17:29:58 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 10:53:16 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,12 @@ int	worker_args_split_add_token(t_block *worker, t_token_node *arg, int *move)
 
 	copy = ft_strdup(arg->text);
 	if (!copy)
-		return (perror_msg("malloc"));
+		return (perror_msg_int("malloc", 0));
 	empty_quotes(copy);
-	//printf("arg [%s], copy unguard [%s]\n", arg->text, copy);
 	split = ft_split_count_replenish(copy, arg->text, "\t\v\n\r ", move);
 	free(copy);
 	if (!split)
-		return (perror_msg("malloc"));
+		return (perror_msg_int("malloc", 0));
 	if (*move == 1)
 	{
 		ft_free_charmat_null(&split, free);

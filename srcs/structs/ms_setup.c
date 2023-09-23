@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:30:56 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/22 13:13:22 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 10:51:40 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int	ms_disable_sigquit(t_ms *ms)
 		return (perror_msg_int("tcgetattr", 0));
 	if (tcgetattr(ms->infd, &ms->modified) == -1)
 		return (perror_msg_int("tcgetattr", 0));
-	//ms->modified.c_lflag &= ~(ISIG);
 	ms->modified.c_cc[VQUIT] = _POSIX_VDISABLE;
 	if (tcsetattr(ms->infd, TCSANOW, &ms->modified) == -1)
 		return (perror_msg_int("tcsetattr", 0));
@@ -39,6 +38,9 @@ int	ms_init(t_ms *ms, char *avzero, char **env)
 		return (ms_destroy(ms));
 	ms->prompt = NULL;
 	ms->name = avzero;
+	ms->name_readline = ft_strjoin(ms->name, ">$ ");
+	if (!ms->name_readline)
+		return (ms_destroy(ms));
 	ms->infd = STDIN_FILENO;
 	ms->outfd = STDOUT_FILENO;
 	ms->errfd = STDERR_FILENO;
@@ -129,6 +131,8 @@ int	ms_destroy(t_ms *ms)
 		ft_free_set_null(&ms->prompt);
 	if (ms->first)
 		block_destroy(ms->first);
+	if (ms->name_readline)
+		ft_free_set_null(&ms->name_readline);
 	if (tcsetattr(ms->infd, TCSANOW, &ms->original) == -1)
 		return (0);
 	if (ms->kill_stdin)
