@@ -6,17 +6,11 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/23 10:37:43 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 10:41:16 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	error_msg(char *text)
-{
-	ft_putstr_fd(text, STDERR_FILENO);
-	return (0);
-}
 
 int	perror_msg_func(t_block *block, char *function, int errcode, int with_ms)
 {
@@ -39,7 +33,6 @@ void	error_child_exit(t_block *block, char *function, char *cmd, int errcode, in
 		block->my_manager->my_status = errcode;
 	else
 		block->ms->exit_status = errcode;
-	//printf("error code sent by child..? %d\n", block->ms->exit_status);
 	if (with_ms)
 	{
 		ft_putstr_fd(block->ms->name, block->ms->errfd);
@@ -291,15 +284,18 @@ int	process_execution(t_block *block)
 			return (perror_msg_int("fork", 0));
 		if (!pid)
 			child_process(block);
-		//dprintf(2, "exec %d created pid %d\n", getpid(), pid);
 		parent_process(block, pid);
 	}
 	else
 	{
 		if (exec_builtin(block, builtin))
 		{
+			block->my_status = 0;
 			if (block->my_manager)
-				block->my_manager->worker_exit_status[block->my_id] = 0;						// success
+				block->my_manager->worker_exit_status[block->my_id] = 0;						
+			else
+				block->ms->exit_status = 0;
+																						// success
 																						// manage for non success
 		}
 		close_in_fds(block);
