@@ -6,44 +6,39 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 18:28:24 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/23 10:34:44 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 20:13:14 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	exit_execution(t_block *block, char *arg, int is_exiting, int is_error)
-{
-	int	save_status;
+static int	exit_atoi(char *arg, int *place_res);
+static int	exit_execution(t_block *block, char *arg, int is_exiting, int is_error);
+static void	exit_error(t_block *block, char *arg, int is_error);
 
-	if (!block->i_am_forked)				//só escreve stdou se for o main process a chamar
-		ft_putstr_fd("exit\n", block->ms->outfd);
-	if (is_error)
+int	run_exit(t_block *block)
+{
+	if (block->cmd_args[1])
 	{
-		ft_putstr_fd(block->ms->name, block->ms->errfd);
-		ft_putstr_fd(": exit: ", block->ms->errfd);
-		if (arg)
+		if (!exit_atoi(block->cmd_args[1], &block->my_status))
 		{
-			ft_putstr_fd(arg, block->ms->errfd);
-			ft_putstr_fd(": numeric argument required\n", block->ms->errfd);
+			block->my_status = 2;									//EXIT_CODE  non_numerical value = 2, SUBSTITUTE WITH MACRO;
+			exit_execution(block, block->cmd_args[1], 1, 1);
+		}
+		else if (block->cmd_args[2])
+		{
+			block->my_status = 1;									//EXIT_CODE  too many args = 1, SUBSTITUTE WITH MACRO;
+			exit_execution(block, NULL, 0, 1);
 		}
 		else
-			ft_putstr_fd("too many arguments\n", block->ms->errfd);
+			exit_execution(block, NULL, 1, 0);						//clean exit
 	}
-	if (is_exiting)
-	{
-		save_status = block->my_status;
-		ms_destroy(block->ms);
-		exit(save_status);
-	}
-	else if (block->my_manager)
-		block->my_manager->my_status = block->my_status;
 	else
-		block->ms->exit_status = block->my_status;
+		exit_execution(block, NULL, 1, 0);							//clean exit without arguments, exits with whatever there was
 	return (1);
 }
 
-int	exit_atoi(char *arg, int *place_res)
+static int	exit_atoi(char *arg, int *place_res)
 {
 	int	res;
 	int	sign;
@@ -68,24 +63,38 @@ int	exit_atoi(char *arg, int *place_res)
 	return (1);
 }
 
-int	run_exit(t_block *block)
+static int	exit_execution(t_block *block, char *arg, int is_exiting, int is_error)
 {
-	if (block->cmd_args[1])
+	int	save_status;
+
+	if (!block->i_am_forked)				//só escreve stdou se for o main process a chamar
+		ft_putstr_fd("exit\n", block->ms->outfd);
+	exit_error(block, arg, is_error);
+	if (is_exiting)
 	{
-		if (!exit_atoi(block->cmd_args[1], &block->my_status))
+		save_status = block->my_status;
+		ms_destroy(block->ms);
+		exit(save_status);
+	}
+	else if (block->my_manager)
+		block->my_manager->my_status = block->my_status;
+	else
+		block->ms->exit_status = block->my_status;
+	return (1);
+}
+
+static void	exit_error(t_block *block, char *arg, int is_error)
+{
+	if (is_error)
+	{
+		ft_putstr_fd(block->ms->name, block->ms->errfd);
+		ft_putstr_fd(": exit: ", block->ms->errfd);
+		if (arg)
 		{
-			block->my_status = 2;									//EXIT_CODE  non_numerical value = 2, SUBSTITUTE WITH MACRO;
-			exit_execution(block, block->cmd_args[1], 1, 1);
-		}
-		else if (block->cmd_args[2])
-		{
-			block->my_status = 1;									//EXIT_CODE  too many args = 1, SUBSTITUTE WITH MACRO;
-			exit_execution(block, NULL, 0, 1);
+			ft_putstr_fd(arg, block->ms->errfd);
+			ft_putstr_fd(": numeric argument required\n", block->ms->errfd);
 		}
 		else
-			exit_execution(block, NULL, 1, 0);						//clean exit
+			ft_putstr_fd("too many arguments\n", block->ms->errfd);
 	}
-	else
-		exit_execution(block, NULL, 1, 0);							//clean exit without arguments, exits with whatever there was
-	return (1);
 }

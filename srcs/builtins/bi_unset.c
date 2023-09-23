@@ -1,34 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bi_env.c                                           :+:      :+:    :+:   */
+/*   bi_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/12 19:21:09 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/23 20:04:36 by codespace        ###   ########.fr       */
+/*   Created: 2023/09/03 17:09:22 by mnascime          #+#    #+#             */
+/*   Updated: 2023/09/23 20:01:05 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	run_env(t_block *block)
+int	run_unset(t_block *block)
 {
-	int	i;
+	int		i;
+	int		j;
 
-	i = 0;
 	if (!block->ms->env)
 		return (1);
-	while (block->ms->env[i])
+	j = 0;
+	while (block->cmd_args[++j])
 	{
-		if (ft_strchr(block->ms->env[i], '='))
-		{
-			if (ft_putstr_fd(block->ms->env[i], block->final_out) == -1)
-				block->my_status = SIGPIPE + EXIT_SIGNALED;
-			if (write(block->final_out, "\n", 1) == -1)
-				block->my_status = SIGPIPE + EXIT_SIGNALED;
-		}
-		i++;
+		i = get_corr_env(block, block->cmd_args[j], 0);
+		if (i == -2)
+			continue ;
+		else if (i != -1)
+			env_remove(block, i);
 	}
 	return (1);
 }
