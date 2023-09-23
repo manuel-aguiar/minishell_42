@@ -12,14 +12,14 @@
 
 #include "ft_output.h"
 
-void	ft_putstr_fd(char *str, int fd)
+int	ft_putstr_fd(char *str, int fd)
 {
 	if (!*str || !str)
-		return ;
-	write(fd, str, ft_strlen(str));
+		return (0);
+	return (write(fd, str, ft_strlen(str)));
 }
 
-void	ft_putstr(char *str)
+int	ft_putstr(char *str)
 {
-	ft_putstr_fd(str, 1);
+	return (ft_putstr_fd(str, 1));
 }

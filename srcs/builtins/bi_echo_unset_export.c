@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 17:09:22 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/21 12:12:19 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 15:21:28 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,18 @@ int	run_echo(t_block *block)
 	}
 	while (block->cmd_args[++i])
 	{
-		if (i > 1 + jump)
-			write(block->final_out, " ", 1);
-		ft_putstr_fd(block->cmd_args[i], block->final_out);
+		if ((i > 1 + jump && write(block->final_out, " ", 1) == -1) \
+		|| ft_putstr_fd(block->cmd_args[i], block->final_out) == -1)
+		{
+			block->my_status = SIGPIPE + EXIT_SIGNALED;
+			return (0);
+		}
 	}
-	if (jump == 0)
-		write(block->final_out, "\n", 1);
+	if (jump == 0 && write(block->final_out, "\n", 1) == -1)
+	{
+		block->my_status = SIGPIPE + EXIT_SIGNALED;
+		return (0);
+	}
 	return (1);
 }
 

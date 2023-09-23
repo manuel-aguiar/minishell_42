@@ -12,7 +12,7 @@
 
 #include "ft_output.h"
 
-void	ft_putnbr_fd(int nb, int fd)
+int	ft_putnbr_fd(int nb, int fd)
 {
 	char	str[11];
 	char	print;
@@ -35,12 +35,12 @@ void	ft_putnbr_fd(int nb, int fd)
 	}
 	if (sign == -1)
 		str[--i] = '-';
-	write(fd, &str[i], sizeof(str) - i);
+	return (write(fd, &str[i], sizeof(str) - i));
 }
 
-void	ft_putnbr(int nb)
+int	ft_putnbr(int nb)
 {
-	ft_putnbr_fd(nb, 1);
+	return(ft_putnbr_fd(nb, 1));
 }
 
 /*

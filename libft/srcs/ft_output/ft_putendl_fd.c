@@ -12,15 +12,14 @@
 
 #include "ft_output.h"
 
-void	ft_putendl_fd(char *str, int fd)
+int	ft_putendl_fd(char *str, int fd)
 {
 	if (!str || fd < 0)
-		return ;
-	write(fd, str, ft_strlen(str));
-	write(fd, "\n", 1);
+		return (0);
+	return (write(fd, str, ft_strlen(str)) + write(fd, "\n", 1));
 }
 
-void	ft_putendl(char *str)
+int	ft_putendl(char *str)
 {
-	ft_putendl_fd(str, 1);
+	return (ft_putendl_fd(str, 1));
 }
