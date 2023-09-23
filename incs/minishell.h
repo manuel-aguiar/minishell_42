@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/23 10:38:38 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 10:48:11 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ struct s_ms
 	char				**path;
 	t_token_list		*prompt;
 	char				*name;
+	char				*name_readline;
 	int					infd;
 	int					outfd;
 	int					errfd;

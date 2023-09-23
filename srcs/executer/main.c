@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/23 10:21:46 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 10:47:32 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@ int reopen_stdin(t_ms *ms)
 {
 	ms->kill_stdin = 1;
 	if (dup2(ms->dup_stdin, ms->infd) == -1)
-		perror_msg_ptr("dup2", NULL);
+		perror_msg_int("dup2", 0);
 	close(ms->dup_stdin);
 	ms->dup_stdin = dup(ms->infd);
 	if (ms->dup_stdin == -1)
-		perror_msg_ptr("dup", NULL);	
+		perror_msg_int("dup", 0);	
 	return (1);
 }
 
@@ -46,7 +46,7 @@ int	minishell_main_loop(t_ms *ms)
 			reopen_stdin(ms);
 		g_signal = 0;
 		if (tcsetattr(ms->infd, TCSANOW, &ms->modified) == -1)
-			perror_msg_ptr("tcsetattr", NULL);
+			perror_msg_int("tcsetattr", 0);
 	}
 	return (1);
 }

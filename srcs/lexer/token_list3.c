@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 18:29:11 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/23 10:43:42 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 10:44:56 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ void	token_list_move_top_to_new(t_token_list *to, t_token_list *from, \
 	return ;
 }
 
-static void		disconnect_node(t_token_list *to, \
-				t_token_list *from, t_token_node *target)
+static void	disconnect_node(t_token_list *to, \
+			t_token_list *from, t_token_node *target)
 {
 	if (target->prev)
 		target->prev->next = target->next;

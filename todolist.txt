@@ -15,5 +15,6 @@ ECHO $? NAO APANHA EXIT STATUS CERTO EM SIGINT
         - ex cat | ls, nosso echo $? = 130 (SIGINT) bash 0 (ls success)
         - multiplos echo nao mudam o status para zero
 
+CONECTAR EXIT STATUS DOS BUILTINS
 
-REPLENISH STDIN MID EXECUTION
+NORMINETTE ATE AO CRL
