@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/23 12:03:10 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 15:24:14 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <stdio.h>
 # include <limits.h>
 # include <sys/wait.h>
+# include <sys/stat.h>
 # include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -58,7 +59,6 @@ typedef struct s_block	t_block;
 struct s_ms
 {
 	char				**env;
-	char				**path;
 	t_token_list		*prompt;
 	char				*name;
 	char				*name_readline;
@@ -94,7 +94,8 @@ struct s_block
 	int				my_status;				
 	int				i_am_forked;
 	char			*cmd;					
-	char			**cmd_args;					
+	char			**cmd_args;
+	char			**env_path;
 	t_token_list	*io_files;					
 	char			*here_doc;
 	int				here_doc_fd;
@@ -333,7 +334,6 @@ int		remove_unguarded_quotes(char **str, int *has_guards);
 int		ft_matrixlen(void *mat);
 int		ft_charmatdup(char ***dest, char **src);
 void	*quicksort_pointers(void *arr, int size, int (*cmp)(void *, void *));
-
 int		ft_matrixlen(void *mat);
 char	**ft_split_count_replenish(t_cchar *s, t_cchar *og, \
 		char *sepset, int *place_count);

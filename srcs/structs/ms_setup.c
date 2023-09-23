@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:30:56 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/23 10:51:40 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 14:06:06 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,9 @@ int	ms_disable_sigquit(t_ms *ms)
 int	ms_init(t_ms *ms, char *avzero, char **env)
 {
 	ms->env = NULL;
-	ms->path = NULL;
 	if (!ms_setup_initial_env(ms, env))
 		return (ms_destroy(ms));
 	if (!ms_increase_shell_level(ms))
-		return (ms_destroy(ms));
-	if (!ms_set_path(ms))
 		return (ms_destroy(ms));
 	ms->prompt = NULL;
 	ms->name = avzero;
@@ -58,25 +55,7 @@ int	ms_init(t_ms *ms, char *avzero, char **env)
 	return (1);
 }
 
-int	ms_set_path(t_ms *ms)
-{
-	int	i;
 
-	if (!ms->env)
-		return (1);
-	i = 0;
-	while (ms->env[i] && ft_strncmp("PATH=", ms->env[i], 5))
-		i++;
-	if (!ms->env[i])
-		ms->path = NULL;
-	else
-	{
-		ms->path = ft_split(&ms->env[i][5], ':');
-		if (!ms->path)
-			return (0);
-	}
-	return (1);
-}
 
 int	ms_setup_initial_env(t_ms *ms, char **env)
 {
@@ -125,8 +104,6 @@ int	ms_destroy(t_ms *ms)
 {
 	if (ms->env)
 		ft_free_charmat_null(&ms->env, free);
-	if (ms->path)
-		ft_free_charmat_null(&ms->path, free);
 	if (ms->prompt)
 		ft_free_set_null(&ms->prompt);
 	if (ms->first)

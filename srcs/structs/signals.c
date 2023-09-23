@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 15:53:50 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/23 10:45:47 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 14:24:24 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int	ms_reset_signal(t_ms *ms)
 		return (perror_msg_int("sigaction", 0));
 	if (sigaction(SIGQUIT, &ms->sigact, NULL) == -1)
 		return (perror_msg_int("sigaction", 0));
+	if (sigaction(SIGPIPE, &ms->sigact, NULL) == -1)
+		return (perror_msg_int("sigaction", 0));
 	return (1);
 }
 
@@ -45,6 +47,8 @@ int	ms_prepare_signal(t_ms *ms, void (*handler)(int))
 	if (sigaction(SIGINT, &ms->sigact, NULL) == -1)
 		return (perror_msg_int("sigaction", 0));
 	if (sigaction(SIGQUIT, &ms->sigact, NULL) == -1)
+		return (perror_msg_int("sigaction", 0));
+	if (sigaction(SIGPIPE, &ms->sigact, NULL) == -1)
 		return (perror_msg_int("sigaction", 0));
 	return (1);
 }

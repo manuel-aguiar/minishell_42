@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 00:11:09 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/22 19:11:21 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/23 14:17:55 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ static void	block_init_continued(t_block *block, int my_id)
 	block->cmd = NULL;
 	block->cmd_args = NULL;
 	block->io_files = NULL;
+	block->env_path = NULL;
 	block->final_in = -1;
 	block->final_out = -1;
 	block->here_doc = NULL;
@@ -87,6 +88,8 @@ void	block_destroy(void *og_block)
 		ft_free_set_null(&block->worker_exit_status);
 	if (block->op_id)
 		ft_free_set_null(&block->op_id);
+	if (block->env_path)
+		ft_free_charmat_null(&block->env_path, free);
 	if (block->my_manager)
 		block->my_manager->worker_list[block->my_id] = NULL;
 	else
