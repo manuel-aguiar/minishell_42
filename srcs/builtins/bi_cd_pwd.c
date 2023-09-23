@@ -12,26 +12,14 @@
 
 #include "minishell.h"
 
-//static void	aux_cd_paths(t_block *block, char **curpath, char *curr);
-//static int	get_curpath(t_block *block, char **curpath);
-//static int	relative_paths(t_block *block, char **curpath, char *curr);
-
 int	run_pwd(t_block *block)
 {
 	char	*pwd;
-	int		i;
 
-	i = 0;
-	while (block->ms->env[i] && \
-	!ft_strnstr(block->ms->env[i], "PWD=", 4))
-		i++;
-	if (!block->ms->env[i])
-		return (1);
-	pwd = ft_strdup(&block->ms->env[i][4]);
+	pwd = getcwd(NULL, 0);
 	if (!pwd)
 		return (perror_msg_int("malloc", 0));
-	ft_putstr_fd(pwd, block->final_out);
-	write(block->final_out, "\n", 1);
+	ft_printf_fd(block->final_out, "%s\n", pwd);
 	free(pwd);
 	return (1);
 }
@@ -40,28 +28,28 @@ int	run_cd(t_block *block)
 {
 	int		i;
 	char	*temp;
-	char	*curr;
 
-	curr = getcwd(NULL, 0);
-	temp = ft_strjoin("OLDPWD=", curr);
-	if (!temp)
-	{
-		free(temp);
-		return (0);
-	}
-	free(curr);
-	if (cd_exists(block) == 0)
-	{
-		free(temp);
-		return (0);
-	}
 	i = 0;
-	while (block->ms->env[i] && !ft_strnstr(block->ms->env[i], \
-	"OLDPWD=/", ft_strlen(block->ms->env[i])))
+	while (block->ms->env[i] && \
+	!ft_strnstr(block->ms->env[i], "PWD=", 4))
 		i++;
-	env_remove(block, i);
-	env_add(block, temp);
-	free(temp);
+	if (block->ms->env[i])
+	{
+		temp = ft_strjoin("OLDPWD=", block->ms->env[i]);
+		if (!temp)
+		{
+			free(temp);
+			return (0);
+		}
+		i = 0;
+		while (block->ms->env[i] && !ft_strnstr(block->ms->env[i], \
+		"OLDPWD=/", ft_strlen(block->ms->env[i])))
+			i++;
+		env_remove(block, i);
+		env_add(block, temp);
+		free(temp);
+	}
+	cd_exists(block);
 	return (1);
 }
 
@@ -76,9 +64,8 @@ static int	upd_pwd(t_block *block)
 	while (block->ms->env[i] && \
 	!ft_strnstr(block->ms->env[i], "PWD=", 4))
 		i++;
-	if (!block->ms->env[i])
-		return (1);
-	env_remove(block, i);
+	if (block->ms->env[i])
+		env_remove(block, i);
 	temp = ft_strjoin("PWD=", curr);
 	free(curr);
 	if (!temp)
