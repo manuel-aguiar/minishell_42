@@ -7,7 +7,7 @@ NAME 		=		minishell
 
 CC 			= 		cc -g #-fsanitize=address
 ## -Wall Wextra Werror
-FLAGS 		= 		-Wall -Werror -Wextra
+FLAGS 		= 		-Wall -Werror -Wextra -fsanitize=address
 ADD_LIB 	= 		-L./$(LIB_PATH) -lft -lreadline
 RM 			=		rm
 MAKE		=		make
@@ -54,13 +54,13 @@ FILES_BUILTINS	=	bi_exit.c 								\
 					bi_pwd_echo_unset_export.c				\
 					bi_env.c
 
-FILES_EXECUTER	=	execution_tree.c					\
+FILES_EXECUTER	=	minishell_main.c					\
+					execution_tree.c					\
 					manager_execution.c					\
 					worker_execution.c					\
 					parent_process.c					\
 					child_process.c						\
-					child_execve.c						\
-					main.c
+					child_execve.c						
 
 FILES_FD_MAN	=	prepare_redirections.c	\
 					close_in_out.c			\
