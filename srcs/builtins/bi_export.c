@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 17:09:22 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/23 20:02:14 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 18:56:21 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static void	print_export_list(t_block *block, char *exp_item, int fd)
 	if (exp_item[f] && ft_putstr_fd(&exp_item[f], fd) == -1)
 		block->my_status = SIGPIPE + EXIT_SIGNALED;
 	if (((exp_item[f] && exp_item[f] == '=') || (exp_item[f - 1] && \
-	exp_item[f - 1] == '=')) && ft_putstr_fd("\"", fd) != -1)
+	exp_item[f - 1] == '=')) && ft_putstr_fd("\"", fd) == -1)
 		block->my_status = SIGPIPE + EXIT_SIGNALED;
 	if (ft_putstr_fd("\n", fd) == -1)
 		block->my_status = SIGPIPE + EXIT_SIGNALED;
