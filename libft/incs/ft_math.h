@@ -20,6 +20,6 @@ int		ft_min(int first, int second);
 int		ft_max(int first, int second);
 float	ft_fmin(float first, float second);
 float	ft_fmax(float first, float second);
-int		ft_ternary(int cond, int true, int false);
+int		ft_ternary(int cond, int ret_true, int ret_false);
 
 #endif

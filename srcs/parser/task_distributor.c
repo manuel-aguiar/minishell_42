@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 09:57:09 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/23 10:36:21 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 14:10:42 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,26 @@ int	distribute_tasks_between_managers_and_workers(t_block *block)
 	return (1);
 }
 
-int	setup_task_distributor(t_block *block)
+static int	manager_inits_worker_lists_and_status(t_block *block)
 {
 	int	i;
 
+	ft_memset(block->worker_exit_status, -1, (block->op_count + 1) \
+		* sizeof(*(block->worker_exit_status)));
+	i = 0;
+	while (i < block->op_count + 1)
+	{
+		block->worker_exit_status[i] = -1;
+		block->worker_tasks[i] = token_list_new();
+		if (!block->worker_tasks[i])
+			return (free_task_distributor(block));
+		i++;
+	}
+	return (1);
+}
+
+int	setup_task_distributor(t_block *block)
+{
 	block->op_count = check_if_worker_and_count_operators(block);
 	if (!block->is_worker)
 	{
@@ -48,22 +64,14 @@ int	setup_task_distributor(t_block *block)
 				sizeof(*(block->worker_pids)));
 		block->worker_exit_status = ft_calloc(block->op_count + 1,
 				sizeof(*(block->worker_exit_status)));
-		ft_memset(block->worker_exit_status, -1, (block->op_count + 1)
-			* sizeof(*(block->worker_exit_status)));
-		if (!block->op_id || !block->worker_tasks || !block->worker_pids)
+		if (!block->op_id || !block->worker_tasks \
+		|| !block->worker_pids || !block->worker_exit_status)
 		{
 			perror_msg_int("malloc", 0);
 			return (free_task_distributor(block));
 		}
-		i = 0;
-		while (i < block->op_count + 1)
-		{
-			block->worker_exit_status[i] = -1;
-			block->worker_tasks[i] = token_list_new();
-			if (!block->worker_tasks[i])
-				return (free_task_distributor(block));
-			i++;
-		}
+		if (!manager_inits_worker_lists_and_status(block))
+			return (0);
 	}
 	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard_return.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 13:51:53 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/17 13:34:50 by mnascime         ###   ########.fr       */
+/*   Updated: 2023/09/24 13:51:19 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,16 @@ void	*destroy_wildcard(t_wildc *wildcard, int clean_exit)
 	return (NULL);
 }
 
-static int	init_wildcard_struct_on_stack(t_wildc *wildcard, char *pattern, int pat_len)
+static int	init_wildcard_struct_on_stack(t_wildc *wildcard, char *pattern, \
+			int pat_len)
 {
 	wildcard->pattern = pattern;
 	wildcard->pat_len = pat_len;
 	wildcard->sub_count = 0;
 	wildcard->match_count = 0;
 	wildcard->depth = count_chars(pattern, '/');
-	wildcard->sub_pats = ft_split_count(wildcard->pattern, " *", &wildcard->sub_count);
+	wildcard->sub_pats = ft_split_count(wildcard->pattern, " *", \
+						&wildcard->sub_count);
 	if (!wildcard->sub_pats)
 		return (0);
 	wildcard->files = vdmlist_new();

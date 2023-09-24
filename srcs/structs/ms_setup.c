@@ -6,13 +6,13 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:30:56 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/23 14:06:06 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 13:53:01 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int g_signal;
+int	g_signal;
 
 int	ms_disable_sigquit(t_ms *ms)
 {
@@ -54,8 +54,6 @@ int	ms_init(t_ms *ms, char *avzero, char **env)
 		return (ms_destroy(ms));
 	return (1);
 }
-
-
 
 int	ms_setup_initial_env(t_ms *ms, char **env)
 {

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 14:02:09 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/23 19:47:37 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 13:02:13 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,8 @@ int	manage_io_expansion(t_block *block)
 	fail_return = ft_triple_join("\'", redir_copy, "\'");
 	if (!fail_return)
 		return (perror_msg_int("malloc", 0));
-	if (!expand_dollars(&redir_copy, block->ms))
-		return (0);
-	if (!expand_wildcards(&redir_copy, NULL))
+	if (!expand_dollars(&redir_copy, block->ms) \
+	|| !expand_wildcards(&redir_copy))
 		return (0);
 	split = ft_split_count(redir_copy, "\t\v\n\r ", &count);
 	ft_free_charmat_null(&split, free);
@@ -48,7 +47,7 @@ int	manage_io_expansion(t_block *block)
 		return (ambiguous_redirection_err(block, &fail_return));
 	ft_free_set_null(&fail_return);
 	if (!block->io_files->head->text || !*(block->io_files->head->text))
-		return (perror_msg_func(block, block->io_files->head->text, 
+		return (perror_msg_func(block, block->io_files->head->text, \
 		CODE_OPEN, 1));
 	return (1);
 }

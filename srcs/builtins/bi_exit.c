@@ -6,18 +6,25 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 18:28:24 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/23 21:36:32 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 14:32:41 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	exit_execution(t_block *block, char *arg, int is_exiting, int is_error)
+void	exit_destroy_and_exit(t_block *block)
 {
 	int	save_status;
 
-	if (!block->i_am_forked)
-		ft_putstr_fd("exit\n", block->ms->outfd);
+	save_status = block->my_status;
+	ms_destroy(block->ms);
+	exit(save_status);
+}
+
+int	exit_execution(t_block *block, char *arg, int is_exiting, int is_error)
+{
+	if (!block->i_am_forked && ft_putstr_fd("exit\n", block->final_out) == -1)
+		block->my_status = SIGPIPE + EXIT_SIGNALED;
 	if (is_error)
 	{
 		ft_putstr_fd(block->ms->name, block->ms->errfd);
@@ -31,11 +38,7 @@ int	exit_execution(t_block *block, char *arg, int is_exiting, int is_error)
 			ft_putstr_fd("too many arguments\n", block->ms->errfd);
 	}
 	if (is_exiting)
-	{
-		save_status = block->my_status;
-		ms_destroy(block->ms);
-		exit(save_status);
-	}
+		exit_destroy_and_exit(block);
 	else if (block->my_manager)
 		block->my_manager->my_status = block->my_status;
 	else
@@ -74,18 +77,18 @@ int	run_exit(t_block *block)
 	{
 		if (!exit_atoi(block->cmd_args[1], &block->my_status))
 		{
-			block->my_status = 2;											// substituir macros	
+			block->my_status = EXIT_NON_NUMERICAL;
 			exit_execution(block, block->cmd_args[1], 1, 1);
 		}
 		else if (block->cmd_args[2])
 		{
-			block->my_status = 1;											// substituir macros			
-			exit_execution(block, NULL, 0, 1);
+			block->my_status = EXIT_TOO_MANY_ARGS;
+			exit_execution(block, NULL, false, true);
 		}
 		else
-			exit_execution(block, NULL, 1, 0);						
+			exit_execution(block, NULL, true, false);
 	}
 	else
-		exit_execution(block, NULL, 1, 0);		
+		exit_execution(block, NULL, true, false);
 	return (1);
 }

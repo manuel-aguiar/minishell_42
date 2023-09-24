@@ -86,7 +86,7 @@ char	**ft_split_count(t_cchar *s, char *sepset, int *place_count)
 		split[i] = malloc(sizeof(*split[i]) * (wordlen + 1));
 		if (!split[i])
 			return (perror_msg_ptr("malloc", \
-			ft_free_charmat_null(&split, &free)));
+			ft_free_sizemat_null(&split, i, &free)));
 		s = copyword(split[i], s, wordlen);
 		i++;
 	}

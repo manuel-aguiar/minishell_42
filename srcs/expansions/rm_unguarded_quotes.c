@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 13:51:18 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/19 22:25:47 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 13:50:39 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,32 +39,19 @@ static int	setup_guard_array(char *str)
 	return (1);
 }
 
-int	remove_unguarded_quotes(char **str, int *has_guards)
+static int	remove_quotes_copy_replace(char **str, int *has_guards, \
+			int oldlen, int newlen)
 {
-	int		len;
 	char	*new;
 	int		i;
 	int		j;
 
-	setup_guard_array(*str);
-	i = 0;
-	j = 0;
-	while ((*str)[i])
-		if ((*str)[i++] != -1)
-			j++;
-	len = i;
-	if (j == len)
-	{
-		if (has_guards)
-			*has_guards = 0;
-		return (1);
-	}
-	new = malloc(sizeof(*new) * (j + 1));
+	new = malloc(sizeof(*new) * (newlen + 1));
 	if (!new)
 		return (perror_msg_int("malloc", 0));
 	i = 0;
 	j = 0;
-	while (i < len)
+	while (i < oldlen)
 	{
 		if ((*str)[i] != -1)
 			new[j++] = (*str)[i];
@@ -76,4 +63,26 @@ int	remove_unguarded_quotes(char **str, int *has_guards)
 	if (has_guards)
 		*has_guards = 1;
 	return (1);
+}
+
+int	remove_unguarded_quotes(char **str, int *has_guards)
+{
+	int		oldlen;
+	int		newlen;
+	int		i;
+
+	setup_guard_array(*str);
+	i = 0;
+	newlen = 0;
+	while ((*str)[i])
+		if ((*str)[i++] != -1)
+			newlen++;
+	oldlen = i;
+	if (newlen == oldlen)
+	{
+		if (has_guards)
+			*has_guards = 0;
+		return (1);
+	}
+	return (remove_quotes_copy_replace(str, has_guards, oldlen, newlen));
 }

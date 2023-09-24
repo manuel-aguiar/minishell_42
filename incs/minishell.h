@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/23 21:40:47 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 14:22:38 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <sys/wait.h>
 # include <sys/stat.h>
 # include <errno.h>
+# include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <dirent.h>
@@ -51,6 +52,8 @@
 # define EXIT_SYNTAX 2
 # define EXIT_AMBIG_REDIR 1
 # define EXIT_SIGNALED 128
+# define EXIT_TOO_MANY_ARGS 1
+# define EXIT_NON_NUMERICAL 2
 
 extern int g_signal;
 
@@ -122,6 +125,9 @@ typedef struct s_wildc
 	struct dirent	*entry;
 	char			*filename;
 	char			*copy_dir;
+	int				i;
+	int				j;
+	int				k;
 }	t_wildc;
 
 enum e_builtin
@@ -187,23 +193,29 @@ int		setup_task_distributor(t_block *block);
 int		free_task_distributor(t_block *block);
 int		check_if_worker_and_count_operators(t_block *block);
 
-/*manager_tasks.c*/
-int		manager_gets_workers_and_operators(t_block *manager);
+/*manager_tasks_1.c*/
+
 int		manager_extract_redirections(t_block *manager);
 int		manager_subshell_and_arithmatic(t_block *manager);
 int		manager_check_arithmatic_parenthesis(t_block *manager);
 void	manager_destroy_worker_tasks(t_block *manager);
+
+/*manager_tasks_2.c*/
+int		manager_gets_workers_and_operators(t_block *manager);
 
 /*worker_tasks_1.c*/
 int		worker_task_preparation(t_block *worker);
 int		worker_extract_redirections(t_block *worker);
 
 /*worker_tasks_2.c*/
-int 	worker_args_split_add_token(t_block *worker, t_token_node *arg, int *move);
 int		worker_args_rm_unguarded_quotes(t_block *worker);
 int		worker_args_split_unguarded_quotes(t_block *worker);
 int		worker_args_expand_dollar_wildcard(t_block *worker);
 int		worker_dump_tasks_to_cmd_args(t_block *worker);
+
+/*worker_tasks_3.c*/
+int 	worker_args_split_add_token(t_block *worker, t_token_node *arg, int *move);
+
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -302,7 +314,7 @@ int		open_here_docs_at_block(t_block *block);
 //////////////////////////////////////
 
 /*wildcard_expansion.c*/
-int		expand_wildcards(char **to_expand, char **fail_return);
+int		expand_wildcards(char **to_expand);
 
 /*wildcard_return.c*/
 char	*wildcard(char *pattern, int pat_len, int *match_count);
@@ -318,6 +330,7 @@ char	**list_to_array(t_vdmlist *list);
 
 /* dollar_expansion.c */
 int		expand_dollars(char **to_expand, t_ms *ms);
+int		dollar_search_replace(char **to_expand, t_ms *ms, int *index);
 
 /* dollar_heredoc*/
 int		here_doc_expand_dollars(char **to_expand, t_ms *ms);

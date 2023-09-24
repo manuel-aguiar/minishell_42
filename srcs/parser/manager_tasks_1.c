@@ -1,53 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   manager_tasks.c                                    :+:      :+:    :+:   */
+/*   manager_tasks_1.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:04:12 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/21 10:21:23 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 14:05:06 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	manager_gets_workers_and_operators(t_block *manager)
-{
-	t_token_node	*cur;
-	int				all;
-	int				i;
-	int				open_par;
-
-	i = 0;
-	all = 0;
-	open_par = 0;
-	cur = manager->prompt->head;
-	while (all < manager->op_count)
-	{
-		open_par += (cur->type == T_OPEN_PAR);
-		open_par -= (cur->type == T_CLOSE_PAR);
-		if (cur && token_is_big_operator(cur) && !open_par)
-		{
-			token_list_move_top_to_new(manager->worker_tasks[all],
-				manager->prompt, cur->prev, i);
-			manager->op_id[all] = manager->prompt->head->type;
-			token_list_del_head(manager->prompt);
-			cur = manager->prompt->head;
-			i = 0;
-			all++;
-		}
-		else
-		{
-			i++;
-			cur = cur->next;
-		}
-	}
-	token_list_destroy(&manager->worker_tasks[all]);
-	manager->worker_tasks[all] = manager->prompt;
-	manager->prompt = NULL;
-	return (1);
-}
 
 int	manager_extract_redirections(t_block *manager)
 {
