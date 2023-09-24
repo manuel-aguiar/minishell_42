@@ -72,7 +72,8 @@ FILES_FD_MAN	=	prepare_redirections.c	\
 FILES_PARSER	=	task_distributor.c		\
 					manager_tasks.c			\
 					worker_tasks_1.c		\
-					worker_tasks_2.c
+					worker_tasks_2.c		\
+					worker_tasks_3.c
 					
 FILES_EXPAND	=	wildcard_return.c			\
 					wildcard_search_files.c		\

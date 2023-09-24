@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:36:31 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/24 12:23:25 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 13:01:17 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static int	wildcard_strjoin_result(char **to_expand, char **join, \
 	return (1);
 }
 
-int	wildcard_search_replace(char **to_expand, int *index, char **fail_return)
+int	wildcard_search_replace(char **to_expand, int *index)
 {
 	char	*join;
 	int		count;
@@ -66,13 +66,6 @@ int	wildcard_search_replace(char **to_expand, int *index, char **fail_return)
 	join = wildcard(&(*to_expand)[start], end - start, &count);
 	if (!join)
 		return (0);
-	if (count > 1 && fail_return)
-	{
-		(*to_expand)[end] = '\0';
-		*fail_return = ft_triple_join("\'", &((*to_expand)[start]), "\'");
-		free(join);
-		return (1);
-	}
 	*index += (ft_strlen(join) - *index + start);
 	return (wildcard_strjoin_result(to_expand, &join, start, end));
 }
@@ -106,7 +99,7 @@ static void	manage_quotes(char checkquote, int *quote, int *index)
 	*index += 1;
 }
 
-int	expand_wildcards(char **to_expand, char **fail_return)
+int	expand_wildcards(char **to_expand)
 {
 	int	i;
 	int	quote;
@@ -119,10 +112,8 @@ int	expand_wildcards(char **to_expand, char **fail_return)
 			manage_quotes((*to_expand)[i], &quote, &i);
 		else if ((*to_expand)[i] == '*' && !quote)
 		{
-			if (!wildcard_search_replace(to_expand, &i, fail_return))
+			if (!wildcard_search_replace(to_expand, &i))
 				return (0);
-			if (fail_return && *fail_return)
-				break ;
 		}
 		else
 			i++;
