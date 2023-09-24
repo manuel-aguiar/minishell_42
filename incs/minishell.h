@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/24 14:22:38 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 18:35:41 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,8 @@ int				prompt_is_valid(t_ms *ms);
 int				valid_elem_order(t_ms *ms);
 int				valid_redir_texts(t_ms *ms);
 int				invalid_elem_msg(t_ms *ms, int type, char *has_text, char *text);
-
+void			deal_with_text(t_token_list *list, \
+				char **prompt, char **temp, int to_create);
 //////////////////////////////////////
 //////////////////////////////////////
 ////////////// PARSER ////////////////

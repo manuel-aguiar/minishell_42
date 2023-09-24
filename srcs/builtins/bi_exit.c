@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 18:28:24 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/24 14:32:41 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 18:41:16 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	exit_atoi(char *arg, int *place_res)
 		arg++;
 	if (*arg)
 		return (0);
-	*place_res = res * sign % UCHAR_MAX;
+	*place_res = res * sign % (UCHAR_MAX + 1);
 	return (1);
 }
 

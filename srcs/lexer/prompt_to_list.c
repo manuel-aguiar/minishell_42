@@ -6,11 +6,11 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 15:42:02 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/24 14:57:28 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 18:36:23 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "token_list.h"
+#include "minishell.h"
 
 static void	upd_temp_and_prompt(char **prompt, int len, char **temp)
 {
