@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_count_replenish.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:31:56 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/17 13:46:32 by mnascime         ###   ########.fr       */
+/*   Updated: 2023/09/24 14:44:36 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,25 +76,24 @@ char	**ft_split_count_replenish(t_cchar *s, t_cchar *og, \
 	char	**split;
 	char	*save;
 
-	if (!s)
+	if (!s || !og)
 		return (NULL);
 	save = (char *)s;
 	*place_count = wordnum(s, sepset);
 	split = malloc(sizeof(*split) * (*place_count + 1));
-	if (split)
+	if (!split)
+		return (NULL);
+	i = 0;
+	while (i < *place_count)
 	{
-		i = 0;
-		while (i < *place_count)
-		{
-			s = lenword(s, sepset, &wordlen);
-			split[i] = malloc(sizeof(*split[i]) * (wordlen + 1));
-			if (split[i])
-				s = copyword_replenish(split[i], s, &og[s - save], wordlen);
-			else
-				return (ft_free_charmat_null(&split, &free));
-			i++;
-		}
-		split[i] = NULL;
+		s = lenword(s, sepset, &wordlen);
+		split[i] = malloc(sizeof(*split[i]) * (wordlen + 1));
+		if (split[i])
+			s = copyword_replenish(split[i], s, &og[s - save], wordlen);
+		else
+			return (ft_free_charmat_null(&split, &free));
+		i++;
 	}
+	split[i] = NULL;
 	return (split);
 }
