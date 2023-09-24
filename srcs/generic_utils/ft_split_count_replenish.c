@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:31:56 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/24 14:44:36 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 14:47:49 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,16 +82,16 @@ char	**ft_split_count_replenish(t_cchar *s, t_cchar *og, \
 	*place_count = wordnum(s, sepset);
 	split = malloc(sizeof(*split) * (*place_count + 1));
 	if (!split)
-		return (NULL);
+		return (perror_msg_ptr("malloc", NULL));
 	i = 0;
 	while (i < *place_count)
 	{
 		s = lenword(s, sepset, &wordlen);
 		split[i] = malloc(sizeof(*split[i]) * (wordlen + 1));
-		if (split[i])
-			s = copyword_replenish(split[i], s, &og[s - save], wordlen);
-		else
-			return (ft_free_charmat_null(&split, &free));
+		if (!split[i])
+			return (perror_msg_ptr("malloc", \
+			ft_free_sizemat_null(&split, i, &free)));
+		s = copyword_replenish(split[i], s, &og[s - save], wordlen);
 		i++;
 	}
 	split[i] = NULL;
