@@ -6,6 +6,7 @@
         "string": "c",
         "string_view": "c",
         "minishell.h": "c",
-        "random": "c"
+        "random": "c",
+        "SAVECOPY.C": "cpp"
     }
 }

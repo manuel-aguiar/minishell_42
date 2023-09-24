@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/24 13:01:33 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 13:22:03 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -324,6 +324,7 @@ char	**list_to_array(t_vdmlist *list);
 
 /* dollar_expansion.c */
 int		expand_dollars(char **to_expand, t_ms *ms);
+int		dollar_search_replace(char **to_expand, t_ms *ms, int *index);
 
 /* dollar_heredoc*/
 int		here_doc_expand_dollars(char **to_expand, t_ms *ms);
