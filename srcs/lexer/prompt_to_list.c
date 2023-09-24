@@ -6,85 +6,24 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 15:42:02 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/18 15:54:13 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 14:57:28 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "token_list.h"
 
-static int	get_len_of_text_arg(char **prompt)
+static void	upd_temp_and_prompt(char **prompt, int len, char **temp)
 {
-	int		len;
-	int		dummy_token;
-	int		count_squotes;
-	int		count_dquotes;
-
-	len = 0;
-	dummy_token = 0;
-	count_squotes = 0;
-	count_dquotes = 0;
-	while (**prompt && (!ft_isspace(**prompt) || (ft_isspace(**prompt) && \
-	(count_squotes % 2 != 0 || count_dquotes % 2 != 0))) \
-	&& !is_token(prompt, &dummy_token, 0))
-	{
-		dummy_token = 0;
-		len++;
-		(*prompt)++;
-		update_quote_count(**prompt, &count_squotes, &count_dquotes);
-	}
-	return (len);
-}
-
-void	deals_with_text(t_token_list *list, char **prompt, char **temp)
-{
-	int		len;
-	int		rewind;
-
-	len = 0;
-	rewind = ft_strlen(*prompt);
-	len = get_len_of_text_arg(prompt);
-	while (!prompt)
-		(*prompt)--;
-	(*prompt) -= rewind - ft_strlen(*prompt);
 	if (len > 0)
 	{
-		(*temp) = ft_strdup_len(*prompt, len);
+		(*temp) = ft_strdup_len((*prompt), len);
 		if (!(*temp))
 			return ;
-		(*prompt) += len;
-		token_list_in_tail(list, T_ARG, (*temp));				//malloc
 	}
-}
-
-void	deals_with_quotes(char **prompt, char **temp)
-{
-	int		len;
-	char	*str;
-	char	current;
-	char	quotes;
-
-	len = 0;
-	quotes = 0;
-	current = **prompt;
-	str = (*prompt);
-	while (str[len] && (!ft_isspace(str[len]) \
-	|| (ft_isspace(str[len]) && quotes % 2 != 0)))
-	{
-		while (str[len] && str[len] != current)
-			len++;
-		if (str[len] && str[len] == current)
-		{
-			len++;
-			quotes++;
-		}
-	}
-	(*temp) = ft_strdup_len((*prompt), len);
-	if (!(*temp))
-		return ;
 	(*prompt) += len;
 }
 
-void	create_args_for_token(char **prompt, \
+static void	create_args_for_token(char **prompt, \
 int token, int *dummy_token, char **temp)
 {
 	int		len;
@@ -107,14 +46,13 @@ int token, int *dummy_token, char **temp)
 		(*prompt)++;
 	}
 	(*prompt) -= rewind - ft_strlen(*prompt);
-	if (len > 0)
-		(*temp) = ft_strdup_len((*prompt), len);								//malloc
-	(*prompt) += len;
+	upd_temp_and_prompt(prompt, len, temp);
 	if (token_is_operator(token))
 		(*temp) = NULL;
 }
 
-void	fill_in_token(char **prompt, int *token, char **temp)
+static void	fill_in_token(t_token_list *list, \
+char **prompt, int *token, char **temp)
 {
 	int		dummy_token;
 
@@ -124,15 +62,13 @@ void	fill_in_token(char **prompt, int *token, char **temp)
 	if (*prompt && !is_token(prompt, &dummy_token, 0))
 	{
 		if (*prompt && !token_is_operator(*token) && ft_isquote(**prompt))
-			deals_with_quotes(prompt, temp);
+			deal_with_text(list, prompt, temp, 0);
 		else
 			create_args_for_token(prompt, *token, &dummy_token, temp);
 	}
 	else
 		(*temp) = NULL;
 }
-
-//NO CHECKSSSSSSSSSS
 
 int	prompt_to_list(t_token_list *list, char *prompt)
 {
@@ -147,36 +83,11 @@ int	prompt_to_list(t_token_list *list, char *prompt)
 			prompt++;
 		if (*prompt && is_token(&prompt, &token, 1))
 		{
-			fill_in_token(&prompt, &token, &temp);
+			fill_in_token(list, &prompt, &token, &temp);
 			token_list_in_tail(list, token, temp);
 		}
-		else if (*prompt && ft_isquote(*prompt))
-		{
-			deals_with_quotes(&prompt, &temp);
-			token_list_in_tail(list, T_ARG, temp);
-		}
 		else if (*prompt)
-			deals_with_text(list, &prompt, &temp);
+			deal_with_text(list, &prompt, &temp, 1);
 	}
 	return (1);
 }
-/*
-int	main(void)
-{
-	char			*line;
-	t_token_list	*list;
-
-	while (1)
-	{
-		line = readline("line: ");
-		if (!line)
-			break ;
-		list = token_list_new();
-		prompt_to_list(list, line);
-		free(line);
-		token_list_head_print(list, print_token);
-		token_list_destroy(&list);
-	}
-	return (0);
-}
-*/
