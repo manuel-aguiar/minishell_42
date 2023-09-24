@@ -55,7 +55,8 @@ FILES_BUILTINS	=	bi_exit.c 								\
 					bi_env.c
 
 FILES_EXECUTER	=	minishell_main.c					\
-					execution_tree.c					\
+					execution_tree_loop.c				\
+					execution_tree_setup.c				\
 					manager_execution.c					\
 					worker_execution.c					\
 					parent_process.c					\

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/24 18:35:41 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 20:14:38 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,13 @@
 
 /* error name macros */
 # define ERR_CMD "command not found"
-// provavelmente adicionar ambiguous redirect aqui também
 
 /* error code macros */
 # define CODE_OPEN 1
 # define CODE_CMD 127
-# define CODE_DUP 123123     //i don't know...
-# define CODE_DUP2 123123     //i don't know...
-# define CODE_EXECVE 123123     //i don't know...
+# define CODE_DUP 1
+# define CODE_DUP2 1
+# define CODE_EXECVE 1
 
 # define EXIT_SIGINT 130
 # define EXIT_SIGQUIT 131
@@ -55,8 +54,7 @@
 # define EXIT_TOO_MANY_ARGS 1
 # define EXIT_NON_NUMERICAL 2
 
-extern int g_signal;
-
+extern int				g_signal;
 typedef struct s_ms		t_ms;
 typedef struct s_block	t_block;
 
@@ -154,7 +152,8 @@ int		ms_increase_shell_level(t_ms *ms);
 int		ms_destroy(t_ms *ms);
 
 /*block_setup.c*/
-t_block	*block_init(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id);
+t_block	*block_init(t_ms *ms, t_block *manager, \
+		t_token_list *prompt, int my_id);
 void	block_destroy(void *og_block);
 
 /* ms_signals.c */
@@ -169,19 +168,19 @@ int		ms_reset_signal(t_ms *ms);
 //////////////////////////////////////
 
 /*get_prompt.c*/
-int				get_prompt(t_ms *ms);
-char			*prompt_readline(t_ms *ms);
-int				prompt_token_setup(t_ms *ms, char *line);
+int		get_prompt(t_ms *ms);
+char	*prompt_readline(t_ms *ms);
+int		prompt_token_setup(t_ms *ms, char *line);
 
-/* ??????? */																	// discriminar por ficheiros
-int				ft_isquote(int c);
-char			*ft_strdup_len(char *s, int len);
-int				prompt_is_valid(t_ms *ms);
-int				valid_elem_order(t_ms *ms);
-int				valid_redir_texts(t_ms *ms);
-int				invalid_elem_msg(t_ms *ms, int type, char *has_text, char *text);
-void			deal_with_text(t_token_list *list, \
-				char **prompt, char **temp, int to_create);
+int		ft_isquote(int c);
+char	*ft_strdup_len(char *s, int len);
+int		prompt_is_valid(t_ms *ms);
+int		valid_elem_order(t_ms *ms);
+int		valid_redir_texts(t_ms *ms);
+int		invalid_elem_msg(t_ms *ms, int type, char *has_text, char *text);
+void	deal_with_text(t_token_list *list, \
+		char **prompt, char **temp, int to_create);
+
 //////////////////////////////////////
 //////////////////////////////////////
 ////////////// PARSER ////////////////
@@ -215,8 +214,8 @@ int		worker_args_expand_dollar_wildcard(t_block *worker);
 int		worker_dump_tasks_to_cmd_args(t_block *worker);
 
 /*worker_tasks_3.c*/
-int 	worker_args_split_add_token(t_block *worker, t_token_node *arg, int *move);
-
+int		worker_args_split_add_token(t_block *worker, \
+		t_token_node *arg, int *move);
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -240,20 +239,22 @@ int		worker_execution(t_block *worker);
 
 /* error_message.c */
 
-int		setup_execution_tree(t_ms *ms, t_block *manager, t_token_list *prompt, int my_id);
+int		setup_execution_tree(t_ms *ms, t_block *manager, \
+		t_token_list *prompt, int my_id);
 int		exec_command(t_block *block);
 int		process_execution(t_block *block);
 
 /*child_process.c*/
 int		child_process(t_block *block);
-void	error_child_exit(t_block *block, char *error_msg, int errcode,
+void	error_child_exit(t_block *block, char *error_msg, int errcode, \
 		int with_ms);
-void	perror_child_exit(t_block *block, int errcode,
+void	perror_child_exit(t_block *block, int errcode, \
 		int with_ms);
 
 /*child_execve.c*/
 int		exec_command(t_block *block);
-int		perror_msg_func(t_block *block, char *function, int errcode, int with_ms);
+int		perror_msg_func(t_block *block, char *function, \
+		int errcode, int with_ms);
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -265,7 +266,6 @@ int		perror_msg_func(t_block *block, char *function, int errcode, int with_ms);
 int		check_builtins(t_block *block);
 int		exec_builtin(t_block *block, int builtin);
 
-/* ??????? */																// discriminar por ficheiros
 int		run_cd(t_block *block);
 int		run_env(t_block *block);
 int		run_pwd(t_block *block);
