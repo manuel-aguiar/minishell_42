@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 12:41:01 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/24 13:02:25 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 13:54:00 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	empty_quotes(char *str)
 
 int	worker_args_split_helper(char ***split_place, t_token_node *arg, int *move)
 {
-	char    *copy;
+	char	*copy;
 
 	copy = ft_strdup(arg->text);
 	if (!copy)

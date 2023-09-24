@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/24 13:22:03 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 14:05:03 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,12 +190,15 @@ int		setup_task_distributor(t_block *block);
 int		free_task_distributor(t_block *block);
 int		check_if_worker_and_count_operators(t_block *block);
 
-/*manager_tasks.c*/
-int		manager_gets_workers_and_operators(t_block *manager);
+/*manager_tasks_1.c*/
+
 int		manager_extract_redirections(t_block *manager);
 int		manager_subshell_and_arithmatic(t_block *manager);
 int		manager_check_arithmatic_parenthesis(t_block *manager);
 void	manager_destroy_worker_tasks(t_block *manager);
+
+/*manager_tasks_2.c*/
+int		manager_gets_workers_and_operators(t_block *manager);
 
 /*worker_tasks_1.c*/
 int		worker_task_preparation(t_block *worker);
