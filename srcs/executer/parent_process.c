@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/23 17:31:55 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 14:37:24 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,10 @@ static int	parent_process(t_block *block, pid_t pid)
 	return (1);
 }
 
-static int	external_program_execution(t_block * block)
+static int	external_program_execution(t_block *block)
 {
 	pid_t	pid;
-	
+
 	pid = fork();
 	if (!block->i_am_forked)
 	{
@@ -64,7 +64,6 @@ static int	external_program_execution(t_block * block)
 
 int	process_execution(t_block *block)
 {
-	
 	int		builtin;
 
 	builtin = check_builtins(block);
@@ -77,7 +76,7 @@ int	process_execution(t_block *block)
 		{
 			if (block->my_manager)
 				block->my_manager->worker_exit_status[block->my_id] \
-				= block->my_status;						
+				= block->my_status;
 			else
 				block->ms->exit_status = block->my_status;
 		}

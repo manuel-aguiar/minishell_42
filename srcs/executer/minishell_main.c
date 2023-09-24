@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   minishell_main.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/23 10:47:32 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 14:36:30 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int reopen_stdin(t_ms *ms)
+int	reopen_stdin(t_ms *ms)
 {
 	ms->kill_stdin = 1;
 	if (dup2(ms->dup_stdin, ms->infd) == -1)
@@ -20,7 +20,7 @@ int reopen_stdin(t_ms *ms)
 	close(ms->dup_stdin);
 	ms->dup_stdin = dup(ms->infd);
 	if (ms->dup_stdin == -1)
-		perror_msg_int("dup", 0);	
+		perror_msg_int("dup", 0);
 	return (1);
 }
 
@@ -52,7 +52,8 @@ int	minishell_main_loop(t_ms *ms)
 }
 
 /*
-valgrind --track-fds=yes --trace-children=yes --leak-check=full --show-leak-kinds=all ./minishell
+valgrind --track-fds=yes --trace-children=yes 
+--leak-check=full --show-leak-kinds=all ./minishell
 */
 
 int	main(int ac, char **av, char **env)
