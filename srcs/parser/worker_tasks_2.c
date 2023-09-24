@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:18:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/23 10:53:16 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 12:30:54 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,13 +90,13 @@ int	worker_args_split_unguarded_quotes(t_block *worker)
 	{
 		if (!*(cur->text))
 			cur = cur->next;
-		else 
+		else
 		{
 			if (!worker_args_split_add_token(worker, cur, &move))
 				return (0);
 			while (move-- > 0)
 				cur = cur->next;
-		} 
+		}
 	}
 	return (1);
 }

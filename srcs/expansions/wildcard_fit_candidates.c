@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcard_fit_candidates.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 13:50:47 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/17 13:35:47 by mnascime         ###   ########.fr       */
+/*   Updated: 2023/09/24 12:28:46 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,30 +46,27 @@ static int	wc_mandatory_start(char *file, char *pattern)
 
 int	wildcard_fit_check(t_wildc *wc, char *file)
 {
-	int	i;
-	int	j;
-	int	k;
-
-	k = 0;
+	wc->k = 0;
 	if (wc->pattern[0] != '*')
 	{
-		if (!wc_mandatory_start(file, wc->sub_pats[k]))
+		if (!wc_mandatory_start(file, wc->sub_pats[wc->k]))
 			return (0);
-		k++;
+		wc->k++;
 	}
-	i = 0;
-	while (wc->sub_pats[k])
+	wc->i = 0;
+	while (wc->sub_pats[wc->k])
 	{
-		j = 0;
-		while (file[i] && file[i] != wc->sub_pats[k][j])
-			i++;
-		while (file[i + j] && file[i + j] == wc->sub_pats[k][j])
-			j++;
-		if (wc->sub_pats[k][j])
+		wc->j = 0;
+		while (file[wc->i] && file[wc->i] != wc->sub_pats[wc->k][wc->j])
+			wc->i++;
+		while (file[wc->i + wc->j] && file[wc->i + wc->j] \
+		== wc->sub_pats[wc->k][wc->j])
+			wc->j++;
+		if (wc->sub_pats[wc->k][wc->j])
 			return (0);
-		k++;
+		wc->k++;
 	}
-	if (wc->pattern[wc->pat_len - 1] != '*' && file[i + j])
-		return (wc_mandatory_end(file, wc->sub_pats[k - 1], i));
+	if (wc->pattern[wc->pat_len - 1] != '*' && file[wc->i + wc->j])
+		return (wc_mandatory_end(file, wc->sub_pats[wc->k - 1], wc->i));
 	return (1);
 }

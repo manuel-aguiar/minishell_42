@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:42:58 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/22 18:42:56 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 12:29:12 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,15 @@
 	dollar expansion functions
 
 
-	all of these serve to insert on the cmd_arg/redirection the corresponding expansion of $
+	all of these serve to insert on the cmd_arg/redirection the corresponding 
+	expansion of $
 	according to the env variables and/or exit status,
 	all the functions take the place where the original argument is (char **).
 	This intent is to make the code more modular:
-		-   both cmd and block can use these when dealing with their redirections.
-		-   all that is required is that there is a pointer to t_ms available to search env
+		-   both cmd and block can use these when dealing with their
+		 redirections.
+		-   all that is required is that there is a pointer to t_ms 
+		available to search env
 		in the case of expanding $
 
 

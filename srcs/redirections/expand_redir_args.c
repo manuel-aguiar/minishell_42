@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 14:02:09 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/23 19:47:37 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 12:20:57 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	manage_io_expansion(t_block *block)
 		return (ambiguous_redirection_err(block, &fail_return));
 	ft_free_set_null(&fail_return);
 	if (!block->io_files->head->text || !*(block->io_files->head->text))
-		return (perror_msg_func(block, block->io_files->head->text, 
+		return (perror_msg_func(block, block->io_files->head->text, \
 		CODE_OPEN, 1));
 	return (1);
 }

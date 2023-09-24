@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/23 21:40:47 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 12:25:04 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,9 @@ typedef struct s_wildc
 	struct dirent	*entry;
 	char			*filename;
 	char			*copy_dir;
+	int				i;
+	int				j;
+	int				k;
 }	t_wildc;
 
 enum e_builtin

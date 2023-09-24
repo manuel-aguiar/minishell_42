@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:09:22 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/23 10:53:06 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 12:29:46 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,3 @@ int	worker_extract_redirections(t_block *worker)
 	}
 	return (1);
 }
-
-
