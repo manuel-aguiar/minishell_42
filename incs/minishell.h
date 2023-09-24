@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/24 20:14:38 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 22:00:08 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ enum e_builtin
 //////////////////////////////////////
 
 /*ms_setup.c*/
-int		ms_init(t_ms *ms, char *avzero, char **env);
+int		ms_init(t_ms *ms, char **env);
 int		ms_set_path(t_ms *ms);
 int		ms_setup_initial_env(t_ms *ms, char **env);
 int		ms_increase_shell_level(t_ms *ms);

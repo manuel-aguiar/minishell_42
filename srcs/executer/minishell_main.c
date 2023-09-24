@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/24 14:36:30 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 22:00:28 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ int	main(int ac, char **av, char **env)
 	t_ms	ms;
 
 	(void)ac;
-	if (!ms_init(&ms, &av[0][2], env))
+	(void)av;
+	if (!ms_init(&ms, env))
 		return (0);
 	minishell_main_loop(&ms);
 	ms_destroy(&ms);
