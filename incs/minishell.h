@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/24 14:05:03 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 14:22:38 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <sys/wait.h>
 # include <sys/stat.h>
 # include <errno.h>
+# include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <dirent.h>
@@ -51,6 +52,8 @@
 # define EXIT_SYNTAX 2
 # define EXIT_AMBIG_REDIR 1
 # define EXIT_SIGNALED 128
+# define EXIT_TOO_MANY_ARGS 1
+# define EXIT_NON_NUMERICAL 2
 
 extern int g_signal;
 

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 19:21:09 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/23 21:27:18 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 14:24:40 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ int	run_env(t_block *block)
 	}
 	return (1);
 }
-
 
 int	env_strcmp(void *s1, void *s2)
 {
