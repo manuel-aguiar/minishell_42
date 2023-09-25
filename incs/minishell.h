@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/25 09:26:19 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 15:59:52 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,6 @@ struct s_block
 typedef struct s_wildc
 {
 	char			*pattern;
-	char			**sub_pats;
 	int				depth;
 	int				sub_count;
 	int				pat_len;
@@ -318,14 +317,14 @@ int		open_here_docs_at_block(t_block *block);
 //////////////////////////////////////
 
 /*wildcard_expansion.c*/
-int		expand_wildcards(char **to_expand);
+int		expand_wildcards(char **to_expand, int *count);
 
 /*wildcard_return.c*/
 char	*wildcard(char *pattern, int pat_len, int *match_count);
 void	*destroy_wildcard(t_wildc *wildcard, int clean_exit);
 
 /*wildcard_fit_candidates.c*/
-int		wildcard_fit_check(t_wildc *wc, char *file);
+int		wildcard_fit_check(char* pattern, char* text);
 
 /* wildcard_search_files.c */
 void	void_putstr(void *str);
@@ -342,6 +341,7 @@ int		here_doc_expand_dollars(char **to_expand, t_ms *ms);
 
 /*rm_unguarded_quotes*/
 int		remove_unguarded_quotes(char **str, int *has_guards);
+int		remove_unguarded_quotes_wildcard(char **str, int *has_guards);
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -357,5 +357,10 @@ char	**ft_split_count_replenish(t_cchar *s, t_cchar *og, \
 		char *sepset, int *place_count);
 char	*ft_split_join(char **split, char *sep);
 char	*ft_triple_join(char *first, char *second, char *third);
+
+
+void		set_negative(char *str);
+void	turn_positive(char *str);
+
 
 #endif

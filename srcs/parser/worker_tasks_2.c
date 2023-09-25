@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:18:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/25 01:26:53 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 16:09:56 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,10 @@ int	worker_args_expand_dollar_wildcard(t_block *worker)
 			cur = cur->next;
 		else
 		{
-			if (!expand_dollars(&cur->text, worker->ms, true) \
-			|| !expand_wildcards(&cur->text))
-				return (0);
+			expand_dollars(&cur->text, worker->ms, true);
+			remove_unguarded_quotes_wildcard(&cur->text, NULL);
+			expand_wildcards(&cur->text, NULL);
+			remove_unguarded_quotes(&cur->text, NULL);
 			if (!*(cur->text))
 			{
 				next = cur->next;

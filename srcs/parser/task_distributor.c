@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 09:57:09 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/24 14:10:42 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 09:56:08 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ static int	manager_inits_worker_lists_and_status(t_block *block)
 
 int	setup_task_distributor(t_block *block)
 {
+	if (block->prompt->tail->type == T_OP_SEMICOL)
+		token_list_del_tail(block->prompt);
 	block->op_count = check_if_worker_and_count_operators(block);
 	if (!block->is_worker)
 	{

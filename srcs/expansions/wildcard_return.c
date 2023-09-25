@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 13:51:53 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/24 13:51:19 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 16:02:11 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ static int	count_chars(char *str, char c)
 
 void	*destroy_wildcard(t_wildc *wildcard, int clean_exit)
 {
-	if (wildcard->sub_pats)
-		ft_free_charmat_null(&wildcard->sub_pats, free);
 	if (wildcard->files)
 		vdmlist_destroy(&wildcard->files, free);
 	if (wildcard->test)
@@ -52,13 +50,8 @@ static int	init_wildcard_struct_on_stack(t_wildc *wildcard, char *pattern, \
 {
 	wildcard->pattern = pattern;
 	wildcard->pat_len = pat_len;
-	wildcard->sub_count = 0;
 	wildcard->match_count = 0;
 	wildcard->depth = count_chars(pattern, '/');
-	wildcard->sub_pats = ft_split_count(wildcard->pattern, " *", \
-						&wildcard->sub_count);
-	if (!wildcard->sub_pats)
-		return (0);
 	wildcard->files = vdmlist_new();
 	if (!wildcard->files)
 		return (0);
@@ -71,6 +64,37 @@ static int	init_wildcard_struct_on_stack(t_wildc *wildcard, char *pattern, \
 	return (1);
 }
 
+void		set_negative(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		str[i] *= -1;
+		i++;
+	}
+}
+
+void	wildcard_list_set_negative(t_vdmlist *files)
+{
+	t_vdmnode	*cur;
+
+	cur = files->head;
+	while (cur)
+	{
+		set_negative((char *)cur->data);
+		cur = cur->next;
+	}
+}
+
+void	void_putstr(void *str)
+{
+	char *my_str;
+	my_str = (char *)str;
+	printf("[%s]\n", my_str);
+}
+
 char	*wildcard(char *pattern, int pat_len, int *match_count)
 {
 	t_wildc	wildcard;
@@ -80,6 +104,8 @@ char	*wildcard(char *pattern, int pat_len, int *match_count)
 	if (!list_all_wildcard_matches(&wildcard, ".", 0))
 		return (destroy_wildcard(&wildcard, 0));
 	wildcard.match_count = wildcard.files->len;
+	if (match_count)
+		*match_count = wildcard.match_count;
 	if (wildcard.match_count == 0)
 		wildcard.join = ft_triple_join("\'", pattern, "\'");
 	else
@@ -91,7 +117,6 @@ char	*wildcard(char *pattern, int pat_len, int *match_count)
 	}
 	if (!wildcard.join)
 		return (destroy_wildcard(&wildcard, 0));
-	*match_count = wildcard.match_count;
 	destroy_wildcard(&wildcard, 1);
 	return (wildcard.join);
 }

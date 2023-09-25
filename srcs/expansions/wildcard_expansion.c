@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:36:31 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/24 13:01:17 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 15:45:24 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,21 +49,20 @@ static int	wildcard_strjoin_result(char **to_expand, char **join, \
 	return (1);
 }
 
-int	wildcard_search_replace(char **to_expand, int *index)
+int	wildcard_search_replace(char **to_expand, int *index, int *count)
 {
 	char	*join;
-	int		count;
 	int		start;
 	int		end;
 
 	start = *index;
-	while (start > 0 && (*to_expand)[start - 1] != ' ' \
+	while (start > 0 \
 	&& (*to_expand)[start - 1] != '<' && (*to_expand)[start - 1] != '>')
 		start--;
 	end = *index;
-	while ((*to_expand)[end] && (*to_expand)[end] != ' ')
+	while ((*to_expand)[end])
 		end++;
-	join = wildcard(&(*to_expand)[start], end - start, &count);
+	join = wildcard(&(*to_expand)[start], end - start, count);
 	if (!join)
 		return (0);
 	*index += (ft_strlen(join) - *index + start);
@@ -99,20 +98,21 @@ static void	manage_quotes(char checkquote, int *quote, int *index)
 	*index += 1;
 }
 
-int	expand_wildcards(char **to_expand)
+int	expand_wildcards(char **to_expand, int *count)
 {
 	int	i;
 	int	quote;
 
 	quote = 0;
 	i = 0;
+
 	while ((*to_expand)[i])
 	{
 		if ((*to_expand)[i] == '\'' || (*to_expand)[i] == '"')
 			manage_quotes((*to_expand)[i], &quote, &i);
 		else if ((*to_expand)[i] == '*' && !quote)
 		{
-			if (!wildcard_search_replace(to_expand, &i))
+			if (!wildcard_search_replace(to_expand, &i, count))
 				return (0);
 		}
 		else
