@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/24 20:14:38 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 01:15:38 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -330,8 +330,8 @@ int		list_all_wildcard_matches(t_wildc *wildc, char *path, int cur_lvl);
 char	**list_to_array(t_vdmlist *list);
 
 /* dollar_expansion.c */
-int		expand_dollars(char **to_expand, t_ms *ms);
-int		dollar_search_replace(char **to_expand, t_ms *ms, int *index);
+int		expand_dollars(char **to_expand, t_ms *ms, int turn_negative);
+int		dollar_search_replace(char **to_expand, t_ms *ms, int *index, int turn_negative);
 
 /* dollar_heredoc*/
 int		here_doc_expand_dollars(char **to_expand, t_ms *ms);

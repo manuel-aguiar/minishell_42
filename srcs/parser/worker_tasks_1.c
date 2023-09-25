@@ -6,11 +6,30 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:09:22 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/24 12:29:46 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 01:36:25 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	worker_turn_neg_chars_to_pos(t_block *worker)
+{
+	t_token_node	*cur;
+	int				i;
+
+	cur = worker->prompt->head;
+	while (cur)
+	{
+		i = 0;
+		while (cur->text[i])
+		{
+			if (!ft_isspace(cur->text[i]))
+				cur->text[i] = ft_abs(cur->text[i]);
+			i++;
+		}
+		cur = cur->next;
+	}
+}
 
 int	worker_task_preparation(t_block *worker)
 {
@@ -25,6 +44,7 @@ int	worker_task_preparation(t_block *worker)
 		return (0);
 	if (!worker_args_rm_unguarded_quotes(worker))
 		return (0);
+	worker_turn_neg_chars_to_pos(worker);
 	if (!worker_dump_tasks_to_cmd_args(worker))
 		return (0);
 	worker->cmd = ft_strdup(worker->cmd_args[0]);

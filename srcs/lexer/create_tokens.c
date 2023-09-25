@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_tokens.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mmaria-d <mmaria-d@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:03:01 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/16 23:30:04 by mmaria-d         ###   ########.fr       */
+/*   Updated: 2023/09/25 01:37:56 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	update_quote_count(char prompt, int *squotes, int *dquotes)
 {
-	if (prompt == '\'')
+	if (prompt == '\'' && (*dquotes) % 2 == 0)
 		(*squotes)++;
-	else if (prompt == '\"')
+	else if (prompt == '\"' && (*squotes) % 2 == 0)
 		(*dquotes)++;
 	else
 		return (0);
