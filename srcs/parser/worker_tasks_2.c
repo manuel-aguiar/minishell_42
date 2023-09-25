@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:18:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/25 17:38:15 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 17:44:42 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	worker_args_expand_and_split(t_block *worker)
 		}
 		//printf("stuck\n");
 	}
-	token_list_head_print(worker->prompt, print_token_args);
+	//token_list_head_print(worker->prompt, print_token_args);
 	return (1);
 }
 

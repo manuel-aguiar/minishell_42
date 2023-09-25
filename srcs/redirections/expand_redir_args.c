@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 14:02:09 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/25 17:34:21 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 17:49:09 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int	manage_io_expansion(t_block *block)
 	}
 	//printf("redir_copy after wildcard: [%s] found %d matches\n", redir_copy, count);
 	block->io_files->head->text = split[0];
+	ft_free_set_null(&redir_copy);
 	ft_free_set_null(&split);
 	if (!remove_unguarded_quotes(&block->io_files->head->text, NULL))
 		return (0);
