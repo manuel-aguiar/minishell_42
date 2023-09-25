@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:30:56 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/24 13:53:01 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/24 22:01:38 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	ms_disable_sigquit(t_ms *ms)
 	return (1);
 }
 
-int	ms_init(t_ms *ms, char *avzero, char **env)
+int	ms_init(t_ms *ms, char **env)
 {
 	ms->env = NULL;
 	if (!ms_setup_initial_env(ms, env))
@@ -34,7 +34,7 @@ int	ms_init(t_ms *ms, char *avzero, char **env)
 	if (!ms_increase_shell_level(ms))
 		return (ms_destroy(ms));
 	ms->prompt = NULL;
-	ms->name = avzero;
+	ms->name = ft_strdup("minishell");
 	ms->name_readline = ft_strjoin(ms->name, ">$ ");
 	if (!ms->name_readline)
 		return (ms_destroy(ms));
@@ -106,6 +106,8 @@ int	ms_destroy(t_ms *ms)
 		ft_free_set_null(&ms->prompt);
 	if (ms->first)
 		block_destroy(ms->first);
+	if (ms->name)
+		free(ms->name);
 	if (ms->name_readline)
 		ft_free_set_null(&ms->name_readline);
 	if (tcsetattr(ms->infd, TCSANOW, &ms->original) == -1)

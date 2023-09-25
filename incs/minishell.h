@@ -145,7 +145,7 @@ enum e_builtin
 //////////////////////////////////////
 
 /*ms_setup.c*/
-int		ms_init(t_ms *ms, char *avzero, char **env);
+int		ms_init(t_ms *ms, char **env);
 int		ms_set_path(t_ms *ms);
 int		ms_setup_initial_env(t_ms *ms, char **env);
 int		ms_increase_shell_level(t_ms *ms);
