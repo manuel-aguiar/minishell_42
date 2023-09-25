@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 14:02:09 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/25 01:13:29 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 09:23:33 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,19 @@ static int	ambiguous_redirection_err(t_block *block, char **fail_return)
 	return (0);
 }
 
+void	turn_positive(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] < 0)
+			str[i] *= -1;
+		i++;
+	}
+}
+
 int	manage_io_expansion(t_block *block)
 {
 	char	*redir_copy;
@@ -35,13 +48,21 @@ int	manage_io_expansion(t_block *block)
 	fail_return = ft_triple_join("\'", redir_copy, "\'");
 	if (!fail_return)
 		return (perror_msg_int("malloc", 0));
-	if (!expand_dollars(&redir_copy, block->ms, false) \
+	if (!expand_dollars(&redir_copy, block->ms, true) \
 	|| !expand_wildcards(&redir_copy))
 		return (0);
-	split = ft_split_count(redir_copy, "\t\v\n\r ", &count);
+
+	char	*copy;
+	copy = ft_strdup(redir_copy);
+	if (!copy)
+		return (perror_msg_int("malloc", 0));
+	empty_quotes(copy);
+	split = ft_split_count_replenish(copy, redir_copy, "\t\v\n\r ", &count);
+	free(copy);
 	ft_free_charmat_null(&split, free);
 	if (!remove_unguarded_quotes(&redir_copy, NULL))
 		return (0);
+	turn_positive(redir_copy);
 	block->io_files->head->text = redir_copy;
 	if (count != 1)
 		return (ambiguous_redirection_err(block, &fail_return));

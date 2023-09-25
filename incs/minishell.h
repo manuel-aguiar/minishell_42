@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/25 01:15:38 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 09:26:19 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,12 +206,15 @@ int		manager_gets_workers_and_operators(t_block *manager);
 /*worker_tasks_1.c*/
 int		worker_task_preparation(t_block *worker);
 int		worker_extract_redirections(t_block *worker);
+void	worker_turn_neg_chars_to_pos(t_token_list *list);
 
 /*worker_tasks_2.c*/
 int		worker_args_rm_unguarded_quotes(t_block *worker);
 int		worker_args_split_unguarded_quotes(t_block *worker);
 int		worker_args_expand_dollar_wildcard(t_block *worker);
 int		worker_dump_tasks_to_cmd_args(t_block *worker);
+int		empty_quotes(char *str);
+
 
 /*worker_tasks_3.c*/
 int		worker_args_split_add_token(t_block *worker, \
@@ -331,7 +334,8 @@ char	**list_to_array(t_vdmlist *list);
 
 /* dollar_expansion.c */
 int		expand_dollars(char **to_expand, t_ms *ms, int turn_negative);
-int		dollar_search_replace(char **to_expand, t_ms *ms, int *index, int turn_negative);
+int		dollar_search_replace(char **to_expand, t_ms *ms, \
+		int *index, int turn_negative);
 
 /* dollar_heredoc*/
 int		here_doc_expand_dollars(char **to_expand, t_ms *ms);
