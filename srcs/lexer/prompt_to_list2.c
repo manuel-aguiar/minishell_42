@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 15:42:02 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/25 01:28:42 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 08:44:11 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ static int	get_len_of_text_arg(char **prompt)
 {
 	int		len;
 	int		dummy_token;
+	int		dummy_res;
 	int		count_squotes;
 	int		count_dquotes;
 
@@ -23,14 +24,16 @@ static int	get_len_of_text_arg(char **prompt)
 	dummy_token = 0;
 	count_squotes = 0;
 	count_dquotes = 0;
-	while (**prompt && (!ft_isspace(**prompt) || (ft_isspace(**prompt) && \
-	(count_squotes % 2 != 0 || count_dquotes % 2 != 0) \
-	&& !is_token(prompt, &dummy_token, 0))))
+	dummy_res = is_token(prompt, &dummy_token, 0);
+	while (**prompt && ((!dummy_res && !ft_isspace(**prompt)) || \
+	(((ft_isspace(**prompt) || dummy_res) && (count_squotes % 2 != 0 \
+	|| count_dquotes % 2 != 0)))))
 	{
 		update_quote_count(**prompt, &count_squotes, &count_dquotes);
 		dummy_token = 0;
 		len++;
 		(*prompt)++;
+		dummy_res = is_token(prompt, &dummy_token, 0);
 	}
 	return (len);
 }

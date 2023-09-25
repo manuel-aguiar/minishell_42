@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 15:42:02 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/24 18:36:23 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 08:52:04 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int token, int *dummy_token, char **temp)
 {
 	int		len;
 	int		rewind;
+	int		dummy_res;
 	int		count_squotes;
 	int		count_dquotes;
 
@@ -35,15 +36,16 @@ int token, int *dummy_token, char **temp)
 	count_squotes = 0;
 	count_dquotes = 0;
 	rewind = ft_strlen(*prompt);
+	dummy_res = is_token(prompt, dummy_token, 0);
 	while (**prompt && (((!token_is_operator(token) && \
-	!is_token(prompt, dummy_token, 0)) && !ft_isspace(**prompt)) \
-	|| ((ft_isspace(**prompt) && (count_squotes % 2 != 0 \
-	|| count_dquotes % 2 != 0)))))
+	!dummy_res && !ft_isspace(**prompt))) || (((ft_isspace(**prompt) \
+	) && (count_squotes % 2 != 0 || count_dquotes % 2 != 0)))))
 	{
 		update_quote_count(**prompt, &count_squotes, &count_dquotes);
 		(*dummy_token) = 0;
 		len++;
 		(*prompt)++;
+		dummy_res = is_token(prompt, dummy_token, 0);
 	}
 	(*prompt) -= rewind - ft_strlen(*prompt);
 	upd_temp_and_prompt(prompt, len, temp);
