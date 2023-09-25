@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validate_2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnascime <mnascime@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 18:32:01 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/17 14:20:55 by mnascime         ###   ########.fr       */
+/*   Updated: 2023/09/25 09:43:23 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,8 @@ int	valid_elem_order(t_ms *ms)
 			return (0);
 	}
 	cur = ms->prompt->tail;
-	if (cur->type == T_OPEN_PAR || \
-	(cur->type >= T_OP_PIPE && cur->type <= T_OP_AND))
+	if (cur->type == T_OPEN_PAR || (cur->type != T_OP_SEMICOL \
+	&& cur->type >= T_OP_PIPE && cur->type <= T_OP_AND))
 		return (invalid_elem_msg(ms, cur->type, \
 	cur->text, ": syntax error near unexpected token `"));
 	return (1);
