@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:26:37 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/23 21:51:36 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 14:54:36 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ int	run_cd(t_block *block)
 		while (block->ms->env[i] && !ft_strnstr(block->ms->env[i], \
 		"OLDPWD=", 7))
 			i++;
-		env_remove(block, i);
+		if (block->ms->env[i])
+			env_remove(block, i);
 		env_add(block, temp);
 		free(temp);
 	}
