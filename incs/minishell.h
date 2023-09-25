@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/25 17:30:56 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 19:41:59 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,8 +208,8 @@ void	worker_turn_neg_chars_to_pos(t_token_list *list);
 
 /*worker_tasks_2.c*/
 int		worker_args_rm_unguarded_quotes(t_block *worker);
-int		worker_args_split_unguarded_quotes(t_block *worker);
-int		worker_args_expand_dollar_wildcard(t_block *worker);
+int		worker_args_expand_dollar_split(t_block *worker);
+int		worker_args_expand_wildcard_split(t_block *worker);
 int		worker_dump_tasks_to_cmd_args(t_block *worker);
 int		empty_quotes(char *str);
 
@@ -218,6 +218,8 @@ int		worker_args_expand_and_split(t_block *worker);
 /*worker_tasks_3.c*/
 int		worker_args_split_add_token(t_block *worker, \
 		t_token_node *arg, int *move);
+
+void	turn_positive(char *str);
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -343,8 +345,7 @@ int		here_doc_expand_dollars(char **to_expand, t_ms *ms);
 int		remove_unguarded_quotes(char **str, int *has_guards);
 int		remove_unguarded_quotes_wildcard(char **str, int *has_guards);
 
-
-int	count_split_after_dollar(char ***split_place, char *redir_copy, int *count);
+int		count_split_after_dollar(char ***split_place, char *redir_copy, int *count);
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -362,8 +363,7 @@ char	*ft_split_join(char **split, char *sep);
 char	*ft_triple_join(char *first, char *second, char *third);
 
 
-void		set_negative(char *str);
-void	turn_positive(char *str);
+
 
 
 #endif
