@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/25 15:59:52 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 16:43:49 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,6 +214,7 @@ int		worker_args_expand_dollar_wildcard(t_block *worker);
 int		worker_dump_tasks_to_cmd_args(t_block *worker);
 int		empty_quotes(char *str);
 
+int		worker_args_expand_and_split(t_block *worker);
 
 /*worker_tasks_3.c*/
 int		worker_args_split_add_token(t_block *worker, \
@@ -342,6 +343,9 @@ int		here_doc_expand_dollars(char **to_expand, t_ms *ms);
 /*rm_unguarded_quotes*/
 int		remove_unguarded_quotes(char **str, int *has_guards);
 int		remove_unguarded_quotes_wildcard(char **str, int *has_guards);
+
+
+int	count_split_after_dollar(char ***split_place, char *redir_copy, int *count);
 
 //////////////////////////////////////
 //////////////////////////////////////

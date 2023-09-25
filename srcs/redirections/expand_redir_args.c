@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 14:02:09 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/25 15:54:46 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 16:44:10 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,29 @@ void	turn_positive(char *str)
 	}
 }
 
+int	count_split_after_dollar(char ***split_place, char *redir_copy, int *count)
+{
+	char	*copy;
+	char	**split;
+	
+	copy = ft_strdup(redir_copy);
+	if (!copy)
+		return (perror_msg_int("malloc", 0));
+	empty_quotes(copy);
+	split = ft_split_count_replenish(copy, redir_copy, "\t\v\n\r ", count);
+	//printf("split count after dollar %d\n", count);
+	free(copy);
+	if (split_place)
+		*split_place = split;
+	else
+		ft_free_charmat_null(&split, free);
+	return (1);
+}
+
 int	manage_io_expansion(t_block *block)
 {
 	char	*redir_copy;
 	char	*fail_return;
-	char	**split;
 	int		count;
 
 	redir_copy = block->io_files->head->text;
@@ -50,22 +68,11 @@ int	manage_io_expansion(t_block *block)
 		return (perror_msg_int("malloc", 0));
 	if (!expand_dollars(&redir_copy, block->ms, true))
 		return (0);
-
-
-	char	*copy;
-	copy = ft_strdup(redir_copy);
-	if (!copy)
-		return (perror_msg_int("malloc", 0));
-	empty_quotes(copy);
-	split = ft_split_count_replenish(copy, redir_copy, "\t\v\n\r ", &count);
-	//printf("split count after dollar %d\n", count);
-	free(copy);
-	ft_free_charmat_null(&split, free);
+	count_split_after_dollar(NULL, redir_copy, &count);
 	block->io_files->head->text = redir_copy;
 	if (count != 1)
 		return (ambiguous_redirection_err(block, &fail_return));
 	redir_copy = block->io_files->head->text;
-
 
 	//printf("redir_copy after dollar: [%s]\n", redir_copy);
 
@@ -79,7 +86,7 @@ int	manage_io_expansion(t_block *block)
 	if (!expand_wildcards(&redir_copy, &count))
 		return (0);
 
-	printf("redir_copy after wildcard: [%s] found %d matches\n", redir_copy, count);
+	//printf("redir_copy after wildcard: [%s] found %d matches\n", redir_copy, count);
 	
 	if (!remove_unguarded_quotes(&redir_copy, NULL))
 		return (0);
@@ -92,7 +99,7 @@ int	manage_io_expansion(t_block *block)
 	//printf("redir_copy after TURNING POSITIVE: [%s]\n", redir_copy);
 
 	block->io_files->head->text = redir_copy;
-	printf("count %d\n", count);
+	//printf("count %d\n", count);
 	if (count != 1)
 		return (ambiguous_redirection_err(block, &fail_return));
 

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:09:22 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/25 16:11:11 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 16:42:52 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,14 @@ int	worker_task_preparation(t_block *worker)
 		token_list_destroy(&worker->prompt);
 		return (1);
 	}
-	if (!worker_args_expand_dollar_wildcard(worker))
-		return (0);
-	if (!worker_args_split_unguarded_quotes(worker))
-		return (0);
-	if (!worker_args_rm_unguarded_quotes(worker))
-		return (0);
+	if (!worker_args_expand_and_split(worker))
+		return (0);	
+	//if (!worker_args_expand_dollar_wildcard(worker))
+	//	return (0);
+	//if (!worker_args_split_unguarded_quotes(worker))
+	//	return (0);
+	//if (!worker_args_rm_unguarded_quotes(worker))
+	//	return (0);
 	worker_turn_neg_chars_to_pos(worker->prompt);
 	if (!worker_dump_tasks_to_cmd_args(worker))
 		return (0);
