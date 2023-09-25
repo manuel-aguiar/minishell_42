@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/25 16:43:49 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 17:30:56 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,6 @@ typedef struct s_wildc
 	int				pat_len;
 	t_vdmlist		*files;
 	char			*test;
-	char			**split;
 	char			*join;
 	int				match_count;
 	struct dirent	*entry;
@@ -318,10 +317,10 @@ int		open_here_docs_at_block(t_block *block);
 //////////////////////////////////////
 
 /*wildcard_expansion.c*/
-int		expand_wildcards(char **to_expand, int *count);
+int		expand_wildcards(char **to_expand, int *count, char ***place_split);
 
 /*wildcard_return.c*/
-char	*wildcard(char *pattern, int pat_len, int *match_count);
+char	**wildcard(char *pattern, int pat_len, int *match_count);
 void	*destroy_wildcard(t_wildc *wildcard, int clean_exit);
 
 /*wildcard_fit_candidates.c*/

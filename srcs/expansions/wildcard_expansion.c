@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:36:31 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/25 15:45:24 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 17:40:03 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 	the wildcard that failed in producing a single valid file descriptor.
 
 */
-
+/*
 static int	wildcard_strjoin_result(char **to_expand, char **join, \
 			int start, int end)
 {
@@ -48,25 +48,19 @@ static int	wildcard_strjoin_result(char **to_expand, char **join, \
 	*to_expand = new;
 	return (1);
 }
-
-int	wildcard_search_replace(char **to_expand, int *index, int *count)
+*/
+int	expand_wildcards(char **to_expand, int *count, char ***place_split)
 {
-	char	*join;
-	int		start;
-	int		end;
+	char	**split;
 
-	start = *index;
-	while (start > 0 \
-	&& (*to_expand)[start - 1] != '<' && (*to_expand)[start - 1] != '>')
-		start--;
-	end = *index;
-	while ((*to_expand)[end])
-		end++;
-	join = wildcard(&(*to_expand)[start], end - start, count);
-	if (!join)
+	split = wildcard(*to_expand, ft_strlen(*to_expand), count);
+	if (!split)
 		return (0);
-	*index += (ft_strlen(join) - *index + start);
-	return (wildcard_strjoin_result(to_expand, &join, start, end));
+	if (split)
+		*place_split = split;
+	else
+		ft_free_charmat_null(&split, free);
+	return (1);
 }
 
 /*
@@ -89,23 +83,32 @@ int	wildcard_search_replace(char **to_expand, int *index, int *count)
 
 */
 
-static void	manage_quotes(char checkquote, int *quote, int *index)
-{
-	if (!*quote)
-		*quote = checkquote;
-	else if (*quote == checkquote)
-		*quote = 0;
-	*index += 1;
-}
+//static void	manage_quotes(char checkquote, int *quote, int *index)
+//{
+//	if (!*quote)
+//		*quote = checkquote;
+//	else if (*quote == checkquote)
+//		*quote = 0;
+//	*index += 1;
+//}
+
+/*
 
 int	expand_wildcards(char **to_expand, int *count)
 {
-	int	i;
-	int	quote;
+	int	index;
 
-	quote = 0;
-	i = 0;
+	index = 0;
+	if (!wildcard_search_replace(to_expand, &index, count))
+		return (0);
+	//int	i;
+	//int	quote;
+//
+	//quote = 0;
+	//i = 0;
+*/
 
+/*
 	while ((*to_expand)[i])
 	{
 		if ((*to_expand)[i] == '\'' || (*to_expand)[i] == '"')
@@ -120,3 +123,4 @@ int	expand_wildcards(char **to_expand, int *count)
 	}
 	return (1);
 }
+*/

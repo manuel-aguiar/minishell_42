@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:18:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/25 17:04:19 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 17:38:15 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,8 @@ int	worker_args_expand_and_split(t_block *worker)
 			dup = ft_strdup(cur->text);
 			if (!dup)
 				return (0);
-			if (!expand_wildcards(&cur->text, &count))
+			if (!expand_wildcards(&cur->text, &move, &split))
 				return (0);
-			count_split_after_dollar(&split, cur->text, &move);
 			if (move > 1)
 			{
 				//printf("move is %d\n", move);
@@ -187,7 +186,7 @@ int	worker_args_rm_unguarded_quotes(t_block *worker)
 	}
 	return (1);
 }
-
+/*
 int	worker_args_expand_dollar_wildcard(t_block *worker)
 {
 	t_token_node	*cur;
@@ -216,7 +215,7 @@ int	worker_args_expand_dollar_wildcard(t_block *worker)
 	}
 	return (1);
 }
-
+*/
 int	worker_dump_tasks_to_cmd_args(t_block *worker)
 {
 	int				i;

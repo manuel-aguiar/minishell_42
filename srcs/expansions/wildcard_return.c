@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 13:51:53 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/25 16:02:11 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 17:38:33 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ void	*destroy_wildcard(t_wildc *wildcard, int clean_exit)
 		vdmlist_destroy(&wildcard->files, free);
 	if (wildcard->test)
 		ft_free_set_null(&wildcard->test);
-	if (wildcard->split)
-		ft_free_charmat_null(&wildcard->split, free);
 	if (!clean_exit && wildcard->join)
 		ft_free_set_null(wildcard->join);
 	if (wildcard->filename)
@@ -56,7 +54,6 @@ static int	init_wildcard_struct_on_stack(t_wildc *wildcard, char *pattern, \
 	if (!wildcard->files)
 		return (0);
 	wildcard->test = NULL;
-	wildcard->split = NULL;
 	wildcard->join = NULL;
 	wildcard->entry = NULL;
 	wildcard->filename = NULL;
@@ -95,9 +92,10 @@ void	void_putstr(void *str)
 	printf("[%s]\n", my_str);
 }
 
-char	*wildcard(char *pattern, int pat_len, int *match_count)
+char	**wildcard(char *pattern, int pat_len, int *match_count)
 {
 	t_wildc	wildcard;
+	char	**split;
 
 	if (!init_wildcard_struct_on_stack(&wildcard, pattern, pat_len))
 		return (destroy_wildcard(&wildcard, 0));
@@ -106,17 +104,17 @@ char	*wildcard(char *pattern, int pat_len, int *match_count)
 	wildcard.match_count = wildcard.files->len;
 	if (match_count)
 		*match_count = wildcard.match_count;
-	if (wildcard.match_count == 0)
-		wildcard.join = ft_triple_join("\'", pattern, "\'");
+	if (!match_count)
+	{
+		split = malloc(sizeof(*split) * 2);
+		split[0] = ft_triple_join("\'", pattern, "\'");
+	}
 	else
 	{
-		wildcard.split = list_to_array(wildcard.files);
-		if (!wildcard.split)
+		split = list_to_array(wildcard.files);
+		if (!split)
 			return (destroy_wildcard(&wildcard, 0));
-		wildcard.join = ft_split_join(wildcard.split, " ");
 	}
-	if (!wildcard.join)
-		return (destroy_wildcard(&wildcard, 0));
 	destroy_wildcard(&wildcard, 1);
-	return (wildcard.join);
+	return (split);
 }

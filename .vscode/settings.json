@@ -8,6 +8,10 @@
         "minishell.h": "c",
         "random": "c",
         "SAVECOPY.C": "cpp",
-        "sstream": "c"
+        "sstream": "c",
+        "deque": "c",
+        "unordered_map": "c",
+        "vector": "c",
+        "initializer_list": "c"
     }
 }
