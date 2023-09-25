@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:26:37 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/25 14:54:36 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 17:29:25 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,11 @@ int	run_cd(t_block *block)
 		while (block->ms->env[i] && !ft_strnstr(block->ms->env[i], \
 		"OLDPWD=", 7))
 			i++;
-		if (block->ms->env[i])
-			env_remove(block, i);
+		env_remove(block, i);
 		env_add(block, temp);
 		free(temp);
 	}
-	cd_exists(block);
-	return (1);
+	return (cd_exists(block));
 }
 
 static int	cd_exists(t_block *block)
@@ -66,9 +64,7 @@ static int	cd_exists(t_block *block)
 		if (chdir(block->cmd_args[1]) != 0)
 			return (cd_error(block, 1));
 	}
-	if (!upd_pwd(block))
-		return (0);
-	return (1);
+	return (upd_pwd(block));
 }
 
 static int	cd_error(t_block *block, int arg)
