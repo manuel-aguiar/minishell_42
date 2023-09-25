@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:37:28 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/23 17:07:53 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 08:39:05 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ int	pipes_forks_and_conditionals(t_block *manager, int index)
 	}
 	if (index > 0 && index <= manager->op_count \
 	&& (manager->op_id[index - 1] == T_OP_AND \
-	|| manager->op_id[index - 1] == T_OP_OR))
+	|| manager->op_id[index - 1] == T_OP_OR \
+	|| manager->op_id[index - 1] == T_OP_SEMICOL))
 	{
 		waiting_for_my_workers(manager, index);
 		if ((manager->op_id[index - 1] == T_OP_AND \

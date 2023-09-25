@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:50:30 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/24 20:00:19 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 08:55:30 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ enum e_token
 	T_OPEN_PAR = 1,
 	T_CLOSE_PAR,
 	T_OP_PIPE,
+	T_OP_SEMICOL,
 	T_OP_OR,
 	T_OP_AND,
 	T_OP_AMPER,
@@ -52,6 +53,7 @@ enum e_token
 # define PRINT_OPEN_PAR "("
 # define PRINT_CLOSE_PAR ")"
 # define PRINT_OP_PIPE "|"
+# define PRINT_OP_SEMICOL ";"
 # define PRINT_OP_OR "||"
 # define PRINT_OP_AND "&&"
 # define PRINT_OP_AMPER "&"
@@ -74,12 +76,13 @@ void			token_list_move_top_to_new(t_token_list *to, \
 t_token_list *from, t_token_node *until, int count);
 void			token_list_head_print(t_token_list *list, \
 void (*pnt)(t_token_node *));
-void			token_list_tail_print(t_token_list *list, \
-void (*pnt)(t_token_node *));
 void			token_list_head_print(t_token_list *list, \
 void (*pnt)(t_token_node *));
+
+/*
 void			token_list_tail_print(t_token_list *list, \
 void (*pnt)(t_token_node *));
+*/
 
 t_token_node	*move_node_to_list_and_retrive_next(t_token_list *to, \
 t_token_list *from, t_token_node *target);
