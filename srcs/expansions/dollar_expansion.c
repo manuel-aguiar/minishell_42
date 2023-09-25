@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:42:58 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/25 01:44:22 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 15:51:30 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,10 @@ static int negative_copy(char *str, char **place_neg_copy)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'' || str[i] == '"')
-			new[i] = -str[i];
-		else		
+		if (ft_isspace(str[i]))
 			new[i] = str[i];
+		else		
+			new[i] = -str[i];
 		i++;
 	}
 	new[i] = '\0';
@@ -158,5 +158,6 @@ int	expand_dollars(char **to_expand, t_ms *ms, int turn_negative)
 		else
 			i++;
 	}
+	//printf("arg after dolar [%s]\n", *to_expand);
 	return (1);
 }
