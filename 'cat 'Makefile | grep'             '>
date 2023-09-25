@@ -1,0 +1,14 @@
+'cat 'Makefile | grep'             '>
+'test test'
+*hop
+*tes*'cat 'Makefile | grep'             '>
+*tes*cena
+*tes*olahiphop
+Makefile
+incs
+legacy
+libft
+minishell
+objs
+srcs
+todolist.txt

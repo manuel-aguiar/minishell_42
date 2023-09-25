@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 14:02:09 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/25 17:49:09 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 18:10:52 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,9 @@ int	manage_io_expansion(t_block *block)
 		return (perror_msg_int("malloc", 0));
 	if (!expand_dollars(&redir_copy, block->ms, true))
 		return (0);
+	
 	count_split_after_dollar(NULL, redir_copy, &count);
+	//printf("after dollar [%s], number of args %d\n", redir_copy, count);
 	block->io_files->head->text = redir_copy;
 	if (count != 1)
 		return (ambiguous_redirection_err(block, &fail_return));
@@ -86,16 +88,16 @@ int	manage_io_expansion(t_block *block)
 
 	if (!expand_wildcards(&redir_copy, &count, &split))
 		return (0);
-	block->io_files->head->text = redir_copy;
-	if (count != 1)
+	ft_free_set_null(&redir_copy);
+	if (count > 1)
 	{
 		ft_free_charmat_null(&split, free);
 		return (ambiguous_redirection_err(block, &fail_return));
 	}
 	//printf("redir_copy after wildcard: [%s] found %d matches\n", redir_copy, count);
 	block->io_files->head->text = split[0];
-	ft_free_set_null(&redir_copy);
 	ft_free_set_null(&split);
+	//printf("split[0] [%s]\n", block->io_files->head->text);
 	if (!remove_unguarded_quotes(&block->io_files->head->text, NULL))
 		return (0);
 	

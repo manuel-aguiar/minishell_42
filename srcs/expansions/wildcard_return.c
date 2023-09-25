@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 13:51:53 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/25 17:38:33 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 18:12:59 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,17 +104,16 @@ char	**wildcard(char *pattern, int pat_len, int *match_count)
 	wildcard.match_count = wildcard.files->len;
 	if (match_count)
 		*match_count = wildcard.match_count;
-	if (!match_count)
+	if (!*match_count)
 	{
-		split = malloc(sizeof(*split) * 2);
-		split[0] = ft_triple_join("\'", pattern, "\'");
+		split = ft_calloc(2, sizeof(*split));
+		split[0] = ft_strdup(pattern);
+		//printf("split after wildcard [%s]\n", split[0]);
 	}
 	else
-	{
 		split = list_to_array(wildcard.files);
-		if (!split)
-			return (destroy_wildcard(&wildcard, 0));
-	}
+	if (!split)
+		return (ft_free_charmat_null(&split, free));
 	destroy_wildcard(&wildcard, 1);
 	return (split);
 }
