@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:42:58 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/24 13:35:33 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 01:44:22 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,33 @@ static int	dollar_check_malloc_and_replace(char **to_expand, char *new)
 	return (1);
 }
 
-int	dollar_search_env(char **to_expand, t_ms *ms, int *index, int dol_len)
+static int negative_copy(char *str, char **place_neg_copy)
 {
 	int		i;
 	char	*new;
+
+	new = malloc(ft_strlen(str) + 1);
+	if (!new)
+		return (perror_msg_int("malloc", 0));
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '\'' || str[i] == '"')
+			new[i] = -str[i];
+		else		
+			new[i] = str[i];
+		i++;
+	}
+	new[i] = '\0';
+	*place_neg_copy = new;
+	return (1);
+}
+
+int	dollar_search_env(char **to_expand, t_ms *ms, int *index, int dol_len, int turn_negative)
+{
+	int		i;
+	char	*new;
+	char	*neg_copy;
 
 	i = 0;
 	(*to_expand)[*index] = '\0';
@@ -73,8 +96,16 @@ int	dollar_search_env(char **to_expand, t_ms *ms, int *index, int dol_len)
 			if (!ft_strncmp(&((*to_expand)[*index + 1]), ms->env[i], dol_len) \
 			&& ms->env[i][dol_len] == '=')
 			{
-				new = ft_triple_join(*to_expand, &ms->env[i][dol_len + 1], \
-				&((*to_expand)[*index + 1 + dol_len]));
+				if (turn_negative && !negative_copy(&ms->env[i][dol_len + 1], &neg_copy))
+					return (0);
+				if (turn_negative)
+					new = ft_triple_join(*to_expand, neg_copy, \
+					&((*to_expand)[*index + 1 + dol_len]));
+				else
+					new = ft_triple_join(*to_expand, &ms->env[i][dol_len + 1], \
+					&((*to_expand)[*index + 1 + dol_len]));
+				if (turn_negative)
+					free(neg_copy);
 				*index += ft_strlen(&ms->env[i][dol_len + 1]);
 				break ;
 			}
@@ -86,7 +117,7 @@ int	dollar_search_env(char **to_expand, t_ms *ms, int *index, int dol_len)
 	return (dollar_check_malloc_and_replace(to_expand, new));
 }
 
-int	dollar_search_replace(char **to_expand, t_ms *ms, int *index)
+int	dollar_search_replace(char **to_expand, t_ms *ms, int *index, int turn_negative)
 {
 	int	len;
 
@@ -98,10 +129,10 @@ int	dollar_search_replace(char **to_expand, t_ms *ms, int *index)
 	while ((*to_expand)[*index + 1 + len] && \
 	ft_isalnum((*to_expand)[*index + 1 + len]))
 		len++;
-	return (dollar_search_env(to_expand, ms, index, len));
+	return (dollar_search_env(to_expand, ms, index, len, turn_negative));
 }
 
-int	expand_dollars(char **to_expand, t_ms *ms)
+int	expand_dollars(char **to_expand, t_ms *ms, int turn_negative)
 {
 	int	i;
 	int	quote;
@@ -121,7 +152,7 @@ int	expand_dollars(char **to_expand, t_ms *ms)
 		else if ((*to_expand)[i] == '$' && (*to_expand)[i + 1] \
 			&& (*to_expand)[i + 1] != '$' && (!quote || quote == '"'))
 		{
-			if (!dollar_search_replace(to_expand, ms, &i))
+			if (!dollar_search_replace(to_expand, ms, &i, turn_negative))
 				return (0);
 		}
 		else

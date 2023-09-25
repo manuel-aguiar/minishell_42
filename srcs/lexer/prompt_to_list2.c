@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 15:42:02 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/24 18:36:15 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 01:28:42 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ static int	get_len_of_text_arg(char **prompt)
 	count_squotes = 0;
 	count_dquotes = 0;
 	while (**prompt && (!ft_isspace(**prompt) || (ft_isspace(**prompt) && \
-	(count_squotes % 2 != 0 || count_dquotes % 2 != 0))) \
-	&& !is_token(prompt, &dummy_token, 0))
+	(count_squotes % 2 != 0 || count_dquotes % 2 != 0) \
+	&& !is_token(prompt, &dummy_token, 0))))
 	{
 		update_quote_count(**prompt, &count_squotes, &count_dquotes);
 		dummy_token = 0;
