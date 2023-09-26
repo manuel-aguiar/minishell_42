@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:32:48 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/24 14:37:24 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/26 11:22:12 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,12 @@ int	process_execution(t_block *block)
 	else
 	{
 		ms_prepare_signal(block->ms, SIG_IGN);
-		if (exec_builtin(block, builtin))
-		{
-			if (block->my_manager)
-				block->my_manager->worker_exit_status[block->my_id] \
-				= block->my_status;
-			else
-				block->ms->exit_status = block->my_status;
-		}
+		exec_builtin(block, builtin);
+		if (block->my_manager)
+			block->my_manager->worker_exit_status[block->my_id] \
+			= block->my_status;
+		else
+			block->ms->exit_status = block->my_status;
 		ms_prepare_signal(block->ms, signal_handler);
 		close_in_fds(block);
 		close_out_fds(block);
