@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/23 11:35:14 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/23 16:57:13 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/26 09:59:28 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ int	child_process(t_block *block)
 		if (block->ms->dup_stdin == -1)
 			perror_child_exit(block, CODE_DUP, 1);
 	}
-	if (tcsetattr(block->ms->infd, TCSANOW, &block->ms->original) == -1)
+	if (isatty(block->ms->infd) \
+	&& tcsetattr(block->ms->infd, TCSANOW, &block->ms->original) == -1)
 		perror_msg_ptr("tcsetattr", NULL);
 	ms_reset_signal(block->ms);
 	if (dup2(block->final_in, block->ms->infd) == -1)
