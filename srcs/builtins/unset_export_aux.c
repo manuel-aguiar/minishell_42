@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 17:09:22 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/26 14:32:22 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/26 18:53:27 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,19 @@ static int	env_error(t_block *block, int is_exporting, char *arg)
 	return (-2);
 }
 
-static int	get_valid_len(char *arg, int is_export)
+static int	get_valid_len(char *arg, int is_export, int *passed_equal)
 {
 	size_t	j;
-	int		passed_equal;
 
 	j = 0;
-	passed_equal = 0;
-	while (arg[j] && (passed_equal || ft_isalpha(arg[j]) || \
+	while (arg[j] && ((*passed_equal) || ft_isalpha(arg[j]) || \
 	(ft_isdigit(arg[j]) && j > 0) || arg[j] == '_' || \
-	(arg[j] == '=' && is_export && ++passed_equal)))
+	(arg[j] == '=' && is_export)))
+	{
+		if ((arg[j] == '=' && is_export) || (*passed_equal) > 0)
+			(*passed_equal)++;
 		j++;
+	}
 	return (j);
 }
 
@@ -45,9 +47,11 @@ int	get_corr_env(t_block *block, char *arg, int is_export)
 	int		i;
 	size_t	f;
 	size_t	j;
+	int		passed_equal;
 
 	i = -1;
-	j = get_valid_len(arg, is_export);
+	passed_equal = 0;
+	j = get_valid_len(arg, is_export, &passed_equal);
 	if (j < ft_strlen(arg) || ft_strlen(arg) == 0 || (arg[0] == '=' \
 	&& is_export) || (ft_strrchr(arg, '=') && !is_export))
 		return (env_error(block, is_export, arg));
@@ -56,7 +60,7 @@ int	get_corr_env(t_block *block, char *arg, int is_export)
 		f = 0;
 		while (block->ms->env[i][f] && block->ms->env[i][f] != '=')
 			f++;
-		if (f < j)
+		if (f < j - passed_equal)
 			f = j;
 		if (f > 0 && ft_strncmp(block->ms->env[i], arg, f) == 0)
 			return (i);
