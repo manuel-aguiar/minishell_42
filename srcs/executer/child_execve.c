@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/23 11:35:39 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/23 16:58:30 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/26 11:37:48 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,11 @@ static int	join_path_bin(char **full_path, char *path, char *bin)
 
 static int	exec_cmd_with_path(t_block *block)
 {
+	struct stat	file_status;
+
+	stat(block->cmd, &file_status);
+	if (S_ISDIR(file_status.st_mode))
+		error_child_exit(block, ERR_IS_DIR, CODE_DIR, 1);
 	if (access(block->cmd, F_OK))
 		perror_child_exit(block, CODE_CMD, 1);
 	else if (execve(block->cmd, block->cmd_args, block->ms->env) == -1)
