@@ -1,0 +1,68 @@
+/bin/ls
+/bin/pwd
+"  "
+echo
+echo teste
+echo "pedro pinto"
+echo -n teste
+echo "agora 'mais' fdd"
+echo -n 'será"que vai dar'parsing"
+./minishell
+./minishell
+./minishell
+exit 300
+echo $?
+exit
+echo $?
+./minishell
+exit 50
+$?
+echo "tinha que dar 50 command not found"
+exit 122
+echo $?
+/bin/ls
+echo $?
+/bin/ls este_ficheir_nao_existe
+echo $?
+echo $? + $?
+$? * $?
+echo $? % $?
+echo "cat lol.c | cat > lol.c"
+echo $USER
+"cd .."
+'cd ..'
+''
+'$TERM'
+$TERM
+TERM
+ls | wc | >> 1.txt
+'ls | wc | >> 1.txt'
+'ls | 'wc' '|' >> 1.txt'
+echo '$USER' echo $USER
+env
+export
+export A2=34
+env
+export A2=42
+echo $A2
+export 3A
+echo $?
+export
+unset
+unset 3A
+echo $?
+export Nao_Existe
+echo $?
+env
+unset A2
+unset TERM
+env
+export TERM=new_term_42
+cd .
+pwd
+cd ..
+pwd
+pwd
+cd /bin/ls
+pwd
+/usr/local/bin/pwd
