@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 14:02:09 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/25 18:43:49 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/26 10:12:11 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,19 +88,21 @@ int	manage_io_expansion(t_block *block)
 
 	if (!expand_wildcards(&redir_copy, &count, &split))
 		return (0);
-	ft_free_set_null(&redir_copy);
+	block->io_files->head->text = redir_copy;
+	
 	if (count > 1)
 	{
 		ft_free_charmat_null(&split, free);
 		return (ambiguous_redirection_err(block, &fail_return));
 	}
 	//printf("redir_copy after wildcard: [%s] found %d matches\n", redir_copy, count);
+	ft_free_set_null(&redir_copy);
 	block->io_files->head->text = split[0];
 	ft_free_set_null(&split);
 	//printf("split[0] [%s]\n", block->io_files->head->text);
 	if (!remove_unguarded_quotes(&block->io_files->head->text, NULL))
 		return (0);
-	
+	//echo " > >> < * ? [ ] | ; [ ] || && ( ) & # $ \ << "
 	//printf("redir_copy after final unguarded quotes: [%s]\n", redir_copy);
 	turn_positive(block->io_files->head->text);
 	//printf("redir_copy after TURNING POSITIVE: [%s]\n", redir_copy);
