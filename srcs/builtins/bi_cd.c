@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:26:37 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/26 11:05:59 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/26 14:06:55 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,11 @@ int	run_cd(t_block *block)
 		if (!temp)
 			return (perror_msg_int("malloc", 0));
 		i = 0;
-		while (block->ms->env[i] && !ft_strnstr(block->ms->env[i], \
-		"OLDPWD=", 7))
+		while (block->ms->env[i] && ft_strncmp(block->ms->env[i], \
+		"OLDPWD=", 7) == 0)
 			i++;
-		env_remove(block, i);
+		if (block->ms->env[i])
+			env_remove(block, i);
 		env_add(block, temp);
 		free(temp);
 	}
