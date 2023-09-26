@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/25 19:41:59 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/26 11:37:23 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,11 @@
 
 /* error name macros */
 # define ERR_CMD "command not found"
+# define ERR_IS_DIR "Is a directory"
 
 /* error code macros */
 # define CODE_OPEN 1
+# define CODE_DIR 126
 # define CODE_CMD 127
 # define CODE_DUP 1
 # define CODE_DUP2 1
