@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:30:56 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/26 09:55:00 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/26 16:19:27 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ int	ms_increase_shell_level(t_ms *ms)
 
 int	ms_destroy(t_ms *ms)
 {
+	rl_clear_history();
 	if (ms->env)
 		ft_free_charmat_null(&ms->env, free);
 	if (ms->prompt)
