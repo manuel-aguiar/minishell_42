@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:09:22 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/26 10:18:58 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/26 12:56:19 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	worker_turn_neg_chars_to_pos(t_token_list *list)
 
 int	worker_task_preparation(t_block *worker)
 {
+	//token_list_head_print(worker->prompt, print_token_args);
 	if (!worker->prompt->head)
 	{
 		token_list_destroy(&worker->prompt);
@@ -42,11 +43,8 @@ int	worker_task_preparation(t_block *worker)
 		return (0);
 	//token_list_head_print(worker->prompt, print_token_args);
 	if (!worker_args_expand_wildcard_split(worker))
-		return (0);	
-	//if (!worker_args_expand_dollar_wildcard(worker))
-	//	return (0);
-	//if (!worker_args_split_unguarded_quotes(worker))
-	//	return (0);
+		return (0);
+	//token_list_head_print(worker->prompt, print_token_args);
 	if (!worker_args_rm_unguarded_quotes(worker))
 		return (0);
 	worker_turn_neg_chars_to_pos(worker->prompt);
@@ -56,7 +54,6 @@ int	worker_task_preparation(t_block *worker)
 	worker->cmd = ft_strdup(worker->cmd_args[0]);
 	if (!worker->cmd)
 		return (0);
-	token_list_head_print(worker->prompt, print_token_args);
 	return (1);
 }
 

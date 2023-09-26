@@ -6,13 +6,13 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 13:51:53 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/25 19:40:49 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/26 12:54:37 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	count_chars(char *str, char c)
+int	count_chars(char *str, char c)
 {
 	int	i;
 	int	count;

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/26 11:45:47 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/26 12:51:06 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ struct s_block
 typedef struct s_wildc
 {
 	char			*pattern;
+	char			search_start[2];
 	int				depth;
 	int				sub_count;
 	int				pat_len;
@@ -350,7 +351,7 @@ int		remove_unguarded_quotes(char **str, int *has_guards);
 int		remove_unguarded_quotes_wildcard(char **str, int *has_guards);
 
 int		count_split_after_dollar(char ***split_place, char *redir_copy, int *count);
-
+int		count_chars(char *str, char c);
 //////////////////////////////////////
 //////////////////////////////////////
 //////////// GENERIC UTILS ///////////

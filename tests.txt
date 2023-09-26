@@ -1,0 +1,99 @@
+/bin/ls
+/bin/pwd
+"  "
+echo
+echo teste
+echo "pedro pinto"
+echo -n teste
+echo "agora 'mais' fdd"
+echo -n 'será"que vai dar'parsing"
+./minishell
+./minishell
+./minishell
+exit 300
+echo $?
+exit
+echo $?
+./minishell
+exit 50
+$?
+echo "tinha que dar 50 command not found"
+exit 122
+echo $?
+/bin/ls
+echo $?
+/bin/ls este_ficheir_nao_existe
+echo $?
+echo $? + $?
+$? * $?
+echo $? % $?
+echo "cat lol.c | cat > lol.c"
+echo $USER
+"cd .."
+'cd ..'
+''
+'$TERM'
+$TERM
+TERM
+ls | wc | >> 1.txt
+'ls | wc | >> 1.txt'
+'ls | 'wc' '|' >> 1.txt'
+echo '$USER' echo $USER
+env
+export
+export A2=34
+env
+export A2=42
+echo $A2
+export 3A
+echo $?
+export
+unset
+unset 3A
+echo $?
+export Nao_Existe
+echo $?
+env
+unset A2
+unset TERM
+env
+export TERM=new_term_42
+cd .
+pwd
+cd ..
+pwd
+pwd
+cd /bin/ls
+pwd
+/usr/local/bin/pwd
+/sbin/env
+/usr/share/echo -n pinto
+/snap/bin/no_command
+unset PATH
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
+cd ~
+pwd
+echo "Hello
+World!"
+export VAR="This is a test variable."
+echo $VAR
+unset VAR
+echo $VAR
+echo "Hello
+world!" > output.txt
+cat output.txt
+echo "Hello
+world!" >> output.txt
+cat output.txt
+sort < output.txt
+ls -l < input.txt > output.txt
+cat output.txt
+ls | sort
+echo "This is a error \n test file. line1\nline2 error \nline3error" > file.txt
+cat file.txt | tr -s ' ' '\n' | sort | uniq -c | sort -nr
+cat file.txt | grep 'error' | wc -l
+ps aux --sort=-%mem | head -n 10
+find /path/to/directory -type f -size +100M -printf '%f %s\n'
+find . -type f | wc -l
+find . -name "*.txt" -exec cat {} + | wc -l
+cat file.txt | tr -s ' ' '\n' | sort | uniq -c | sort -nr | awk '{print $2 $1}'
