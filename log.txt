@@ -1,0 +1,715 @@
+==39304== Memcheck, a memory error detector
+==39304== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==39304== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==39304== Command: ./minishell
+==39304== 
+minishell>$ echo hey
+hey
+minishell>$ (ls ; ls ; ls ) > test1
+==39678== Memcheck, a memory error detector
+==39678== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==39678== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==39678== Command: /usr/bin/ls
+==39678== 
+==39678== 
+==39678== FILE DESCRIPTORS: 6 open at exit.
+==39678== Open file descriptor 24: /home/codespace/.vscode-remote/data/logs/20230926T204038/network.log
+==39678==    <inherited from parent>
+==39678== 
+==39678== Open file descriptor 21: /home/codespace/.vscode-remote/data/logs/20230926T204038/remoteagent.log
+==39678==    <inherited from parent>
+==39678== 
+==39678== Open file descriptor 19: /home/codespace/.vscode-remote/data/logs/20230926T204038/ptyhost.log
+==39678==    <inherited from parent>
+==39678== 
+==39678== Open file descriptor 6: /dev/null
+==39678==    <inherited from parent>
+==39678== 
+==39678== Open file descriptor 4: /workspaces/minishell_42/test1
+==39678==    <inherited from parent>
+==39678== 
+==39678== Open file descriptor 0: /dev/pts/0
+==39678==    <inherited from parent>
+==39678== 
+==39678== 
+==39678== HEAP SUMMARY:
+==39678==     in use at exit: 20,695 bytes in 19 blocks
+==39678==   total heap usage: 253 allocs, 234 frees, 80,428 bytes allocated
+==39678== 
+==39678== 56 bytes in 1 blocks are still reachable in loss record 1 of 6
+==39678==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==39678==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==39678==    by 0x11DAF8: ??? (in /usr/bin/ls)
+==39678==    by 0x11C890: ??? (in /usr/bin/ls)
+==39678==    by 0x10D8F6: ??? (in /usr/bin/ls)
+==39678==    by 0x48A3082: (below main) (libc-start.c:308)
+==39678== 
+==39678== 56 bytes in 1 blocks are still reachable in loss record 2 of 6
+==39678==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==39678==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==39678==    by 0x11DAF8: ??? (in /usr/bin/ls)
+==39678==    by 0x11C890: ??? (in /usr/bin/ls)
+==39678==    by 0x10D955: ??? (in /usr/bin/ls)
+==39678==    by 0x48A3082: (below main) (libc-start.c:308)
+==39678== 
+==39678== 119 bytes in 14 blocks are still reachable in loss record 3 of 6
+==39678==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==39678==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==39678==    by 0x11DAF8: ??? (in /usr/bin/ls)
+==39678==    by 0x112BE7: ??? (in /usr/bin/ls)
+==39678==    by 0x113E1E: ??? (in /usr/bin/ls)
+==39678==    by 0x10DB5C: ??? (in /usr/bin/ls)
+==39678==    by 0x48A3082: (below main) (libc-start.c:308)
+==39678== 
+==39678== 128 bytes in 1 blocks are still reachable in loss record 4 of 6
+==39678==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==39678==    by 0x11EDC9: ??? (in /usr/bin/ls)
+==39678==    by 0x10DA7E: ??? (in /usr/bin/ls)
+==39678==    by 0x48A3082: (below main) (libc-start.c:308)
+==39678== 
+==39678== 336 bytes in 1 blocks are still reachable in loss record 5 of 6
+==39678==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==39678==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==39678==    by 0x10F2CA: ??? (in /usr/bin/ls)
+==39678==    by 0x113C88: ??? (in /usr/bin/ls)
+==39678==    by 0x10DB5C: ??? (in /usr/bin/ls)
+==39678==    by 0x48A3082: (below main) (libc-start.c:308)
+==39678== 
+==39678== 20,000 bytes in 1 blocks are still reachable in loss record 6 of 6
+==39678==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==39678==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==39678==    by 0x10DAEF: ??? (in /usr/bin/ls)
+==39678==    by 0x48A3082: (below main) (libc-start.c:308)
+==39678== 
+==39678== LEAK SUMMARY:
+==39678==    definitely lost: 0 bytes in 0 blocks
+==39678==    indirectly lost: 0 bytes in 0 blocks
+==39678==      possibly lost: 0 bytes in 0 blocks
+==39678==    still reachable: 20,695 bytes in 19 blocks
+==39678==         suppressed: 0 bytes in 0 blocks
+==39678== 
+==39678== For lists of detected and suppressed errors, rerun with: -s
+==39678== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==39685== Memcheck, a memory error detector
+==39685== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==39685== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==39685== Command: /usr/bin/ls
+==39685== 
+==39685== 
+==39685== FILE DESCRIPTORS: 6 open at exit.
+==39685== Open file descriptor 24: /home/codespace/.vscode-remote/data/logs/20230926T204038/network.log
+==39685==    <inherited from parent>
+==39685== 
+==39685== Open file descriptor 21: /home/codespace/.vscode-remote/data/logs/20230926T204038/remoteagent.log
+==39685==    <inherited from parent>
+==39685== 
+==39685== Open file descriptor 19: /home/codespace/.vscode-remote/data/logs/20230926T204038/ptyhost.log
+==39685==    <inherited from parent>
+==39685== 
+==39685== Open file descriptor 6: /dev/null
+==39685==    <inherited from parent>
+==39685== 
+==39685== Open file descriptor 4: /workspaces/minishell_42/test1
+==39685==    <inherited from parent>
+==39685== 
+==39685== Open file descriptor 0: /dev/pts/0
+==39685==    <inherited from parent>
+==39685== 
+==39685== 
+==39685== HEAP SUMMARY:
+==39685==     in use at exit: 20,695 bytes in 19 blocks
+==39685==   total heap usage: 253 allocs, 234 frees, 80,428 bytes allocated
+==39685== 
+==39685== 56 bytes in 1 blocks are still reachable in loss record 1 of 6
+==39685==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==39685==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==39685==    by 0x11DAF8: ??? (in /usr/bin/ls)
+==39685==    by 0x11C890: ??? (in /usr/bin/ls)
+==39685==    by 0x10D8F6: ??? (in /usr/bin/ls)
+==39685==    by 0x48A3082: (below main) (libc-start.c:308)
+==39685== 
+==39685== 56 bytes in 1 blocks are still reachable in loss record 2 of 6
+==39685==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==39685==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==39685==    by 0x11DAF8: ??? (in /usr/bin/ls)
+==39685==    by 0x11C890: ??? (in /usr/bin/ls)
+==39685==    by 0x10D955: ??? (in /usr/bin/ls)
+==39685==    by 0x48A3082: (below main) (libc-start.c:308)
+==39685== 
+==39685== 119 bytes in 14 blocks are still reachable in loss record 3 of 6
+==39685==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==39685==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==39685==    by 0x11DAF8: ??? (in /usr/bin/ls)
+==39685==    by 0x112BE7: ??? (in /usr/bin/ls)
+==39685==    by 0x113E1E: ??? (in /usr/bin/ls)
+==39685==    by 0x10DB5C: ??? (in /usr/bin/ls)
+==39685==    by 0x48A3082: (below main) (libc-start.c:308)
+==39685== 
+==39685== 128 bytes in 1 blocks are still reachable in loss record 4 of 6
+==39685==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==39685==    by 0x11EDC9: ??? (in /usr/bin/ls)
+==39685==    by 0x10DA7E: ??? (in /usr/bin/ls)
+==39685==    by 0x48A3082: (below main) (libc-start.c:308)
+==39685== 
+==39685== 336 bytes in 1 blocks are still reachable in loss record 5 of 6
+==39685==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==39685==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==39685==    by 0x10F2CA: ??? (in /usr/bin/ls)
+==39685==    by 0x113C88: ??? (in /usr/bin/ls)
+==39685==    by 0x10DB5C: ??? (in /usr/bin/ls)
+==39685==    by 0x48A3082: (below main) (libc-start.c:308)
+==39685== 
+==39685== 20,000 bytes in 1 blocks are still reachable in loss record 6 of 6
+==39685==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==39685==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==39685==    by 0x10DAEF: ??? (in /usr/bin/ls)
+==39685==    by 0x48A3082: (below main) (libc-start.c:308)
+==39685== 
+==39685== LEAK SUMMARY:
+==39685==    definitely lost: 0 bytes in 0 blocks
+==39685==    indirectly lost: 0 bytes in 0 blocks
+==39685==      possibly lost: 0 bytes in 0 blocks
+==39685==    still reachable: 20,695 bytes in 19 blocks
+==39685==         suppressed: 0 bytes in 0 blocks
+==39685== 
+==39685== For lists of detected and suppressed errors, rerun with: -s
+==39685== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==39719== Memcheck, a memory error detector
+==39719== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==39719== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==39719== Command: /usr/bin/ls
+==39719== 
+==39719== 
+==39719== FILE DESCRIPTORS: 6 open at exit.
+==39719== Open file descriptor 24: /home/codespace/.vscode-remote/data/logs/20230926T204038/network.log
+==39719==    <inherited from parent>
+==39719== 
+==39719== Open file descriptor 21: /home/codespace/.vscode-remote/data/logs/20230926T204038/remoteagent.log
+==39719==    <inherited from parent>
+==39719== 
+==39719== Open file descriptor 19: /home/codespace/.vscode-remote/data/logs/20230926T204038/ptyhost.log
+==39719==    <inherited from parent>
+==39719== 
+==39719== Open file descriptor 6: /dev/null
+==39719==    <inherited from parent>
+==39719== 
+==39719== Open file descriptor 4: /workspaces/minishell_42/test1
+==39719==    <inherited from parent>
+==39719== 
+==39719== Open file descriptor 0: /dev/pts/0
+==39719==    <inherited from parent>
+==39719== 
+==39719== 
+==39719== HEAP SUMMARY:
+==39719==     in use at exit: 20,695 bytes in 19 blocks
+==39719==   total heap usage: 253 allocs, 234 frees, 80,428 bytes allocated
+==39719== 
+==39719== 56 bytes in 1 blocks are still reachable in loss record 1 of 6
+==39719==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==39719==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==39719==    by 0x11DAF8: ??? (in /usr/bin/ls)
+==39719==    by 0x11C890: ??? (in /usr/bin/ls)
+==39719==    by 0x10D8F6: ??? (in /usr/bin/ls)
+==39719==    by 0x48A3082: (below main) (libc-start.c:308)
+==39719== 
+==39719== 56 bytes in 1 blocks are still reachable in loss record 2 of 6
+==39719==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==39719==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==39719==    by 0x11DAF8: ??? (in /usr/bin/ls)
+==39719==    by 0x11C890: ??? (in /usr/bin/ls)
+==39719==    by 0x10D955: ??? (in /usr/bin/ls)
+==39719==    by 0x48A3082: (below main) (libc-start.c:308)
+==39719== 
+==39719== 119 bytes in 14 blocks are still reachable in loss record 3 of 6
+==39719==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==39719==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==39719==    by 0x11DAF8: ??? (in /usr/bin/ls)
+==39719==    by 0x112BE7: ??? (in /usr/bin/ls)
+==39719==    by 0x113E1E: ??? (in /usr/bin/ls)
+==39719==    by 0x10DB5C: ??? (in /usr/bin/ls)
+==39719==    by 0x48A3082: (below main) (libc-start.c:308)
+==39719== 
+==39719== 128 bytes in 1 blocks are still reachable in loss record 4 of 6
+==39719==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==39719==    by 0x11EDC9: ??? (in /usr/bin/ls)
+==39719==    by 0x10DA7E: ??? (in /usr/bin/ls)
+==39719==    by 0x48A3082: (below main) (libc-start.c:308)
+==39719== 
+==39719== 336 bytes in 1 blocks are still reachable in loss record 5 of 6
+==39719==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==39719==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==39719==    by 0x10F2CA: ??? (in /usr/bin/ls)
+==39719==    by 0x113C88: ??? (in /usr/bin/ls)
+==39719==    by 0x10DB5C: ??? (in /usr/bin/ls)
+==39719==    by 0x48A3082: (below main) (libc-start.c:308)
+==39719== 
+==39719== 20,000 bytes in 1 blocks are still reachable in loss record 6 of 6
+==39719==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==39719==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==39719==    by 0x10DAEF: ??? (in /usr/bin/ls)
+==39719==    by 0x48A3082: (below main) (libc-start.c:308)
+==39719== 
+==39719== LEAK SUMMARY:
+==39719==    definitely lost: 0 bytes in 0 blocks
+==39719==    indirectly lost: 0 bytes in 0 blocks
+==39719==      possibly lost: 0 bytes in 0 blocks
+==39719==    still reachable: 20,695 bytes in 19 blocks
+==39719==         suppressed: 0 bytes in 0 blocks
+==39719== 
+==39719== For lists of detected and suppressed errors, rerun with: -s
+==39719== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==39677== 
+==39677== FILE DESCRIPTORS: 6 open at exit.
+==39677== Open file descriptor 24: /home/codespace/.vscode-remote/data/logs/20230926T204038/network.log
+==39677==    <inherited from parent>
+==39677== 
+==39677== Open file descriptor 21: /home/codespace/.vscode-remote/data/logs/20230926T204038/remoteagent.log
+==39677==    <inherited from parent>
+==39677== 
+==39677== Open file descriptor 19: /home/codespace/.vscode-remote/data/logs/20230926T204038/ptyhost.log
+==39677==    <inherited from parent>
+==39677== 
+==39677== Open file descriptor 6: /dev/null
+==39677==    <inherited from parent>
+==39677== 
+==39677== Open file descriptor 2: /workspaces/minishell_42/log.txt
+==39677==    <inherited from parent>
+==39677== 
+==39677== Open file descriptor 1: /workspaces/minishell_42/log.txt
+==39677==    <inherited from parent>
+==39677== 
+==39677== 
+==39677== HEAP SUMMARY:
+==39677==     in use at exit: 204,600 bytes in 215 blocks
+==39677==   total heap usage: 633 allocs, 418 frees, 245,110 bytes allocated
+==39677== 
+==39677== LEAK SUMMARY:
+==39677==    definitely lost: 0 bytes in 0 blocks
+==39677==    indirectly lost: 0 bytes in 0 blocks
+==39677==      possibly lost: 0 bytes in 0 blocks
+==39677==    still reachable: 0 bytes in 0 blocks
+==39677==         suppressed: 204,600 bytes in 215 blocks
+==39677== 
+==39677== For lists of detected and suppressed errors, rerun with: -s
+==39677== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell>$ ls
+==40176== Memcheck, a memory error detector
+==40176== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==40176== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==40176== Command: /usr/bin/ls
+==40176== 
+Makefile
+bash
+gitpush.txt
+incs
+legacy
+libft
+log.txt
+minishell
+objs
+readline.supp
+savetests.txt
+srcs
+test1
+todolist.txt
+==40176== 
+==40176== FILE DESCRIPTORS: 5 open at exit.
+==40176== Open file descriptor 24: /home/codespace/.vscode-remote/data/logs/20230926T204038/network.log
+==40176==    <inherited from parent>
+==40176== 
+==40176== Open file descriptor 21: /home/codespace/.vscode-remote/data/logs/20230926T204038/remoteagent.log
+==40176==    <inherited from parent>
+==40176== 
+==40176== Open file descriptor 19: /home/codespace/.vscode-remote/data/logs/20230926T204038/ptyhost.log
+==40176==    <inherited from parent>
+==40176== 
+==40176== Open file descriptor 6: /dev/null
+==40176==    <inherited from parent>
+==40176== 
+==40176== Open file descriptor 0: /dev/pts/0
+==40176==    <inherited from parent>
+==40176== 
+==40176== 
+==40176== HEAP SUMMARY:
+==40176==     in use at exit: 20,695 bytes in 19 blocks
+==40176==   total heap usage: 253 allocs, 234 frees, 80,428 bytes allocated
+==40176== 
+==40176== 56 bytes in 1 blocks are still reachable in loss record 1 of 6
+==40176==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==40176==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==40176==    by 0x11DAF8: ??? (in /usr/bin/ls)
+==40176==    by 0x11C890: ??? (in /usr/bin/ls)
+==40176==    by 0x10D8F6: ??? (in /usr/bin/ls)
+==40176==    by 0x48A3082: (below main) (libc-start.c:308)
+==40176== 
+==40176== 56 bytes in 1 blocks are still reachable in loss record 2 of 6
+==40176==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==40176==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==40176==    by 0x11DAF8: ??? (in /usr/bin/ls)
+==40176==    by 0x11C890: ??? (in /usr/bin/ls)
+==40176==    by 0x10D955: ??? (in /usr/bin/ls)
+==40176==    by 0x48A3082: (below main) (libc-start.c:308)
+==40176== 
+==40176== 119 bytes in 14 blocks are still reachable in loss record 3 of 6
+==40176==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==40176==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==40176==    by 0x11DAF8: ??? (in /usr/bin/ls)
+==40176==    by 0x112BE7: ??? (in /usr/bin/ls)
+==40176==    by 0x113E1E: ??? (in /usr/bin/ls)
+==40176==    by 0x10DB5C: ??? (in /usr/bin/ls)
+==40176==    by 0x48A3082: (below main) (libc-start.c:308)
+==40176== 
+==40176== 128 bytes in 1 blocks are still reachable in loss record 4 of 6
+==40176==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==40176==    by 0x11EDC9: ??? (in /usr/bin/ls)
+==40176==    by 0x10DA7E: ??? (in /usr/bin/ls)
+==40176==    by 0x48A3082: (below main) (libc-start.c:308)
+==40176== 
+==40176== 336 bytes in 1 blocks are still reachable in loss record 5 of 6
+==40176==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==40176==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==40176==    by 0x10F2CA: ??? (in /usr/bin/ls)
+==40176==    by 0x113C88: ??? (in /usr/bin/ls)
+==40176==    by 0x10DB5C: ??? (in /usr/bin/ls)
+==40176==    by 0x48A3082: (below main) (libc-start.c:308)
+==40176== 
+==40176== 20,000 bytes in 1 blocks are still reachable in loss record 6 of 6
+==40176==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==40176==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==40176==    by 0x10DAEF: ??? (in /usr/bin/ls)
+==40176==    by 0x48A3082: (below main) (libc-start.c:308)
+==40176== 
+==40176== LEAK SUMMARY:
+==40176==    definitely lost: 0 bytes in 0 blocks
+==40176==    indirectly lost: 0 bytes in 0 blocks
+==40176==      possibly lost: 0 bytes in 0 blocks
+==40176==    still reachable: 20,695 bytes in 19 blocks
+==40176==         suppressed: 0 bytes in 0 blocks
+==40176== 
+==40176== For lists of detected and suppressed errors, rerun with: -s
+==40176== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell>$ cat[K[K[Kasgasg
+minishell: asgasg: command not found
+==40323== 
+==40323== FILE DESCRIPTORS: 5 open at exit.
+==40323== Open file descriptor 24: /home/codespace/.vscode-remote/data/logs/20230926T204038/network.log
+==40323==    <inherited from parent>
+==40323== 
+==40323== Open file descriptor 21: /home/codespace/.vscode-remote/data/logs/20230926T204038/remoteagent.log
+==40323==    <inherited from parent>
+==40323== 
+==40323== Open file descriptor 19: /home/codespace/.vscode-remote/data/logs/20230926T204038/ptyhost.log
+==40323==    <inherited from parent>
+==40323== 
+==40323== Open file descriptor 6: /dev/null
+==40323==    <inherited from parent>
+==40323== 
+==40323== Open file descriptor 2: /workspaces/minishell_42/log.txt
+==40323==    <inherited from parent>
+==40323== 
+==40323== 
+==40323== HEAP SUMMARY:
+==40323==     in use at exit: 204,600 bytes in 215 blocks
+==40323==   total heap usage: 735 allocs, 520 frees, 248,684 bytes allocated
+==40323== 
+==40323== LEAK SUMMARY:
+==40323==    definitely lost: 0 bytes in 0 blocks
+==40323==    indirectly lost: 0 bytes in 0 blocks
+==40323==      possibly lost: 0 bytes in 0 blocks
+==40323==    still reachable: 0 bytes in 0 blocks
+==40323==         suppressed: 204,600 bytes in 215 blocks
+==40323== 
+==40323== For lists of detected and suppressed errors, rerun with: -s
+==40323== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell>$ (cat ;  echo ; echo $? > erro ) | ls
+==40523== Memcheck, a memory error detector
+==40523== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==40523== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==40523== Command: /usr/bin/ls
+==40523== 
+==40524== Memcheck, a memory error detector
+==40524== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==40524== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==40524== Command: /usr/bin/cat
+==40524== 
+Makefile
+bash
+gitpush.txt
+incs
+legacy
+libft
+log.txt
+minishell
+objs
+readline.supp
+savetests.txt
+srcs
+test1
+todolist.txt
+==40523== 
+==40523== FILE DESCRIPTORS: 5 open at exit.
+==40523== Open file descriptor 24: /home/codespace/.vscode-remote/data/logs/20230926T204038/network.log
+==40523==    <inherited from parent>
+==40523== 
+==40523== Open file descriptor 21: /home/codespace/.vscode-remote/data/logs/20230926T204038/remoteagent.log
+==40523==    <inherited from parent>
+==40523== 
+==40523== Open file descriptor 19: /home/codespace/.vscode-remote/data/logs/20230926T204038/ptyhost.log
+==40523==    <inherited from parent>
+==40523== 
+==40523== Open file descriptor 6: /dev/null
+==40523==    <inherited from parent>
+==40523== 
+==40523== Open file descriptor 0:
+==40523==    <inherited from parent>
+==40523== 
+==40523== 
+==40523== HEAP SUMMARY:
+==40523==     in use at exit: 20,695 bytes in 19 blocks
+==40523==   total heap usage: 253 allocs, 234 frees, 80,428 bytes allocated
+==40523== 
+==40523== 56 bytes in 1 blocks are still reachable in loss record 1 of 6
+==40523==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==40523==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==40523==    by 0x11DAF8: ??? (in /usr/bin/ls)
+==40523==    by 0x11C890: ??? (in /usr/bin/ls)
+==40523==    by 0x10D8F6: ??? (in /usr/bin/ls)
+==40523==    by 0x48A3082: (below main) (libc-start.c:308)
+==40523== 
+==40523== 56 bytes in 1 blocks are still reachable in loss record 2 of 6
+==40523==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==40523==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==40523==    by 0x11DAF8: ??? (in /usr/bin/ls)
+==40523==    by 0x11C890: ??? (in /usr/bin/ls)
+==40523==    by 0x10D955: ??? (in /usr/bin/ls)
+==40523==    by 0x48A3082: (below main) (libc-start.c:308)
+==40523== 
+==40523== 119 bytes in 14 blocks are still reachable in loss record 3 of 6
+==40523==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==40523==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==40523==    by 0x11DAF8: ??? (in /usr/bin/ls)
+==40523==    by 0x112BE7: ??? (in /usr/bin/ls)
+==40523==    by 0x113E1E: ??? (in /usr/bin/ls)
+==40523==    by 0x10DB5C: ??? (in /usr/bin/ls)
+==40523==    by 0x48A3082: (below main) (libc-start.c:308)
+==40523== 
+==40523== 128 bytes in 1 blocks are still reachable in loss record 4 of 6
+==40523==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==40523==    by 0x11EDC9: ??? (in /usr/bin/ls)
+==40523==    by 0x10DA7E: ??? (in /usr/bin/ls)
+==40523==    by 0x48A3082: (below main) (libc-start.c:308)
+==40523== 
+==40523== 336 bytes in 1 blocks are still reachable in loss record 5 of 6
+==40523==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==40523==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==40523==    by 0x10F2CA: ??? (in /usr/bin/ls)
+==40523==    by 0x113C88: ??? (in /usr/bin/ls)
+==40523==    by 0x10DB5C: ??? (in /usr/bin/ls)
+==40523==    by 0x48A3082: (below main) (libc-start.c:308)
+==40523== 
+==40523== 20,000 bytes in 1 blocks are still reachable in loss record 6 of 6
+==40523==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==40523==    by 0x11D8CC: ??? (in /usr/bin/ls)
+==40523==    by 0x10DAEF: ??? (in /usr/bin/ls)
+==40523==    by 0x48A3082: (below main) (libc-start.c:308)
+==40523== 
+==40523== LEAK SUMMARY:
+==40523==    definitely lost: 0 bytes in 0 blocks
+==40523==    indirectly lost: 0 bytes in 0 blocks
+==40523==      possibly lost: 0 bytes in 0 blocks
+==40523==    still reachable: 20,695 bytes in 19 blocks
+==40523==         suppressed: 0 bytes in 0 blocks
+==40523== 
+==40523== For lists of detected and suppressed errors, rerun with: -s
+==40523== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==40521== 
+==40521== FILE DESCRIPTORS: 6 open at exit.
+==40521== Open file descriptor 24: /home/codespace/.vscode-remote/data/logs/20230926T204038/network.log
+==40521==    <inherited from parent>
+==40521== 
+==40521== Open file descriptor 21: /home/codespace/.vscode-remote/data/logs/20230926T204038/remoteagent.log
+==40521==    <inherited from parent>
+==40521== 
+==40521== Open file descriptor 19: /home/codespace/.vscode-remote/data/logs/20230926T204038/ptyhost.log
+==40521==    <inherited from parent>
+==40521== 
+==40521== Open file descriptor 6: /dev/null
+==40521==    <inherited from parent>
+==40521== 
+==40521== Open file descriptor 2: /workspaces/minishell_42/log.txt
+==40521==    <inherited from parent>
+==40521== 
+==40521== Open file descriptor 0: /dev/pts/0
+==40521==    <inherited from parent>
+==40521== 
+==40521== 
+==40521== HEAP SUMMARY:
+==40521==     in use at exit: 204,600 bytes in 215 blocks
+==40521==   total heap usage: 720 allocs, 505 frees, 248,103 bytes allocated
+==40521== 
+==40521== LEAK SUMMARY:
+==40521==    definitely lost: 0 bytes in 0 blocks
+==40521==    indirectly lost: 0 bytes in 0 blocks
+==40521==      possibly lost: 0 bytes in 0 blocks
+==40521==    still reachable: 0 bytes in 0 blocks
+==40521==         suppressed: 204,600 bytes in 215 blocks
+==40521== 
+==40521== For lists of detected and suppressed errors, rerun with: -s
+==40521== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==40524== 
+==40524== Process terminating with default action of signal 13 (SIGPIPE)
+==40524==    at 0x4962077: write (write.c:26)
+==40524==    by 0x10D73D: ??? (in /usr/bin/cat)
+==40524==    by 0x10B8D5: ??? (in /usr/bin/cat)
+==40524==    by 0x10B058: ??? (in /usr/bin/cat)
+==40524==    by 0x4878082: (below main) (libc-start.c:308)
+==40524== 
+==40524== FILE DESCRIPTORS: 8 open at exit.
+==40524== Open file descriptor 24: /home/codespace/.vscode-remote/data/logs/20230926T204038/network.log
+==40524==    <inherited from parent>
+==40524== 
+==40524== Open file descriptor 21: /home/codespace/.vscode-remote/data/logs/20230926T204038/remoteagent.log
+==40524==    <inherited from parent>
+==40524== 
+==40524== Open file descriptor 19: /home/codespace/.vscode-remote/data/logs/20230926T204038/ptyhost.log
+==40524==    <inherited from parent>
+==40524== 
+==40524== Open file descriptor 6: /dev/null
+==40524==    <inherited from parent>
+==40524== 
+==40524== Open file descriptor 5:
+==40524==    <inherited from parent>
+==40524== 
+==40524== Open file descriptor 2: /workspaces/minishell_42/log.txt
+==40524==    <inherited from parent>
+==40524== 
+==40524== Open file descriptor 1:
+==40524==    <inherited from parent>
+==40524== 
+==40524== Open file descriptor 0: /dev/pts/0
+==40524==    <inherited from parent>
+==40524== 
+==40524== 
+==40524== HEAP SUMMARY:
+==40524==     in use at exit: 135,167 bytes in 1 blocks
+==40524==   total heap usage: 228 allocs, 227 frees, 156,338 bytes allocated
+==40524== 
+==40524== 135,167 bytes in 1 blocks are still reachable in loss record 1 of 1
+==40524==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==40524==    by 0x10DDFC: ??? (in /usr/bin/cat)
+==40524==    by 0x10B024: ??? (in /usr/bin/cat)
+==40524==    by 0x4878082: (below main) (libc-start.c:308)
+==40524== 
+==40524== LEAK SUMMARY:
+==40524==    definitely lost: 0 bytes in 0 blocks
+==40524==    indirectly lost: 0 bytes in 0 blocks
+==40524==      possibly lost: 0 bytes in 0 blocks
+==40524==    still reachable: 135,167 bytes in 1 blocks
+==40524==         suppressed: 0 bytes in 0 blocks
+==40524== 
+==40524== For lists of detected and suppressed errors, rerun with: -s
+==40524== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==40522== 
+==40522== FILE DESCRIPTORS: 6 open at exit.
+==40522== Open file descriptor 24: /home/codespace/.vscode-remote/data/logs/20230926T204038/network.log
+==40522==    <inherited from parent>
+==40522== 
+==40522== Open file descriptor 21: /home/codespace/.vscode-remote/data/logs/20230926T204038/remoteagent.log
+==40522==    <inherited from parent>
+==40522== 
+==40522== Open file descriptor 19: /home/codespace/.vscode-remote/data/logs/20230926T204038/ptyhost.log
+==40522==    <inherited from parent>
+==40522== 
+==40522== Open file descriptor 6: /dev/null
+==40522==    <inherited from parent>
+==40522== 
+==40522== Open file descriptor 2: /workspaces/minishell_42/log.txt
+==40522==    <inherited from parent>
+==40522== 
+==40522== Open file descriptor 1: /workspaces/minishell_42/log.txt
+==40522==    <inherited from parent>
+==40522== 
+==40522== 
+==40522== HEAP SUMMARY:
+==40522==     in use at exit: 204,600 bytes in 215 blocks
+==40522==   total heap usage: 750 allocs, 535 frees, 248,372 bytes allocated
+==40522== 
+==40522== LEAK SUMMARY:
+==40522==    definitely lost: 0 bytes in 0 blocks
+==40522==    indirectly lost: 0 bytes in 0 blocks
+==40522==      possibly lost: 0 bytes in 0 blocks
+==40522==    still reachable: 0 bytes in 0 blocks
+==40522==         suppressed: 204,600 bytes in 215 blocks
+==40522== 
+==40522== For lists of detected and suppressed errors, rerun with: -s
+==40522== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==40520== 
+==40520== FILE DESCRIPTORS: 6 open at exit.
+==40520== Open file descriptor 24: /home/codespace/.vscode-remote/data/logs/20230926T204038/network.log
+==40520==    <inherited from parent>
+==40520== 
+==40520== Open file descriptor 21: /home/codespace/.vscode-remote/data/logs/20230926T204038/remoteagent.log
+==40520==    <inherited from parent>
+==40520== 
+==40520== Open file descriptor 19: /home/codespace/.vscode-remote/data/logs/20230926T204038/ptyhost.log
+==40520==    <inherited from parent>
+==40520== 
+==40520== Open file descriptor 6: /dev/null
+==40520==    <inherited from parent>
+==40520== 
+==40520== Open file descriptor 2: /workspaces/minishell_42/log.txt
+==40520==    <inherited from parent>
+==40520== 
+==40520== Open file descriptor 1: /workspaces/minishell_42/log.txt
+==40520==    <inherited from parent>
+==40520== 
+==40520== 
+==40520== HEAP SUMMARY:
+==40520==     in use at exit: 204,600 bytes in 215 blocks
+==40520==   total heap usage: 712 allocs, 497 frees, 248,040 bytes allocated
+==40520== 
+==40520== LEAK SUMMARY:
+==40520==    definitely lost: 0 bytes in 0 blocks
+==40520==    indirectly lost: 0 bytes in 0 blocks
+==40520==      possibly lost: 0 bytes in 0 blocks
+==40520==    still reachable: 0 bytes in 0 blocks
+==40520==         suppressed: 204,600 bytes in 215 blocks
+==40520== 
+==40520== For lists of detected and suppressed errors, rerun with: -s
+==40520== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell>$ ^C
+minishell>$ exit
+==39304== 
+==39304== FILE DESCRIPTORS: 6 open at exit.
+==39304== Open file descriptor 24: /home/codespace/.vscode-remote/data/logs/20230926T204038/network.log
+==39304==    <inherited from parent>
+==39304== 
+==39304== Open file descriptor 21: /home/codespace/.vscode-remote/data/logs/20230926T204038/remoteagent.log
+==39304==    <inherited from parent>
+==39304== 
+==39304== Open file descriptor 19: /home/codespace/.vscode-remote/data/logs/20230926T204038/ptyhost.log
+==39304==    <inherited from parent>
+==39304== 
+==39304== Open file descriptor 6: /dev/null
+==39304==    <inherited from parent>
+==39304== 
+==39304== Open file descriptor 2: /workspaces/minishell_42/log.txt
+==39304==    <inherited from parent>
+==39304== 
+==39304== Open file descriptor 1: /workspaces/minishell_42/log.txt
+==39304==    <inherited from parent>
+==39304== 
+==39304== 
+==39304== HEAP SUMMARY:
+==39304==     in use at exit: 204,600 bytes in 215 blocks
+==39304==   total heap usage: 718 allocs, 503 frees, 248,108 bytes allocated
+==39304== 
+==39304== LEAK SUMMARY:
+==39304==    definitely lost: 0 bytes in 0 blocks
+==39304==    indirectly lost: 0 bytes in 0 blocks
+==39304==      possibly lost: 0 bytes in 0 blocks
+==39304==    still reachable: 0 bytes in 0 blocks
+==39304==         suppressed: 204,600 bytes in 215 blocks
+==39304== 
+==39304== For lists of detected and suppressed errors, rerun with: -s
+==39304== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
