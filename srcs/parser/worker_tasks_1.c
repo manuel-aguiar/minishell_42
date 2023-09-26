@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:09:22 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/26 14:54:17 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/26 17:42:33 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	worker_task_preparation(t_block *worker)
 	if (!worker->prompt->head)
 	{
 		token_list_destroy(&worker->prompt);
-		return (1);
+		return (0);
 	}
 	if (!worker_args_expand_dollar_split(worker))
 		return (0);
