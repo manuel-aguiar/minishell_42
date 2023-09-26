@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/24 22:00:28 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/26 09:55:07 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ int	minishell_main_loop(t_ms *ms)
 		if (g_signal)
 			reopen_stdin(ms);
 		g_signal = 0;
-		if (tcsetattr(ms->infd, TCSANOW, &ms->modified) == -1)
+		if (isatty(ms->infd) \
+		&& tcsetattr(ms->infd, TCSANOW, &ms->modified) == -1)
 			perror_msg_int("tcsetattr", 0);
 	}
 	return (1);
