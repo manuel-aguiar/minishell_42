@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/23 11:35:39 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/26 11:37:48 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/26 11:47:27 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ static int	exec_cmd_with_path(t_block *block)
 		error_child_exit(block, ERR_IS_DIR, CODE_DIR, 1);
 	if (access(block->cmd, F_OK))
 		perror_child_exit(block, CODE_CMD, 1);
+	if (access(block->cmd, X_OK))
+		error_child_exit(block, ERR_PERM, CODE_PERM, 1);
 	else if (execve(block->cmd, block->cmd_args, block->ms->env) == -1)
 		perror_child_exit(block, CODE_EXECVE, 1);
 	return (1);
