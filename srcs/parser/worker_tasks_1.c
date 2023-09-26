@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:09:22 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/25 19:42:45 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/26 10:18:58 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ int	worker_task_preparation(t_block *worker)
 		return (1);
 	}
 	if (!worker_args_expand_dollar_split(worker))
-		return (0);	
+		return (0);
+	//token_list_head_print(worker->prompt, print_token_args);
 	if (!worker_args_expand_wildcard_split(worker))
 		return (0);	
 	//if (!worker_args_expand_dollar_wildcard(worker))
@@ -55,6 +56,7 @@ int	worker_task_preparation(t_block *worker)
 	worker->cmd = ft_strdup(worker->cmd_args[0]);
 	if (!worker->cmd)
 		return (0);
+	token_list_head_print(worker->prompt, print_token_args);
 	return (1);
 }
 
