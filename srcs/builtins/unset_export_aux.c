@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 17:09:22 by mnascime          #+#    #+#             */
-/*   Updated: 2023/09/26 11:25:35 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/26 14:32:22 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,6 @@ static int	env_error(t_block *block, int is_exporting, char *arg)
 	ft_putstr_fd("': not a valid identifier\n", block->ms->errfd);
 	return (-2);
 }
-
-/*
-	while (arg[j] && (ft_isalpha(arg[j])) \
-	|| ft_isdigit(arg[j]) \
-	|| (arg[j] == '=' && is_exporting))
-*/
-
-/*
-	if (j > 0 && (arg[0] == '=' && is_exporting) \
-	|| (ft_strrchr(arg, '=') && !is_exporting))
-
-*/
 
 static int	get_valid_len(char *arg, int is_export)
 {
