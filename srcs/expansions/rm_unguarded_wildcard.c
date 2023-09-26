@@ -6,33 +6,32 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 13:51:18 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/25 11:42:54 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 19:44:18 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void  check_if_wildcard(char *str, int *index, int quote)
+static void	check_if_wildcard(char *str, int *index, int quote)
 {
-    int i;
-    int found;
+	int	i;
+	int	found;
 
-    i = 1;
-    found = 0;
-    while (str[i] && str[i] != quote)
-    {
-        if (str[i] == '*')
-            found = 1;
-        i++;
-    }
-    if (!found)
-    {
-        str[0] = -1;
-        str[i] = -1;
-    }
-    *index += (i + 1);
+	i = 1;
+	found = 0;
+	while (str[i] && str[i] != quote)
+	{
+		if (str[i] == '*')
+			found = 1;
+		i++;
+	}
+	if (!found)
+	{
+		str[0] = -1;
+		str[i] = -1;
+	}
+	*index += (i + 1);
 }
-
 
 static int	setup_guard_array(char *str)
 {
@@ -42,15 +41,15 @@ static int	setup_guard_array(char *str)
 	while (str[i])
 	{
 		if (str[i] == '"' || str[i] == '\'')
-            check_if_wildcard(&str[i], &i, str[i]);
-        else
-		    i++;
+			check_if_wildcard(&str[i], &i, str[i]);
+		else
+			i++;
 	}
 	return (1);
 }
 
-static int	remove_quotes_copy_replace(char **str, int *has_guards, \
-			int oldlen, int newlen)
+static int	remove_quotes_copy_replace(char **str, int *has_guards, int oldlen,
+		int newlen)
 {
 	char	*new;
 	int		i;
@@ -77,9 +76,9 @@ static int	remove_quotes_copy_replace(char **str, int *has_guards, \
 
 int	remove_unguarded_quotes_wildcard(char **str, int *has_guards)
 {
-	int		oldlen;
-	int		newlen;
-	int		i;
+	int	oldlen;
+	int	newlen;
+	int	i;
 
 	setup_guard_array(*str);
 	i = 0;

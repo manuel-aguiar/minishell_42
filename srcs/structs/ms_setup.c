@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:30:56 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/24 22:01:38 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/26 09:55:00 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,16 @@ int	g_signal;
 
 int	ms_disable_sigquit(t_ms *ms)
 {
-	if (tcgetattr(ms->infd, &ms->original) == -1)
-		return (perror_msg_int("tcgetattr", 0));
-	if (tcgetattr(ms->infd, &ms->modified) == -1)
-		return (perror_msg_int("tcgetattr", 0));
-	ms->modified.c_cc[VQUIT] = _POSIX_VDISABLE;
-	if (tcsetattr(ms->infd, TCSANOW, &ms->modified) == -1)
-		return (perror_msg_int("tcsetattr", 0));
+	if (isatty(ms->infd))
+	{
+		if (tcgetattr(ms->infd, &ms->original) == -1)
+			return (perror_msg_int("tcgetattr", 0));
+		if (tcgetattr(ms->infd, &ms->modified) == -1)
+			return (perror_msg_int("tcgetattr", 0));
+		ms->modified.c_cc[VQUIT] = _POSIX_VDISABLE;
+		if (tcsetattr(ms->infd, TCSANOW, &ms->modified) == -1)
+			return (perror_msg_int("tcsetattr", 0));
+	}
 	return (1);
 }
 
@@ -110,7 +113,8 @@ int	ms_destroy(t_ms *ms)
 		free(ms->name);
 	if (ms->name_readline)
 		ft_free_set_null(&ms->name_readline);
-	if (tcsetattr(ms->infd, TCSANOW, &ms->original) == -1)
+	if (isatty(ms->infd) \
+	&& tcsetattr(ms->infd, TCSANOW, &ms->original) == -1)
 		return (0);
 	if (ms->kill_stdin)
 		close(ms->infd);

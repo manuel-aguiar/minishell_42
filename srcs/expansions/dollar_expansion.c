@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:42:58 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/25 15:51:30 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 19:43:02 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,5 @@ int	expand_dollars(char **to_expand, t_ms *ms, int turn_negative)
 		else
 			i++;
 	}
-	//printf("arg after dolar [%s]\n", *to_expand);
 	return (1);
 }

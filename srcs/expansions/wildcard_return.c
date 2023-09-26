@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 13:51:53 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/25 18:12:59 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/25 19:40:49 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,37 +59,6 @@ static int	init_wildcard_struct_on_stack(t_wildc *wildcard, char *pattern, \
 	wildcard->filename = NULL;
 	wildcard->copy_dir = NULL;
 	return (1);
-}
-
-void		set_negative(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		str[i] *= -1;
-		i++;
-	}
-}
-
-void	wildcard_list_set_negative(t_vdmlist *files)
-{
-	t_vdmnode	*cur;
-
-	cur = files->head;
-	while (cur)
-	{
-		set_negative((char *)cur->data);
-		cur = cur->next;
-	}
-}
-
-void	void_putstr(void *str)
-{
-	char *my_str;
-	my_str = (char *)str;
-	printf("[%s]\n", my_str);
 }
 
 char	**wildcard(char *pattern, int pat_len, int *match_count)
