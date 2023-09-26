@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:18:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/26 14:54:05 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/26 15:01:18 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ int	worker_args_expand_wildcard_split(t_block *worker)
 		
 		dup = ft_strdup(cur->text);
 		if (!dup)
+			return (0);
+		if (!remove_unguarded_quotes_wildcard(&cur->text, NULL))
 			return (0);
 		if (!expand_wildcards(&cur->text, &move, &split))
 			return (0);
@@ -88,8 +90,7 @@ int	worker_args_expand_dollar_split(t_block *worker)
 		}
 		else
 		{
-			if (!remove_unguarded_quotes_wildcard(&cur->text, NULL))
-				return (0);
+
 			free(cur->text);
 			cur->text = split[0];
 			if (move > 1)
