@@ -1,1 +1,1 @@
- git add . && git commit -m "invalid close attempted fix" && git push 
+ make fclean ; git add . && git commit -m "invalid close attempted fix" && git push 
