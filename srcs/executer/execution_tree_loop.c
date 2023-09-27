@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:26:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/27 11:03:27 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 11:08:14 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,10 @@ static int	block_exit_status_destroy(t_block *block)
 		status = block->my_status;
 		if (block->ms->dup_stdin != -1)
 			close(block->ms->dup_stdin);
-		close(block->final_in);
-		close(block->final_out);
+		if (block->final_in != -1)
+			close(block->final_in);
+		if (block->final_out != -1)
+			close(block->final_out);
 		ms_destroy(block->ms);
 		exit(status);
 	}
