@@ -21,10 +21,6 @@ static int	block_exit_status_destroy(t_block *block)
 		status = block->my_status;
 		if (block->ms->dup_stdin != -1)
 			close(block->ms->dup_stdin);
-		if (block->final_in != -1)
-			close(block->final_in);
-		if (block->final_out != -1)
-			close(block->final_out);
 		ms_destroy(block->ms);
 		exit(status);
 	}
