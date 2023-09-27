@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 12:41:01 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/27 14:20:10 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 14:35:47 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,47 @@ int	worker_args_expand_wildcard_split(t_block *worker)
 		else
 			wildcard_replace_no_match(&cur, &split, &dup);
 	}
+	return (1);
+}
+
+int	worker_args_rm_unguarded_quotes(t_block *worker)
+{
+	t_token_node	*cur;
+
+	cur = worker->prompt->head;
+	while (cur)
+	{
+		if (!remove_unguarded_quotes(&cur->text, NULL))
+			return (0);
+		cur = cur->next;
+	}
+	return (1);
+}
+
+int	worker_dump_tasks_to_cmd_args(t_block *worker)
+{
+	int				i;
+	int				total_args;
+	t_token_node	*cur;
+	char			**cmd_args;
+
+	total_args = worker->prompt->len;
+	if (!total_args)
+		return (0);
+	cmd_args = malloc(sizeof(*cmd_args) * (total_args + 1));
+	if (!cmd_args)
+		return (perror_msg_int("malloc", 0));
+	i = 0;
+	cur = worker->prompt->head;
+	while (i < total_args)
+	{
+		cmd_args[i] = cur->text;
+		cur->text = NULL;
+		cur = cur->next;
+		i++;
+	}
+	cmd_args[i] = NULL;
+	worker->cmd_args = cmd_args;
+	token_list_destroy(&worker->prompt);
 	return (1);
 }
