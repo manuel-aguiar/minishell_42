@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 17:21:31 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/24 13:20:58 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 16:28:45 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ int	here_doc(t_block *block, char *eof, int has_quote_guard)
 	here_doc_fill(block, eof, has_quote_guard);
 	if (g_signal == SIGINT)
 	{
+		block->ms->exit_status = SIGINT + EXIT_SIGNALED;
 		close(block->here_doc_fd);
 		unlink(block->here_doc);
 		ft_putstr_fd("\n", block->ms->errfd);
