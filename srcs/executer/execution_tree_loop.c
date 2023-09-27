@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 11:26:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/27 10:30:00 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 11:03:27 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ static int	block_exit_status_destroy(t_block *block)
 	}
 	else if (!block->my_manager && !block->is_worker)
 		block->ms->exit_status = block->my_status;
-	close_in_fds(block);
-	close_out_fds(block);
 	block_destroy(block);
 	return (1);
 }

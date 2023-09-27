@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 00:11:09 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/23 14:17:55 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 11:01:40 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,4 +114,6 @@ static void	block_destroy_continued(t_block *block)
 		ft_free_set_null(&block->cmd);
 	if (block->cmd_args)
 		ft_free_charmat_null(&block->cmd_args, free);
+	close_in_fds(block);
+	close_out_fds(block);
 }
