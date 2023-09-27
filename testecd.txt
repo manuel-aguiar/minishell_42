@@ -1,0 +1,1 @@
+(cat ; echo "cat status was $? " >> erro; echo "rm status was $?" >> erro; cat ; echo "cat status was $? " >> erro) | ls ; cat erro ; rm erro
