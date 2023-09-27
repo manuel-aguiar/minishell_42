@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/27 14:40:18 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 15:07:58 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -347,14 +347,13 @@ int		here_doc_expand_dollars(char **to_expand, t_ms *ms);
 /*rm_unguarded_quotes*/
 int		remove_unguarded_quotes(char **str, int *has_guards);
 int		remove_unguarded_quotes_wildcard(char **str, int *has_guards);
-
-int		count_split_after_dollar(char ***split_place, char *redir_copy, \
-		int *count);
 int		count_chars(char *str, char c);
 
 /* expansion_char_protec.c*/
 void	turn_positive(char *str);
 int		empty_quotes(char *str);
+int		count_split_after_dollar(char ***split_place, char *redir_copy, \
+		int *count);
 
 //////////////////////////////////////
 //////////////////////////////////////
