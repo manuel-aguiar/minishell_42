@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:09:22 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/27 12:34:16 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 14:19:40 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,27 @@ int	worker_extract_redirections(t_block *worker)
 		else
 			cur = cur->next;
 	}
+	return (1);
+}
+
+int	worker_expansion_add_tokens(t_block *worker, t_token_node **cur, \
+			char ***split_place, int move)
+{
+	int				i;
+	t_token_node	*new;
+
+	i = 1;
+	while (i < move)
+	{
+		new = new_token_node(T_ARG, (*split_place)[i++]);
+		if (!new)
+		{
+			ft_free_charmat_null(split_place, free);
+			return (0);
+		}
+		token_list_insert_after(worker->prompt, *cur, new);
+		*cur = (*cur)->next;
+	}
+	ft_free_set_null(split_place);
 	return (1);
 }

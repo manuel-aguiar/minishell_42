@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 13:44:40 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/27 13:25:55 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 14:20:29 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	close_in_fds(t_block *block)
 	if ((block->my_manager && block->final_in != block->my_manager->final_in)
 		|| (!block->my_manager && block->final_in != block->ms->infd))
 	{
-		if (block->final_in != -1) 
+		if (block->final_in != -1)
 			close(block->final_in);
 		block->final_in = -1;
 	}
