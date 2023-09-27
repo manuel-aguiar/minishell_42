@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 13:51:53 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/26 14:54:33 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 12:55:31 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,21 +66,17 @@ char	**wildcard(char *pattern, int pat_len, int *match_count)
 	t_wildc	wildcard;
 	char	**split;
 
-	//printf("checking wc\n");
 	if (!init_wildcard_struct_on_stack(&wildcard, pattern, pat_len))
 		return (destroy_wildcard(&wildcard, 0));
 	if (!list_all_wildcard_matches(&wildcard, ".", 0))
 		return (destroy_wildcard(&wildcard, 0));
 	wildcard.match_count = wildcard.files->len;
-	//printf("result: [%s]\n", (char *)wildcard.files->head->data);
-	//printf("match count %d\n", wildcard.match_count);
 	if (match_count)
 		*match_count = wildcard.match_count;
 	if (!*match_count)
 	{
 		split = ft_calloc(2, sizeof(*split));
 		split[0] = ft_strdup(pattern);
-		//printf("split after wildcard [%s]\n", split[0]);
 	}
 	else
 		split = list_to_array(wildcard.files);

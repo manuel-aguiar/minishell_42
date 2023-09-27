@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 13:50:47 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/25 19:39:39 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 12:56:20 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static int	check_char_fit(char *char_test, char char_pat)
 {
-	if ((char_pat < 0 && -(*char_test) == char_pat) \
-	|| (char_pat >= 0 && *char_test == char_pat))
+	if ((char_pat < 0 && -(*char_test) == char_pat) || (char_pat >= 0
+			&& *char_test == char_pat))
 	{
 		(*char_test) *= -1;
 		return (1);
@@ -23,47 +23,44 @@ static int	check_char_fit(char *char_test, char char_pat)
 	return (0);
 }
 
-int	wildcard_fit_check(char *pattern, char *text)
+static int	wildcard_loop_condition(t_wildc *wc, char *text)
 {
-    int n = strlen(text);
-    int m = strlen(pattern);
-    int i = 0, j = 0, startIndex = -1, match = 0;
-
-	//printf("pattern [%s] candidate: [%s]\n", pattern, text);
-    while (i < n)
+	if (wc->j < wc->pat_len && (check_char_fit(&text[wc->i], \
+	wc->pattern[wc->j])) && text[wc->i] != '*' && text[wc->i] != '*' * (-1))
 	{
-        if (j < m && (check_char_fit(&text[i], pattern[j])) && text[i] != '*' && text[i] != -'*') {
-            // Characters match or '?' in pattern matches any character.
-            i++;
-            j++;
-        }
-        else if (j < m && pattern[j] == '*')
-		{
-            // Wildcard character '*', mark the current position in the pattern and the text as a proper match.
-            startIndex = j;
-            match = i;
-            j++;
-        }
-        else if (startIndex != -1)
-		{
-            // No match, but a previous wildcard was found. Backtrack to the last '*' character position and try for a different match.
-            j = startIndex + 1;
-            match++;
-            i = match;
-        }
-        else
-		{
-            // If none of the above cases comply, the pattern does not match.
-            return false;
-        }
-    }
-
-    // Consume any remaining '*' characters in the given pattern.
-    while (j < m && pattern[j] == '*')
+		wc->i++;
+		wc->j++;
+	}
+	else if (wc->j < wc->pat_len && wc->pattern[wc->j] == '*')
 	{
-        j++;
-    }
+		wc->startind = wc->j;
+		wc->match = wc->i;
+		wc->j++;
+	}
+	else if (wc->startind != -1)
+	{
+		wc->j = wc->startind + 1;
+		wc->match++;
+		wc->i = wc->match;
+	}
+	else
+		return (0);
+	return (1);
+}
 
-    // If we have reached the end of both the pattern and the text, the pattern matches the text.
-    return (j == m);
+int	wildcard_fit_check(t_wildc *wc, char *text)
+{
+	wc->candlen = ft_strlen(text);
+	wc->startind = -1;
+	wc->match = 0;
+	wc->i = 0;
+	wc->j = 0;
+	while (wc->i < wc->candlen)
+	{
+		if (!wildcard_loop_condition(wc, text))
+			return (0);
+	}
+	while (wc->j < wc->pat_len && wc->pattern[wc->j] == '*')
+		wc->j++;
+	return (wc->j == wc->pat_len);
 }

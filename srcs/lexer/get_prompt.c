@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 00:13:38 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/26 16:12:24 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 12:33:49 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	get_prompt(t_ms *ms)
 	return (1);
 }
 
-int		is_only_spaces(char *str)
+int	is_only_spaces(char *str)
 {
 	int	i;
 
@@ -50,7 +50,6 @@ char	*prompt_readline(t_ms *ms)
 	char	*line;
 
 	line = readline(ms->name_readline);
-	//rl_replace_line("", 0);
 	if (g_signal == SIGINT)
 	{
 		ms->exit_status = EXIT_SIGINT;
