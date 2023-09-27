@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:42:58 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/27 09:29:17 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 13:38:22 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,8 @@ int	dollar_search_replace(char **to_expand, t_ms *ms, int *index, int turn_negat
 		(*index)++;
 		return (1);
 	}
+// echo "$" tá errado ainda, nao pode haver quotes abertos para expandir
+
 	if ((*to_expand)[*index + 1] && !ft_isalpha((*to_expand)[*index + 1]))
 		return(dollar_delete_jump(to_expand, index, \
 		((*to_expand)[*index + 1] == '\'' || (*to_expand)[*index + 1] == '\"')));
@@ -182,8 +184,6 @@ int	expand_dollars(char **to_expand, t_ms *ms, int turn_negative)
 		}
 		else
 			i++;
-		//printf("survived fault? [%s]\n", *to_expand);
 	}
-	
 	return (1);
 }

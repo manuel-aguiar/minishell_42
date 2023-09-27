@@ -6,74 +6,28 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:18:35 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/26 15:01:18 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 14:19:51 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	worker_args_expand_wildcard_split(t_block *worker)
+static void	expansion_remove_empty_arg(t_block *worker, \
+			t_token_node **cur, char ***split_place)
 {
-	int				i;
-	int				move;
-	char			*dup;
-	char			**split;
-	t_token_node	*cur;
 	t_token_node	*new;
 
-	cur = worker->prompt->head;
-	while (cur)
-	{
-		
-		dup = ft_strdup(cur->text);
-		if (!dup)
-			return (0);
-		if (!remove_unguarded_quotes_wildcard(&cur->text, NULL))
-			return (0);
-		if (!expand_wildcards(&cur->text, &move, &split))
-			return (0);
-		//token_list_head_print(worker->prompt, print_token_args);
-		if (move > 0)
-		{
-			//printf("move is %d\n", move);
-			free(dup);
-			free(cur->text);
-			cur->text = split[0];
-			//printf("arg %d is [%s]\n", 0, split[0]);
-			i = 1;
-			while (i < move)
-			{
-				//printf("arg %d is [%s]\n", i, split[i]);
-				//remove_unguarded_quotes(&split[i], NULL);
-				new = new_token_node(T_ARG, split[i++]);
-				if (!new)
-				{
-					ft_free_charmat_null(&split, free);
-					return (0);
-				}
-				token_list_insert_after(worker->prompt, cur, new);
-				cur = cur->next;
-			}
-			ft_free_set_null(&split);
-		}
-		else
-		{
-			ft_free_charmat_null(&split, free);
-			free(cur->text);
-			cur->text = dup;
-			cur = cur->next;
-		}
-	}
-	return (1);
+	new = (*cur)->next;
+	ft_free_charmat_null(split_place, free);
+	token_list_del_node(worker->prompt, *cur);
+	*cur = new;
 }
 
 int	worker_args_expand_dollar_split(t_block *worker)
 {
-	int				i;
 	int				move;
 	char			**split;
 	t_token_node	*cur;
-	t_token_node	*new;
 
 	cur = worker->prompt->head;
 	while (cur)
@@ -82,35 +36,16 @@ int	worker_args_expand_dollar_split(t_block *worker)
 			return (0);
 		count_split_after_dollar(&split, cur->text, &move);
 		if (!move)
-		{
-			new = cur->next;
-			ft_free_charmat_null(&split, free);
-			token_list_del_node(worker->prompt, cur);
-			cur = new;
-		}
+			expansion_remove_empty_arg(worker, &cur, &split);
 		else
 		{
-
 			free(cur->text);
 			cur->text = split[0];
-			if (move > 1)
-			{
-				i = 1;
-				while (i < move)
-				{
-					new = new_token_node(T_ARG, split[i++]);
-					if (!new)
-					{
-						ft_free_charmat_null(&split, free);
-						return (0);
-					}
-					token_list_insert_after(worker->prompt, cur, new);
-					cur = cur->next;
-				}
-			}
-			else
+			if (move > 1 \
+			&& !worker_expansion_add_tokens(worker, &cur, &split, move))
+				return (0);
+			if (move <= 1)
 				cur = cur->next;
-			ft_free_set_null(&split);
 		}
 	}
 	return (1);

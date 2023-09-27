@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/27 12:45:51 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 14:15:03 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,6 +212,8 @@ int		manager_gets_workers_and_operators(t_block *manager);
 int		worker_task_preparation(t_block *worker);
 int		worker_extract_redirections(t_block *worker);
 void	worker_turn_neg_chars_to_pos(t_token_list *list);
+int		worker_expansion_add_tokens(t_block *worker, t_token_node **cur, \
+			char ***split_place, int move);
 
 /*worker_tasks_2.c*/
 int		worker_args_rm_unguarded_quotes(t_block *worker);
@@ -220,11 +222,8 @@ int		worker_args_expand_wildcard_split(t_block *worker);
 int		worker_dump_tasks_to_cmd_args(t_block *worker);
 int		empty_quotes(char *str);
 
-int		worker_args_expand_and_split(t_block *worker);
-
 /*worker_tasks_3.c*/
-int		worker_args_split_add_token(t_block *worker, \
-		t_token_node *arg, int *move);
+int		worker_args_expand_wildcard_split(t_block *worker);
 
 void	turn_positive(char *str);
 
