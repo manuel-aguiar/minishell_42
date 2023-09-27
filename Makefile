@@ -82,6 +82,7 @@ FILES_EXPAND	=	wildcard_return.c			\
 					wildcard_expansion.c		\
 					dollar_expansion.c			\
 					dolar_heredoc.c				\
+					expansion_char_protect.c	\
 					rm_unguarded_quotes.c
 
 FILES_GENERIC	=	ft_split_count_replenish.c			\

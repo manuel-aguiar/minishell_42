@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 14:02:09 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/27 12:35:23 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 14:36:52 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,7 @@ static int	ambiguous_redirection_err(t_block *block, char **fail_return)
 	return (0);
 }
 
-void	turn_positive(char *str)
-{
-	int	i;
 
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] < 0)
-			str[i] *= -1;
-		i++;
-	}
-}
 
 int	count_split_after_dollar(char ***split_place, char *redir_copy, int *count)
 {
