@@ -1,5 +1,6 @@
-echo $'USER'
+"echo $'USER'
 echo $"USER"
+echo $_
 echo $USER
 echo $1USER
 echo $?USER
@@ -8,4 +9,10 @@ echo "$USER"
 echo '"$USER"'
 echo "'$USER'"
 echo $treta$treta
-echo $$1treta$treta*
+echo $1treta$treta*
+(export var="treta"); echo $var
+export var="treta"; echo $var
+export test1="export test2=test3" ; $test1 ; echo $test2
+(exit 123) ; echo $?
+export var="cat' 'Makefile |' grep' >' '<<" ; $var
+asfasfasfasfa"
