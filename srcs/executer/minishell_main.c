@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/26 20:54:28 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 09:38:41 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,11 @@ int	minishell_main_loop(t_ms *ms)
 
 /*
 valgrind --track-fds=yes --trace-children=yes --leak-check=full --show-leak-kinds=all --suppressions=readline.supp ./minishell
+valgrind --track-fds=yes --trace-children=yes --leak-check=full --show-leak-kinds=all --suppressions=readline.supp ./minishell > log.txt 2>&1
+
+./minishell <./savetests.txt > logmini && <logmini grep -v minishell >logminif ; bash <./savetests.txt > logbash ; diff logminif logbash > final; rm logmini logminif logbash ; cat final
+
+
 */
 
 int	main(int ac, char **av, char **env)

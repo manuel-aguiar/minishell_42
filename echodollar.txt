@@ -1,0 +1,11 @@
+echo $'USER'
+echo $"USER"
+echo $USER
+echo $1USER
+echo $?USER
+echo '$USER'
+echo "$USER"
+echo '"$USER"'
+echo "'$USER'"
+echo $treta$treta
+echo $$1treta$treta*

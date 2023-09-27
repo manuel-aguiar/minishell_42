@@ -66,3 +66,34 @@ pwd
 cd /bin/ls
 pwd
 /usr/local/bin/pwd
+/sbin/env
+/usr/share/echo -n pinto
+/snap/bin/no_command
+unset PATH
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
+cd ~
+pwd
+echo "Hello
+World!"
+export VAR="This is a test variable."
+echo $VAR
+unset VAR
+echo $VAR
+echo "Hello
+world!" > output.txt
+cat output.txt
+echo "Hello
+world!" >> output.txt
+cat output.txt
+sort < output.txt
+ls -l < input.txt > output.txt
+cat output.txt
+ls | sort
+echo "This is a error \n test file. line1\nline2 error \nline3error" > file.txt
+cat file.txt | tr -s ' ' '\n' | sort | uniq -c | sort -nr
+cat file.txt | grep 'error' | wc -l
+ps aux --sort=-%mem | head -n 10
+find /path/to/directory -type f -size +100M -printf '%f %s\n'
+find . -type f | wc -l
+find . -name "*.txt" -exec cat {} + | wc -l
+cat file.txt | tr -s ' ' '\n' | sort | uniq -c | sort -nr | awk '{print $2 $1}'
