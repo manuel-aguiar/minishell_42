@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 13:52:13 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/25 16:01:53 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 12:39:15 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,8 @@ static int	check_fit_and_copy(t_wildc *wildc, char *path, char *filename)
 		wildc->filename = ft_triple_join(path, "/", filename);
 	if (!wildc->filename)
 		return (0);
-	if (wildcard_fit_check(wildc->pattern, wildc->filename))
+	if (wildcard_fit_check(wildc, wildc->filename))
 	{
-		//printf("candidate [%s] approoved\n", wildc->filename);
 		if (!vdmlist_in_tail(wildc->files, wildc->filename))
 			return (0);
 		wildc->filename = NULL;

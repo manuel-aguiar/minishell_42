@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/26 12:51:06 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 12:45:51 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,9 +126,11 @@ typedef struct s_wildc
 	struct dirent	*entry;
 	char			*filename;
 	char			*copy_dir;
+	int				candlen;
 	int				i;
 	int				j;
-	int				k;
+	int				startind;
+	int				match;
 }	t_wildc;
 
 enum e_builtin
@@ -331,7 +333,7 @@ char	**wildcard(char *pattern, int pat_len, int *match_count);
 void	*destroy_wildcard(t_wildc *wildcard, int clean_exit);
 
 /*wildcard_fit_candidates.c*/
-int		wildcard_fit_check(char* pattern, char* text);
+int		wildcard_fit_check(t_wildc *wc, char *text);
 
 /* wildcard_search_files.c */
 void	void_putstr(void *str);
@@ -350,8 +352,10 @@ int		here_doc_expand_dollars(char **to_expand, t_ms *ms);
 int		remove_unguarded_quotes(char **str, int *has_guards);
 int		remove_unguarded_quotes_wildcard(char **str, int *has_guards);
 
-int		count_split_after_dollar(char ***split_place, char *redir_copy, int *count);
+int		count_split_after_dollar(char ***split_place, char *redir_copy, \
+		int *count);
 int		count_chars(char *str, char c);
+
 //////////////////////////////////////
 //////////////////////////////////////
 //////////// GENERIC UTILS ///////////
@@ -366,9 +370,5 @@ char	**ft_split_count_replenish(t_cchar *s, t_cchar *og, \
 		char *sepset, int *place_count);
 char	*ft_split_join(char **split, char *sep);
 char	*ft_triple_join(char *first, char *second, char *third);
-
-
-
-
 
 #endif

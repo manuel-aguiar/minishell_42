@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 10:09:22 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/26 17:42:33 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 12:34:16 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void	worker_turn_neg_chars_to_pos(t_token_list *list)
 
 int	worker_task_preparation(t_block *worker)
 {
-	//token_list_head_print(worker->prompt, print_token_args);
 	if (!worker->prompt->head)
 	{
 		token_list_destroy(&worker->prompt);
@@ -41,14 +40,11 @@ int	worker_task_preparation(t_block *worker)
 	}
 	if (!worker_args_expand_dollar_split(worker))
 		return (0);
-	//token_list_head_print(worker->prompt, print_token_args);
 	if (!worker_args_expand_wildcard_split(worker))
 		return (0);
-	//token_list_head_print(worker->prompt, print_token_args);
 	if (!worker_args_rm_unguarded_quotes(worker))
 		return (0);
 	worker_turn_neg_chars_to_pos(worker->prompt);
-	//token_list_head_print(worker->prompt, print_token_args);
 	if (!worker_dump_tasks_to_cmd_args(worker))
 		return (0);
 	worker->cmd = ft_strdup(worker->cmd_args[0]);
