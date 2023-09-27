@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 10:08:39 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/27 15:07:58 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 15:55:06 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,16 @@ struct s_block
 	int				my_level;
 	int				my_id;
 };
+
+typedef struct s_dollars
+{
+	t_ms		*ms;
+	int			dol_len;
+	int			quote;
+	int			neg;
+	char		*neg_copy;
+	char		*new_final;
+}				t_dollars;
 
 typedef struct s_wildc
 {
@@ -338,8 +348,10 @@ char	**list_to_array(t_vdmlist *list);
 
 /* dollar_expansion.c */
 int		expand_dollars(char **to_expand, t_ms *ms, int turn_negative);
-int		dollar_search_replace(char **to_expand, t_ms *ms, \
-		int *index, int turn_negative);
+int		dollar_search_replace(t_dollars *dol, char **to_expand, int *index);
+
+/* dollar_concat.c*/
+int		dollar_search_env(t_dollars *dol, char **to_expand, int *index);
 
 /* dollar_heredoc*/
 int		here_doc_expand_dollars(char **to_expand, t_ms *ms);
