@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:42:58 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/26 21:48:49 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 09:29:17 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,12 +117,12 @@ int	dollar_search_env(char **to_expand, t_ms *ms, int *index, int dol_len, int t
 	return (dollar_check_malloc_and_replace(to_expand, new));
 }
 
-int dollar_non_alpha(char **to_expand, int *index)
+int dollar_delete_jump(char **to_expand, int *index, int jump)
 {
 	char	*new;
 
 	(*to_expand)[*index] = '\0';
-	new = ft_strjoin(*to_expand, &((*to_expand)[*index + 2]));
+	new = ft_strjoin(*to_expand, &((*to_expand)[*index + 2 - jump]));
 	if (!new)
 		return (0);
 	free(*to_expand);
@@ -141,9 +141,9 @@ int	dollar_search_replace(char **to_expand, t_ms *ms, int *index, int turn_negat
 		(*index)++;
 		return (1);
 	}
-	if ((*to_expand)[*index + 1] && !ft_isalpha((*to_expand)[*index + 1]) \
-	&& ((*to_expand)[*index + 1] != '\'' && (*to_expand)[*index + 1] != '\"'))
-		return(dollar_non_alpha(to_expand, index));
+	if ((*to_expand)[*index + 1] && !ft_isalpha((*to_expand)[*index + 1]))
+		return(dollar_delete_jump(to_expand, index, \
+		((*to_expand)[*index + 1] == '\'' || (*to_expand)[*index + 1] == '\"')));
 	len = 0;
 	while ((*to_expand)[*index + 1 + len] && \
 	ft_isalnum((*to_expand)[*index + 1 + len]))
