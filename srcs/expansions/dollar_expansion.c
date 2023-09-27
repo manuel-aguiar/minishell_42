@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:42:58 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/27 15:56:52 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 16:20:07 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ int	dollar_search_replace(t_dollars *dol, char **to_expand, int *index)
 		(*index)++;
 		return (1);
 	}
-	if ((*to_expand)[*index + 1] && !ft_isalpha((*to_expand)[*index + 1]))
+	if ((*to_expand)[*index + 1] && !ft_isalpha((*to_expand)[*index + 1]) \
+	&& dol->neg)
 		return (dollar_delete_jump(to_expand, index, \
 		((*to_expand)[*index + 1] == '\'' \
 		|| (*to_expand)[*index + 1] == '\"')));

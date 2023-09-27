@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 14:02:09 by codespace         #+#    #+#             */
-/*   Updated: 2023/09/27 15:07:24 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 16:26:16 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ int	manage_io_expansion(t_block *block)
 	char	**split;
 	int		count;
 
+	if (block->io_files->head->type == T_INDIR_HD)
+		return (1);
 	fail_return = ft_triple_join("\'", block->io_files->head->text, "\'");
 	if (!fail_return)
 		return (perror_msg_int("malloc", 0));

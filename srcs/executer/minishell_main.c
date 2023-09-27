@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/25 09:52:17 by marvin            #+#    #+#             */
-/*   Updated: 2023/09/27 12:35:07 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 16:22:38 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,9 @@ valgrind --track-fds=yes --trace-children=yes --leak-check=full
 minishell >logminif ; bash <./savetests.txt > logbash ; 
 diff logminif logbash > final; rm logmini logminif logbash ; cat final
 
+./minishell <./heredoc.txt > logmini && <logmini grep -v 
+minishell >logminif ; bash <./heredoc.txt > logbash ; 
+diff logminif logbash > final; rm logmini logminif logbash ; cat final
 
 */
 
