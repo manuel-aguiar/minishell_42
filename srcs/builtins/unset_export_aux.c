@@ -104,12 +104,12 @@ int	env_remove(t_block *block, int index)
 	int		found;
 
 	len = ft_matrixlen(block->ms->env);
-	res = malloc(len * sizeof(*res));
+	res = malloc((len + 1) * sizeof(*res));
 	if (!res)
 		return (perror_msg_int("malloc", 0));
 	i = 0;
 	found = 0;
-	while (i < len - 1)
+	while (i < len)
 	{
 		if (i == index)
 		{
