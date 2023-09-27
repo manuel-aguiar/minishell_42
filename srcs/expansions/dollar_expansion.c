@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:42:58 by mmaria-d          #+#    #+#             */
-/*   Updated: 2023/09/27 13:38:22 by codespace        ###   ########.fr       */
+/*   Updated: 2023/09/27 15:56:52 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,13 @@
 
 */
 
-int	dollar_exit_status(char **to_expand, t_ms *ms, int *index, int dol_len)
+int	dollar_exit_status(t_dollars *dol, char **to_expand, \
+	int *index, int dol_len)
 {
 	char	*itoa;
 	char	*new;
 
-	itoa = ft_itoa(ms->exit_status);
+	itoa = ft_itoa(dol->ms->exit_status);
 	if (!itoa)
 		return (0);
 	(*to_expand)[*index] = '\0';
@@ -50,74 +51,7 @@ int	dollar_exit_status(char **to_expand, t_ms *ms, int *index, int dol_len)
 	return (1);
 }
 
-static int	dollar_check_malloc_and_replace(char **to_expand, char *new)
-{
-	if (!new)
-		return (0);
-	free(*to_expand);
-	*to_expand = new;
-	return (1);
-}
-
-static int negative_copy(char *str, char **place_neg_copy)
-{
-	int		i;
-	char	*new;
-
-	new = malloc(ft_strlen(str) + 1);
-	if (!new)
-		return (perror_msg_int("malloc", 0));
-	i = 0;
-	while (str[i])
-	{
-		if (ft_isspace(str[i]))
-			new[i] = str[i];
-		else		
-			new[i] = -str[i];
-		i++;
-	}
-	new[i] = '\0';
-	*place_neg_copy = new;
-	return (1);
-}
-
-int	dollar_search_env(char **to_expand, t_ms *ms, int *index, int dol_len, int turn_negative)
-{
-	int		i;
-	char	*new;
-	char	*neg_copy;
-
-	i = 0;
-	(*to_expand)[*index] = '\0';
-	if (ms->env)
-	{
-		while (ms->env[i])
-		{
-			if (!ft_strncmp(&((*to_expand)[*index + 1]), ms->env[i], dol_len) \
-			&& ms->env[i][dol_len] == '=')
-			{
-				if (turn_negative && !negative_copy(&ms->env[i][dol_len + 1], &neg_copy))
-					return (0);
-				if (turn_negative)
-					new = ft_triple_join(*to_expand, neg_copy, \
-					&((*to_expand)[*index + 1 + dol_len]));
-				else
-					new = ft_triple_join(*to_expand, &ms->env[i][dol_len + 1], \
-					&((*to_expand)[*index + 1 + dol_len]));
-				if (turn_negative)
-					free(neg_copy);
-				*index += ft_strlen(&ms->env[i][dol_len + 1]);
-				break ;
-			}
-			i++;
-		}
-	}
-	if (!ms->env || !ms->env[i])
-		new = ft_strjoin(*to_expand, &((*to_expand)[*index + 1 + dol_len]));
-	return (dollar_check_malloc_and_replace(to_expand, new));
-}
-
-int dollar_delete_jump(char **to_expand, int *index, int jump)
+int	dollar_delete_jump(char **to_expand, int *index, int jump)
 {
 	char	*new;
 
@@ -130,56 +64,62 @@ int dollar_delete_jump(char **to_expand, int *index, int jump)
 	return (1);
 }
 
-int	dollar_search_replace(char **to_expand, t_ms *ms, int *index, int turn_negative)
+int	dollar_search_replace(t_dollars *dol, char **to_expand, int *index)
 {
-	int	len;
-
 	if ((*to_expand)[*index + 1] == '?')
-		return (dollar_exit_status(to_expand, ms, index, 2));
-	if (!(*to_expand)[*index + 1] || ft_isspace((*to_expand)[*index + 1]))
+		return (dollar_exit_status(dol, to_expand, index, 2));
+	if (!(*to_expand)[*index + 1] || ft_isspace((*to_expand)[*index + 1]) \
+	|| (dol->quote && (*to_expand)[*index + 1] == dol->quote))
 	{
 		(*index)++;
 		return (1);
 	}
-// echo "$" tá errado ainda, nao pode haver quotes abertos para expandir
-
 	if ((*to_expand)[*index + 1] && !ft_isalpha((*to_expand)[*index + 1]))
-		return(dollar_delete_jump(to_expand, index, \
-		((*to_expand)[*index + 1] == '\'' || (*to_expand)[*index + 1] == '\"')));
-	len = 0;
-	while ((*to_expand)[*index + 1 + len] && \
-	ft_isalnum((*to_expand)[*index + 1 + len]))
-		len++;
-	if (!len)
+		return (dollar_delete_jump(to_expand, index, \
+		((*to_expand)[*index + 1] == '\'' \
+		|| (*to_expand)[*index + 1] == '\"')));
+	dol->dol_len = 0;
+	while ((*to_expand)[*index + 1 + dol->dol_len] && \
+	ft_isalnum((*to_expand)[*index + 1 + dol->dol_len]))
+		dol->dol_len++;
+	if (!dol->dol_len)
 	{
 		(*index)++;
-		return (1);		
+		return (1);
 	}
-	return (dollar_search_env(to_expand, ms, index, len, turn_negative));
+	return (dollar_search_env(dol, to_expand, index));
+}
+
+static void	dollar_save_quote_move(t_dollars *dol, char **to_expand, \
+			int *index)
+{
+	if (!dol->quote)
+		dol->quote = (*to_expand)[*index];
+	else if (dol->quote == (*to_expand)[*index])
+		dol->quote = 0;
+	(*index)++;
 }
 
 int	expand_dollars(char **to_expand, t_ms *ms, int turn_negative)
 {
-	int	i;
-	int	quote;
+	int			i;
+	t_dollars	dol;
 
-	quote = 0;
+	dol.ms = ms;
+	dol.neg = turn_negative;
+	dol.dol_len = 0;
+	dol.quote = 0;
 	i = 0;
 	while ((*to_expand)[i])
 	{
 		if ((*to_expand)[i] == '\'' || (*to_expand)[i] == '"')
+			dollar_save_quote_move(&dol, to_expand, &i);
+		else if ((*to_expand)[i] == '$' && (*to_expand)[i + 1] \
+		&& !ft_isspace((*to_expand)[i + 1]) \
+		&& (*to_expand)[i + 1] != '$' \
+		&& (!dol.quote || dol.quote == '"'))
 		{
-			if (!quote)
-				quote = (*to_expand)[i];
-			else if (quote == (*to_expand)[i])
-				quote = 0;
-			i++;
-		}
-		else if ((*to_expand)[i] == '$' && (*to_expand)[i + 1]  \
-		 && !ft_isspace((*to_expand)[i + 1]) && (*to_expand)[i + 1] != '$' \
-		&& (!quote || quote == '"'))
-		{
-			if (!dollar_search_replace(to_expand, ms, &i, turn_negative))
+			if (!dollar_search_replace(&dol, to_expand, &i))
 				return (0);
 		}
 		else

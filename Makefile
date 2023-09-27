@@ -81,6 +81,7 @@ FILES_EXPAND	=	wildcard_return.c			\
 					wildcard_fit_candidates.c	\
 					wildcard_expansion.c		\
 					dollar_expansion.c			\
+					dollar_concat.c				\
 					dolar_heredoc.c				\
 					expansion_char_protect.c	\
 					rm_unguarded_quotes.c
