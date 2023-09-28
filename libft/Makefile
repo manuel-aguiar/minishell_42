@@ -35,12 +35,12 @@ ERROR			=	error_handling
 
 ## SOURCE FILES ##
 
-FILES_ATOI		=	ft_atoi_arr.c 				\
+SRCS_ATOI		=	ft_atoi_arr.c 				\
 					ft_atoi_overf.c 			\
 					ft_atoi.c					\
 					ft_itoa.c
 
-FILES_MEMFUNC	=	ft_bzero.c					\
+SRCS_MEMFUNC	=	ft_bzero.c					\
 					ft_calloc.c					\
 					ft_free_misc.c				\
 					ft_memchr.c					\
@@ -49,17 +49,17 @@ FILES_MEMFUNC	=	ft_bzero.c					\
 					ft_memmove.c				\
 					ft_memset.c
 
-FILES_OUTPUT	=	ft_print_arr.c				\
+SRCS_OUTPUT	=	ft_print_arr.c				\
 					ft_putchar_fd.c				\
 					ft_putendl_fd.c				\
 					ft_putnbr_fd.c				\
 					ft_putstr_fd.c
 
-FILES_PRINTF	=	ft_printf_csdiu_perc.c		\
+SRCS_PRINTF	=	ft_printf_csdiu_perc.c		\
 					ft_printf_pxX.c				\
 					ft_printf.c
 
-FILES_STRING	=	ft_isalnum.c				\
+SRCS_STRING	=	ft_isalnum.c				\
 					ft_isalpha.c				\
 					ft_isascii.c				\
 					ft_isdigit.c				\
@@ -82,58 +82,58 @@ FILES_STRING	=	ft_isalnum.c				\
 					ft_tolower.c				\
 					ft_toupper.c
 
-FILES_GNL		=	get_next_line.c				\
+SRCS_GNL		=	get_next_line.c				\
 					get_next_line_utils.c
 
-FILES_HASHINT	=	hashtable.c						\
+SRCS_HASHTABLE	=	hashtable.c						\
 					hashtable_utils.c				\
 					ht_linkedlist1.c				\
 					ht_linkedlist2.c				\
 					ht_linkedlist3.c
 
-FILES_HASHTABLE	=	hashset_int.c				\
+SRCS_HASHINT	=	hashset_int.c				\
 					hashset_int_utils.c
 
-FILES_LICIRC	=	icd_list_mpool.c			\
+SRCS_LICIRC	=	icd_list_mpool.c			\
 					icd_list_mpool_utils.c
 
-FILES_LIDBL		=	idl_list_malloc.c			\
+SRCS_LIDBL		=	idl_list_malloc.c			\
 					idl_list_malloc_utils.c		\
 					idl_list_malloc_print.c		\
 					idl_list_mpool.c			\
 					idl_list_mpool_utils.c
 
-FILES_LISNGL	=	isl_list_malloc.c			\
+SRCS_LISNGL	=	isl_list_malloc.c			\
 					isl_list_malloc_utils.c		\
 					isl_list_malloc_print.c
 
-FILES_LIXOR		=	xor_list_malloc.c			\
+SRCS_LIXOR		=	xor_list_malloc.c			\
 					xor_list_malloc_utils.c		\
 					xor_list_malloc_print.c		\
 					xor_list_mpool.c			\
 					xor_list_mpool_utils.c
 
-FILES_LVDBL		=	vdlist_malloc.c				\
+SRCS_LVDBL		=	vdlist_malloc.c				\
 					vdlist_malloc_utils.c		\
 					vdlist_malloc_print.c		\
 					vdlist_mpool.c				\
 					vdlist_mpool_utils.c		\
 					vdlist_mpool_print.c
 
-FILES_ISORT		=	charmat_quicksort.c			\
+SRCS_ISORT		=	charmat_quicksort.c			\
 					cocktailsort.c				\
 					mergesort.c					\
 					quicksort.c					\
 					tim_sort.c					\
 					tim_sort_utils.c			\
 
-FILES_MATH		=	bin_srch.c					\
+SRCS_MATH		=	bin_srch.c					\
 					ft_min_max.c
 
-FILES_MPOOL		=	memory_pool.c				\
+SRCS_MPOOL		=	memory_pool.c				\
 					memory_pool_utils.c
 
-FILES_ERROR		=	error_msg.c					\
+SRCS_ERROR		=	error_msg.c					\
 					perror_msg.c
 
 ## ALL SOURCE FOLDERS
@@ -144,7 +144,24 @@ SRC_DIRS		=	$(ATOI)		$(MEMFUNC)	$(OUTPUT)	$(PRINTF) 	\
 					$(ISORT)	$(MATH)		$(MPOOL)	$(ERROR)	\
 					$(HASHTABLE)
 
-SRCS		:= 		$(foreach src_dir,$(SRC_DIRS),$(wildcard $(SRC_PATH)/$(src_dir)/*.c))
+SRCS			:=  $(addprefix $(SRC_PATH)/$(ATOI)/,$(SRCS_ATOI)) 			\
+					$(addprefix $(SRC_PATH)/$(MEMFUNC)/,$(SRCS_MEMFUNC)) 	\
+					$(addprefix $(SRC_PATH)/$(OUTPUT)/,$(SRCS_OUTPUT)) 		\
+					$(addprefix $(SRC_PATH)/$(PRINTF)/,$(SRCS_PRINTF)) 		\
+					$(addprefix $(SRC_PATH)/$(STRING)/,$(SRCS_STRING)) 		\
+					$(addprefix $(SRC_PATH)/$(GNL)/,$(SRCS_GNL)) 			\
+					$(addprefix $(SRC_PATH)/$(HASHINT)/,$(SRCS_HASHINT)) 	\
+					$(addprefix $(SRC_PATH)/$(LICIRC)/,$(SRCS_LICIRC))		\
+					$(addprefix $(SRC_PATH)/$(LIDBL)/,$(SRCS_LIDBL)) 		\
+					$(addprefix $(SRC_PATH)/$(LISNGL)/,$(SRCS_LISNGL)) 		\
+					$(addprefix $(SRC_PATH)/$(LIXOR)/,$(SRCS_LIXOR)) 		\
+					$(addprefix $(SRC_PATH)/$(LVDBL)/,$(SRCS_LVDBL)) 		\
+					$(addprefix $(SRC_PATH)/$(ISORT)/,$(SRCS_ISORT)) 		\
+					$(addprefix $(SRC_PATH)/$(MATH)/,$(SRCS_MATH)) 			\
+					$(addprefix $(SRC_PATH)/$(MPOOL)/,$(SRCS_MPOOL)) 		\
+					$(addprefix $(SRC_PATH)/$(ERROR)/,$(SRCS_ERROR))		\
+					$(addprefix $(SRC_PATH)/$(HASHTABLE)/,$(SRCS_HASHTABLE))
+
 
 OBJS 		=		$(patsubst $(SRC_PATH)/%.c,$(OBJ_PATH)/%.o,$(SRCS))
 

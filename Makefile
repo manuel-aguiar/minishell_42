@@ -29,32 +29,40 @@ LEXER			=	lexer
 PARSER			=	parser
 BUILTINS		=	builtins
 EXECUTER		=	executer
-FD_MAN			=	redirections
+REDIR			=	redirections
 EXPAND			=	expansions
 GENERIC			=	generic_utils
 
 ## SOURCE FILES ##
 
-FILES_STRUCTS	=	ms_setup.c								\
+SRCS_STRUCTS	=	ms_setup.c								\
 					block_setup.c							\
 					signals.c
 
-FILES_LEXER	=		get_prompt.c								\
+SRCS_LEXER	=		get_prompt.c							\
 					create_tokens.c 						\
 					prompt_to_list.c 						\
+					prompt_to_list2.c						\
 					token_list_print.c						\
 					token_list1.c							\
 					token_list2.c							\
 					token_list3.c							\
-					token_identification.c
+					token_identification.c					\
+					validate_prompt.c						\
+					validate_2.c
 
-FILES_BUILTINS	=	bi_exit.c 								\
+SRCS_BUILTINS	=	bi_check_and_exec.c						\
+					bi_exit.c 								\
 					bi_cd.c 								\
-					bi_check_and_exec.c						\
-					bi_pwd_echo_unset_export.c				\
-					bi_env.c
+					bi_unset.c								\
+					bi_pwd.c								\
+					bi_export.c								\
+					bi_env.c								\
+					bi_echo.c								\
+					unset_export_aux.c
+					
 
-FILES_EXECUTER	=	minishell_main.c					\
+SRCS_EXECUTER	=	minishell_main.c					\
 					execution_tree_loop.c				\
 					execution_tree_setup.c				\
 					manager_execution.c					\
@@ -63,43 +71,53 @@ FILES_EXECUTER	=	minishell_main.c					\
 					child_process.c						\
 					child_execve.c						
 
-FILES_FD_MAN	=	prepare_redirections.c	\
-					close_in_out.c			\
-					heredoc_open.c			\
-					heredoc_read.c			\
+SRCS_REDIR		=	prepare_redirections.c				\
+					expand_redir_args.c					\
+					close_in_out.c						\
+					heredoc_open.c						\
+					heredoc_read.c						\
 					heredoc_temp.c
 
 
-FILES_PARSER	=	task_distributor.c		\
-					manager_tasks.c			\
+SRCS_PARSER		=	task_distributor.c		\
+					manager_tasks_1.c		\
+					manager_tasks_2.c		\
 					worker_tasks_1.c		\
 					worker_tasks_2.c		\
 					worker_tasks_3.c
 					
-FILES_EXPAND	=	wildcard_return.c			\
+SRCS_EXPAND		=	wildcard_return.c			\
 					wildcard_search_files.c		\
 					wildcard_fit_candidates.c	\
 					wildcard_expansion.c		\
 					dollar_expansion.c			\
 					dollar_concat.c				\
-					dolar_heredoc.c				\
+					dollar_heredoc.c			\
 					expansion_char_protect.c	\
-					rm_unguarded_quotes.c
+					rm_unguarded_quotes.c		\
+					rm_unguarded_wildcard.c
 
-FILES_GENERIC	=	ft_split_count_replenish.c			\
+SRCS_GENERIC	=	ft_split_count_replenish.c			\
 					ft_isquote.c						\
 					ft_strdup_len.c						\
-					ft_split_join.c			\
-					ft_triple_join.c		\
-					ft_charmatdup.c			\
+					ft_split_join.c						\
+					ft_triple_join.c					\
+					ft_charmatdup.c						\
 					ft_matrixlen.c
 
 ## ALL SOURCE FOLDERS
 
-SRC_DIRS		=	$(BUILTINS)		$(EXECUTER)	$(FD_MAN)	$(PARSER) 	\
+SRC_DIRS		=	$(BUILTINS)		$(EXECUTER)	$(REDIR)	$(PARSER) 	\
 					$(EXPAND)		$(GENERIC)  $(LEXER) 	$(STRUCTS)
 
-SRCS		:= 		$(foreach src_dir,$(SRC_DIRS),$(wildcard $(SRC_PATH)/$(src_dir)/*.c))
+SRCS			:=  $(addprefix $(SRC_PATH)/$(BUILTINS)/,$(SRCS_BUILTINS)) \
+					$(addprefix $(SRC_PATH)/$(EXECUTER)/,$(SRCS_EXECUTER)) \
+					$(addprefix $(SRC_PATH)/$(REDIR)/,$(SRCS_REDIR)) \
+					$(addprefix $(SRC_PATH)/$(PARSER)/,$(SRCS_PARSER)) \
+					$(addprefix $(SRC_PATH)/$(EXPAND)/,$(SRCS_EXPAND)) \
+					$(addprefix $(SRC_PATH)/$(GENERIC)/,$(SRCS_GENERIC)) \
+					$(addprefix $(SRC_PATH)/$(LEXER)/,$(SRCS_LEXER)) \
+					$(addprefix $(SRC_PATH)/$(STRUCTS)/,$(SRCS_STRUCTS))
 
 OBJS 		=		$(patsubst $(SRC_PATH)/%.c,$(OBJ_PATH)/%.o,$(SRCS))
 
