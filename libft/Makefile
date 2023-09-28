@@ -188,14 +188,14 @@ clean:
 
 fclean: clean
 	@echo Deleting libft.a...
-	@if [ -n "$(wildcard  $(NAME))" ]; then \
+	@if [ -e "$(NAME)" ]; then \
         $(RM) $(NAME); \
     fi
 	@echo Done!!
 
 re: fclean all
 
-.PHONY: clean fclean re message moveobjs
+.PHONY: clean fclean re message
 
 ##COLOUR
 
