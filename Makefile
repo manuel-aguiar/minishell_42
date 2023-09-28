@@ -7,7 +7,7 @@ NAME 		=		minishell
 
 CC 			= 		cc -g #-fsanitize=address
 ## -Wall Wextra Werror
-FLAGS 		= 		-Wall -Werror -Wextra
+FLAGS 		= 		-Wall -Werror -Wextra -fsanitize=address
 ADD_LIB 	= 		-L./$(LIB_PATH) -lft -lreadline
 RM 			=		rm
 MAKE		=		make
@@ -150,14 +150,14 @@ clean:
 
 fclean: clean
 	@echo Deleting libft.a...
-	@if [ -n "$(wildcard  $(NAME))" ]; then \
+	@if [ -e "$(NAME)" ]; then \
         $(RM) $(NAME); \
     fi
-	@if [ -n "$(wildcard  $(LIB_PATH)/$(LIBFT))" ]; then \
+	@if [ -e "$(LIB_PATH)/$(LIBFT)" ]; then \
         $(RM) $(LIB_PATH)/$(LIBFT); \
     fi
 	@echo Done!!
 
 re: fclean all
 
-.PHONY: clean fclean re message bonus
+.PHONY: clean fclean re message
